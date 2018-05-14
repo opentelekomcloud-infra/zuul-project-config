@@ -1,0 +1,2 @@
+# Simple-init might have disabled datasources
+export DIB_CLOUD_INIT_DATASOURCES="OpenStack, ConfigDrive"

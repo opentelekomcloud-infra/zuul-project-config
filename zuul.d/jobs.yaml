@@ -1,0 +1,44 @@
+- job:
+    name: base
+    parent: null
+    abstract: true
+    description: |
+      The base job for OpenStack's installation of Zuul.
+
+      All jobs ultimately inherit from this.  It runs a pre-playbook
+      which copies all of the job's prepared git repos on to all of
+      the nodes in the nodeset.  It runs a post-playbook which copies
+      all of the files in the logs/ subdirectory of the executor
+      work directory to the logserver.
+
+      It also sets default timeout and nodeset values (which may be
+      overidden).
+
+      Responds to these variables:
+
+      .. zuul:jobvar:: base_serial
+         :default: Omitted
+
+         This sets the serial keyword in the pre and post playbooks
+         which can be an integer or percentage.
+
+         See ansible documentation for more information:
+         http://docs.ansible.com/ansible/latest/playbooks_delegation.html
+
+    pre-run: playbooks/base/pre.yaml
+    post-run:
+      - playbooks/base/post-ssh.yaml
+      - playbooks/base/post-logs.yaml
+    roles:
+      - zuul: gtema/zuul-jobs
+    vars:
+      ara_report_type: database
+      ara_report_path: ara-report
+    timeout: 1800
+    post-timeout: 1800
+    nodeset:
+      nodes:
+        - name: fedora-28
+          label: fedora-28
+    secrets:
+      - site_logs

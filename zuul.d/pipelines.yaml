@@ -1,0 +1,47 @@
+- pipeline:
+    name: check
+    description: |
+      Newly opened pull requests enter this pipeline to receive an
+      initial verification
+    success-message: Build succeeded (check pipeline).
+    failure-message: |
+      Build failed (check pipeline).  For information on how to proceed, see
+      http://docs.openstack.org/infra/manual/developers.html#automated-testing
+    manager: independent
+    trigger:
+      github:
+        - event: pull_request
+          action:
+            - opened
+            - changed
+            - reopened
+        - event: pull_request
+          action: comment
+          comment: (?i)^\s*recheck\s*$
+        - event: push
+    start:
+      github:
+        status: pending
+        comment: false
+    success:
+      github:
+        status: 'success'
+      zuul_db:
+    failure:
+      github:
+        status: 'failure'
+      zuul_db:
+
+- pipeline:
+    name: periodic
+    post-review: true
+    description: Jobs in this queue are triggered on a timer.
+    manager: independent
+    precedence: low
+    trigger:
+      timer:
+        - time: '0 6 * * *'
+    # success:
+    #   mysql:
+    # failure:
+    #   mysql:

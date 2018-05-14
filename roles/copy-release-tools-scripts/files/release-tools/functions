@@ -1,0 +1,133 @@
+#!/bin/bash
+#
+# Shared functions for shell scripts
+#
+
+_functions_bindir=$(realpath $(dirname $0))
+
+# Make sure custom grep options don't get in the way
+unset GREP_OPTIONS
+
+
+function lp_project_to_repo {
+    typeset proj="$1"
+
+    if [[ $proj == python-*client* ]]; then
+        echo $proj
+    elif [[ $proj == glance-store ]]; then
+        echo glance_store
+    elif [[ $proj == django-openstack-auth ]]; then
+        echo django_openstack_auth
+    else
+        # Some of the repository names don't match the launchpad names, e.g.
+        # python-stevedore and python-cliff.
+        echo $proj | sed -e 's|^python-||'
+    fi
+}
+
+
+function _cleanup_tmp {
+    rm -rf $MYTMPDIR
+    return 0
+}
+
+
+function setup_temp_space {
+    MYTMPDIR=`mktemp -d _tmp-${1}-XXX`
+    mkdir -p "$MYTMPDIR"
+    trap _cleanup_tmp EXIT
+    cd "$MYTMPDIR"
+    # NOTE(dhellmann): On some platforms mktemp returns a short name
+    # instead of a full path, so expand the full path by looking at
+    # where we ended up after the cd operation.
+    MYTMPDIR="$(pwd)"
+}
+
+
+
+function get_last_tag {
+    # Print the most recent tag for a ref. If no ref is specified, the
+    # currently checked out branch is examined.
+    local ref="$1"
+    if ! git describe --abbrev=0 --first-parent ${ref} >/dev/null 2>&1; then
+        echo ""
+    else
+        git describe --abbrev=0 --first-parent ${ref}
+    fi
+}
+
+
+function update_gitreview {
+    typeset branch="$1"
+
+    echo "Updating .gitreview"
+    git checkout $branch
+    # Remove a trailing newline, if present, to ensure consistent
+    # formatting when we add the defaultbranch line next.
+    typeset grcontents="$(echo -n "$(cat .gitreview | grep -v defaultbranch)")
+defaultbranch=$branch"
+    echo "$grcontents" > .gitreview
+    git add .gitreview
+    git commit -m "Update .gitreview for $branch"
+    git show
+    local shortbranch=$(basename $branch)
+    git review -t "create-${shortbranch}" --yes
+}
+
+
+function update_upper_constraints {
+    typeset branch="$1"
+    typeset uc_server='git.openstack.org'
+    typeset uc_path='cgit/openstack/requirements/plain/upper-constraints.txt'
+    typeset uc_url="https://${uc_server}/${uc_path}?h=${branch}"
+
+    echo "Updating tox.ini for upper-constraints"
+    git checkout $branch
+    if [[ ! -f tox.ini ]]; then
+        echo "No tox.ini file, skipping constraints"
+        return 0
+    fi
+    sed -i~ -e "s,{\(env:UPPER_CONSTRAINTS_FILE\)[^ ]*},{\1:$uc_url}," tox.ini
+    if ! git diff --exit-code >/dev/null 2>&1 ; then
+        git add tox.ini
+        msg="Update UPPER_CONSTRAINTS_FILE for $branch"
+        body="The new stable upper-constraints file is only available
+after the openstack/requirements repository is branched.
+This will happen around the RC1 timeframe.
+
+Recheck and merge this change once the requirements
+repository has been branched.
+
+The CI system will work with this patch before the requirements
+repository is branched because zuul configues the job to run
+with a local copy of the file and defaults to the master branch.
+However, accepting the patch will break the test configuration
+on developers' local systems, so please wait until after the
+requirements repository is branched to merge the patch."
+        git commit -m "$msg" -m "$body"
+        git show
+        local shortbranch=$(basename $branch)
+        git review -t "create-${shortbranch}" --yes
+    fi
+}
+
+
+function clone_repo {
+    typeset repo="$1"
+    typeset branch="$2"
+
+    set -e
+
+    # Sometimes we aren't given a branch, and when we aren't we don't
+    # want to pass the wrong arguments to clone_repo.sh.
+    if [ ! -z "$branch" ]; then
+        branch_arg="--branch"
+    fi
+
+    # Clone the repository using the given branch.
+    $_functions_bindir/clone_repo.sh $branch_arg $branch $repo
+
+    # We assume the job uses a git_config task to configure git
+    # properly.
+    git -C $repo review -s -v
+}
