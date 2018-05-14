@@ -30,7 +30,7 @@
       - playbooks/base/post-ssh.yaml
       - playbooks/base/post-logs.yaml
     roles:
-      - zuul: gtema/zuul-jobs
+      - zuul: OpenTelekomCloud/zuul-jobs
     vars:
       ara_report_type: database
       ara_report_path: ara-report
