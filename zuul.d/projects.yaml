@@ -17,6 +17,8 @@
 
 - project:
     name: openstack-infra/shade
+    # Use shade-ansible integration tests. third-party-check is not expected
+    # to eve happen, therefore doubled with timer.
     third-party-check:
       jobs:
         - shade-ansible-functional-otc

@@ -49,10 +49,9 @@
 - pipeline:
     name: third-party-check
     description: |
-      Newly uploaded patchsets to projects that are external to OpenStack
-      enter this pipeline to receive an initial +/-1 Verified vote.
+      Newly uploaded patchsets to projects that are external to OTC.
+      Only internal tracking is done.
     success-message: Build succeeded (third-party-check pipeline).
-    # TODO(mordred) We should write a document for non-OpenStack developers
     failure-message: |
       Build failed (third-party-check pipeline) integration testing with
       OpenStack. For information on how to proceed, see
