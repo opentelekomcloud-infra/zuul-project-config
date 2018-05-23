@@ -48,11 +48,11 @@
     require:
       github:
         review:
-          - type: approval
+          - type: approved
             # username: gtema
-            # permission: write
-        # current-patchset: True
-        # open: True
+            permission: write
+        current-patchset: True
+        open: True
     trigger:
       github:
         - event: pull_request_review
