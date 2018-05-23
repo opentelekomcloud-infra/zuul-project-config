@@ -49,7 +49,7 @@
       github:
         review:
           - type: approval
-            username: gtema
+            # username: gtema
             permission: write
         current-patchset: True
         open: True
