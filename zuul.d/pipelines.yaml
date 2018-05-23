@@ -51,8 +51,8 @@
           - type: approval
             # username: gtema
             # permission: write
-        current-patchset: True
-        open: True
+        # current-patchset: True
+        # open: True
     trigger:
       github:
         - event: pull_request_review
