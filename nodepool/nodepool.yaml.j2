@@ -34,13 +34,16 @@ providers:
     pools:
       - name: dynamic
 {% if nodepool_os_cloud_networks %}
-        networks: {{ nodepool_os_cloud_networks }}
+        networks: {{ nodepool_os_cloud_networks | to_nice_yaml }}
+{% endif %}
+{% if nodepool_os_cloud_security_groups %}
+        networks: {{ nodepool_os_cloud_security_groups | to_nice_yaml }}
 {% endif %}
         auto-floating-ip: False
         labels: &provider_pools_labels
           - name: fedora-27
             flavor-name: s2.xlarge.2
-            diskimage: fedora-28
+            diskimage: fedora-27
             key-name: nodepool
             console-log: true
           - name: fedora-28
@@ -77,7 +80,7 @@ diskimages:
       - growroot
       - infra-package-needs
       - otc-base
-    release: 28
+    release: 27
     env-vars:
       TMPDIR: /opt/nodepool/tmp
       DIB_CHECKSUM: '1'
