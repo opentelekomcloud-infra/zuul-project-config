@@ -2,7 +2,7 @@
   roles:
     - role: add-fileserver
       fileserver: "{{ site_logs }}"
-    # - role: ara-report
+    - role: ara-report
 
 - hosts: "{{ site_logs.address | default(site_logs.fqdn) }}"
   gather_facts: False
