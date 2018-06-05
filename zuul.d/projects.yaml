@@ -1,21 +1,4 @@
 - project:
-    name: ansible/ansible
-    # ansible/ansible does not include system-required on purpose. We do not
-    # gate ansible/ansible and we should not be doing merge-check on it.
-    third-party-check:
-      jobs:
-        - shade-ansible-functional-otc:
-            files:
-              - ^lib/ansible/modules/cloud/openstack/.*
-              - ^contrib/inventory/openstack.py
-              - ^lib/ansible/plugins/inventory/openstack.py
-              - ^lib/ansible/module_utils/openstack.py
-              - ^lib/ansible/utils/module_docs_fragments/openstack.py
-    periodic:
-      jobs:
-        - shade-ansible-functional-otc
-
-- project:
     name: openstack-infra/shade
     # Use shade-ansible integration tests. third-party-check is not expected
     # to eve happen, therefore doubled with timer.
@@ -25,3 +8,14 @@
     periodic:
       jobs:
         - shade-ansible-functional-otc
+
+- project:
+    name: openstack/openstacksdk
+    # Use openstacksdk-ansible integration tests. third-party-check is not expected
+    # to eve happen, therefore doubled with timer.
+    third-party-check:
+      jobs:
+        - openstacksdk-ansible-functional-otc
+    periodic:
+      jobs:
+        - openstacksdk-ansible-functional-otc
