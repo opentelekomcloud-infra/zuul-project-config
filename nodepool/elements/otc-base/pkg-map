@@ -3,7 +3,8 @@
     "redhat": {
       "cloud-init": "cloud-init",
       "dhcp-client": "dhclient",
-      "network": "NetworkManager"
+      "network": "NetworkManager",
+      "openstack": "python2-openstackclient"
     },
     "suse": {
       "cloud-init": "cloud-init",
