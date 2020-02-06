@@ -1,0 +1,16 @@
+- hosts: all
+  tasks:
+    - name: Gather debug info on job fail
+      when: not (zuul_success | bool)
+      block:
+        - name: get df disk usage
+          raw: timeout -k 5 90 df
+
+        - name: get df inode usage
+          raw: timeout -k 5 90 df -i
+
+        - name: get l2 networking
+          raw: timeout -k 5 90 ip link
+
+        - name: get l3 networking
+          raw: timeout -k 5 90 ip addr
