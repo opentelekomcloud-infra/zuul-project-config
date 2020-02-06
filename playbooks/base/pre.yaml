@@ -21,12 +21,12 @@
 
 - hosts: all
   tasks:
-    package:
-      name: "{{ item }}"
-      state: present
-    loop:
-      - python3-virtualenv
-      - python3-tox
+    - package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - python3-virtualenv
+        - python3-tox
 
 - hosts: all
   roles:
