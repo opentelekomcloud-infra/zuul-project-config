@@ -1,7 +1,8 @@
 - hosts: localhost
   roles:
     - role: emit-job-header
-      zuul_log_url: "http://logs.zuul.tsi-dev.otc-service.com"
+      zuul_log_path_shard_build: true
+    - log-inventory
 
 - hosts: all
   pre_tasks:
@@ -16,9 +17,20 @@
   roles:
     - add-build-sshkey
     - start-zuul-console
+    - ensure-output-dirs
+
+- hosts: all
+  roles:
+    # NOTE(pabelanger): We run this role in its own play to ensure unbound is
+    # restarted before proceeding with any other role. This is because we use
+    # notify / handler to restart the unbound service. With ansible notify
+    # actions are triggered at the end of each block of tasks in a play.
+    - configure-unbound
+
+- hosts: all
+  roles:
     - validate-host
-    - use-cached-repos
-    - mirror-workspace-git-repos
-    # - role: fetch-zuul-cloner
-    #   destination: "/usr/zuul-env/bin/zuul-cloner"
-    #   repo_src_dir: "/home/zuul/src/git.openstack.org"
+    - prepare-workspace-git
+      #    - mirror-info
+      #    - role: configure-mirrors
+      #      set_apt_mirrors_trusted: True

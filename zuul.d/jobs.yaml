@@ -3,7 +3,7 @@
     parent: null
     abstract: true
     description: |
-      The base job for OpenStack's installation of Zuul.
+      The base job for OTC installation of Zuul.
 
       All jobs ultimately inherit from this.  It runs a pre-playbook
       which copies all of the job's prepared git repos on to all of
@@ -27,18 +27,17 @@
 
     pre-run: playbooks/base/pre.yaml
     post-run:
-      - playbooks/base/post-ssh.yaml
+      - playbooks/base/post.yaml
       - playbooks/base/post-logs.yaml
+    cleanup-run: playbooks/base/cleanup.yaml
     roles:
-      - zuul: OpenTelekomCloud/zuul-jobs
-    vars:
-      ara_report_type: database
-      ara_report_path: ara-report
+      - zuul: opendev/zuul-jobs
     timeout: 1800
     post-timeout: 1800
-    nodeset:
-      nodes:
-        - name: fedora-28
-          label: fedora-28
+    vars:
+      ara_report_type: html
+      ara_report_path: ara-report
+      ara_compress_html: false
+    nodeset: fedora-30
     secrets:
-      - site_logs
+      - otc_cloud_logs

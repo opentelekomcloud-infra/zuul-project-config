@@ -1,0 +1,6 @@
+- nodeset:
+    name: fedora-30
+    nodes:
+      - name: fedora-30
+        label: fedora-30
+
