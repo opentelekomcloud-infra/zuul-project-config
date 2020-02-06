@@ -31,7 +31,7 @@
       - playbooks/base/post-logs.yaml
     cleanup-run: playbooks/base/cleanup.yaml
     roles:
-      - zuul: opendev/zuul-jobs
+      - zuul: zuul/zuul-jobs
     timeout: 1800
     post-timeout: 1800
     vars:
