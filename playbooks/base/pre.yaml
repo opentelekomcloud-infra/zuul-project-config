@@ -20,16 +20,6 @@
     - ensure-output-dirs
 
 - hosts: all
-  become: true
-  tasks:
-    - package:
-        name: "{{ item }}"
-        state: present
-      loop:
-        - python3-virtualenv
-        - python3-tox
-
-- hosts: all
   roles:
     - validate-host
     - prepare-workspace-git
