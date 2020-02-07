@@ -21,11 +21,29 @@ if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
 fi
 set -e
 
-NODEPOOL_STATIC_NAMESERVER_V6=${NODEPOOL_STATIC_NAMESERVER_V6:-2620:0:ccc::2}
-NODEPOOL_STATIC_NAMESERVER_V4=${NODEPOOL_STATIC_NAMESERVER_V4:-208.67.222.222}
-NODEPOOL_STATIC_NAMESERVER_V6_FALLBACK=${NODEPOOL_STATIC_NAMESERVER_V6_FALLBACK:-2001:4860:4860::8888}
+#
+# Note that in OpenStack infra, the configure-unbound role [1] that is
+# part of the base jobs will reconfigure unbound based on the host's
+# ipv6 support very early in the job setup.  Thus the following
+# forwarder setup is only relevant to the initial boot and some parts
+# of the integration-tests before configure-unbound role is used.
+#
+# [1] https://opendev.org/opendev/base-jobs/src/branch/master/roles/configure-unbound
+#
+
+NODEPOOL_STATIC_NAMESERVER_V4=${NODEPOOL_STATIC_NAMESERVER_V4:-1.0.0.1}
 NODEPOOL_STATIC_NAMESERVER_V4_FALLBACK=${NODEPOOL_STATIC_NAMESERVER_V4_FALLBACK:-8.8.8.8}
-dd of=/tmp/forwarding.conf <<EOF
+
+# Explicitly setting a v6 nameserver implies you want ipv6
+if [[ -n ${NODEPOOL_STATIC_NAMESERVER_V6:-} || -n ${NODEPOOL_STATIC_NAMESERVER_V6_FALLBACK} ]]; then
+    NODEPOOL_STATIC_NAMESERVER_POPULATE_IPV6=1
+fi
+
+if [[ ${NODEPOOL_STATIC_NAMESERVER_POPULATE_IPV6:-0} == 1 ]]; then
+    NODEPOOL_STATIC_NAMESERVER_V6=${NODEPOOL_STATIC_NAMESERVER_V6:-2606:4700:4700::1111}
+    NODEPOOL_STATIC_NAMESERVER_V6_FALLBACK=${NODEPOOL_STATIC_NAMESERVER_V6_FALLBACK:-2001:4860:4860::8888}
+
+    dd of=/tmp/forwarding.conf <<EOF
 forward-zone:
   name: "."
   forward-addr: $NODEPOOL_STATIC_NAMESERVER_V6
@@ -33,12 +51,24 @@ forward-zone:
   forward-addr: $NODEPOOL_STATIC_NAMESERVER_V4
   forward-addr: $NODEPOOL_STATIC_NAMESERVER_V4_FALLBACK
 EOF
+else
+    # Otherwise, only populate ipv4 nameservers here.  We used to just
+    # do both, but we found it unreliable on hosts/platforms without
+    # ipv6 support (see
+    # https://www.nlnetlabs.nl/bugs-script/show_bug.cgi?id=4188).
+    dd of=/tmp/forwarding.conf <<EOF
+forward-zone:
+  name: "."
+  forward-addr: $NODEPOOL_STATIC_NAMESERVER_V4
+  forward-addr: $NODEPOOL_STATIC_NAMESERVER_V4_FALLBACK
+EOF
+fi
 
 mv /tmp/forwarding.conf /etc/unbound/
 chown root:root /etc/unbound/forwarding.conf
 chmod a+r /etc/unbound/forwarding.conf
 
-if [[ "$DISTRO_NAME" =~ (centos|fedora) ]] ; then
+if [[ "$DISTRO_NAME" =~ (centos|rhel7|fedora) ]] ; then
     LOG_FILE="/var/lib/unbound/unbound.log"
 else
     LOG_FILE="/var/log/unbound.log"
@@ -46,17 +76,18 @@ fi
 
 UNBOUND_LOGGING_CONF="\
 server:
+  chroot: \"\"
   logfile: \"$LOG_FILE\"
   # Log debug messages
   verbosity: 5"
 echo "$UNBOUND_LOGGING_CONF" > /tmp/unbound-logging.conf
 
-if [[ "$DISTRO_NAME" =~ (centos|fedora|opensuse) ]] ; then
+if [[ "$DISTRO_NAME" =~ (centos|rhel7|fedora|opensuse) ]] ; then
     UNBOUND_CONFD=/etc/unbound/conf.d
 elif [[ "$DISTRO_NAME" =~ 'gentoo' ]] ; then
     UNBOUND_CONFD=/etc/unbound/conf.d
     mkdir -p $UNBOUND_CONFD
-    echo "include: \"$UNBOUND_CONFD\"" >> /etc/unbound/unbound.conf
+    echo "include: \"$UNBOUND_CONFD/*.conf\"" >> /etc/unbound/unbound.conf
 else
     UNBOUND_CONFD=/etc/unbound/unbound.conf.d
 fi
@@ -73,6 +104,7 @@ if [[ "$DISTRO_NAME" =~ (opensuse) ]] ; then
     rclocal=/etc/init.d/boot.local
 elif [[ "${DISTRO_NAME}" =~ "gentoo" ]]; then
     rclocal=/etc/local.d/unbound.start
+    mkdir -p /etc/local.d
 else
     # You'd think rc.local would be simple ...
     #
@@ -92,7 +124,7 @@ else
     # [1] https://bugzilla.redhat.com/show_bug.cgi?id=1386052
     if [[ ! -e /etc/rc.local ]] && [[ ! -e /etc/debian_version ]]; then
         if [[ ! -d /etc/rc.d ]]; then
-            echo "No rc.local and no rc.d directory!  See comments in 89-unbound"
+            echo "No rc.local and no rc.d directory!  See comments in 89-boot-settings"
             exit 1
         fi
         touch /etc/rc.d/rc.local
@@ -105,7 +137,7 @@ fi
 
 # Overwrite /etc/resolv.conf at boot (let's hope nothing else is using
 # rc.local...)
-dd of=$rclocal <<EOF
+cat >$rclocal <<EOF
 #!/bin/bash
 set -o xtrace
 
@@ -118,6 +150,16 @@ set -e
 
 echo 'nameserver 127.0.0.1' > /etc/resolv.conf
 
+EOF
+# openSUSE doesn't have an iptables service, so apply the iptables rules at boot
+if [[ "${DISTRO_NAME}" =~ (opensuse) ]] ; then
+    cat >>$rclocal <<EOF
+iptables-restore /etc/sysconfig/iptables
+ip6tables-restore /etc/sysconfig/ip6tables
+
+EOF
+fi
+cat >>$rclocal <<EOF
 exit 0
 EOF
 
@@ -135,19 +177,6 @@ echo 'include: /etc/unbound/forwarding.conf' >> /etc/unbound/unbound.conf
 # introduces more points of lookup failure. Disable it to avoid these
 # problems.
 sed -i -e 's/dlv-anchor-file:/#dlv-anchor-file:/g' /etc/unbound/unbound.conf
-
-# This defaults file must be in place to work around this bug:
-# https://bugs.launchpad.net/ubuntu/+source/unbound/+bug/988513
-# The issue is fixed for Xenial so this is only required for Trusty.
-if [ "$DIB_RELEASE" == "trusty" ] ; then
-    cat > /etc/default/unbound <<EOF
-UNBOUND_ENABLE=true
-ROOT_TRUST_ANCHOR_UPDATE=true
-ROOT_TRUST_ANCHOR_FILE=/var/lib/unbound/root.key
-RESOLVCONF=true
-RESOLVCONF_FORWARDERS=false
-EOF
-fi
 
 # Tripleo uses dhcp
 dhcp_file=''

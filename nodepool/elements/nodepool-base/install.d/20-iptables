@@ -24,7 +24,7 @@ if [[ "$DISTRO_NAME" =~ (debian|ubuntu) ]] ; then
     rules_dir=/etc/iptables
     ipv4_rules=${rules_dir}/rules.v4
     ipv6_rules=${rules_dir}/rules.v6
-elif [[ "$DISTRO_NAME" =~ (centos|fedora) ]] ; then
+elif [[ "$DISTRO_NAME" =~ (centos|rhel7|fedora) ]] ; then
     rules_dir=/etc/sysconfig
     ipv4_rules=${rules_dir}/iptables
     ipv6_rules=${rules_dir}/ip6tables
@@ -90,14 +90,3 @@ cat > $ipv6_rules << EOF
 -A openstack-INPUT -j REJECT --reject-with icmp6-adm-prohibited
 COMMIT
 EOF
-
-if [[ "$DISTRO_NAME" =~ 'opensuse' ]] ; then
-    sed -i -e 's,^FW_CUSTOMRULES=.*$,FW_CUSTOMRULES="/etc/sysconfig/scripts/SuSEfirewall2-custom",' /etc/sysconfig/SuSEfirewall2
-
-    cat > /etc/sysconfig/scripts/SuSEfirewall2-custom <<EOF
-fw_custom_after_finished() {
-    /usr/sbin/iptables-restore $ipv4_rules
-    /usr/sbin/ip6tables-restore $ipv6_rules
-}
-EOF
-fi

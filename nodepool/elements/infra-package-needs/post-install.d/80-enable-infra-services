@@ -14,15 +14,15 @@ case "$DIB_INIT_SYSTEM" in
     systemd)
         if [[ $DISTRO_NAME = "ubuntu" || $DISTRO_NAME = "debian" ]]; then
             systemctl enable ntp.service
+        elif [[ $DISTRO_NAME == "centos" && $DIB_RELEASE -ge 8 ]]; then
+            systemctl enable chronyd
         else
             systemctl enable ntpd.service
         fi
-        systemctl enable cloud-init.service
         ;;
     openrc)
         rc-update add ntp-client default
         rc-update add acpid default
-        rc-update add cloud-init default
         ;;
     sysv)
         # ntp is enabled by default, nothing to do

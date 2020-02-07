@@ -1,0 +1,26 @@
+{
+  "release": {
+    "centos": {
+      "8": {
+        "libselinux-python": ""
+       }
+    }
+  },
+  "family": {
+    "debian": {
+      "apt-transport-https": "apt-transport-https",
+      "python-apt": "python-apt"
+    },
+    "gentoo": {
+      "libselinux-python": "sys-libs/libselinux"
+    },
+    "redhat": {
+      "libselinux-python": "libselinux-python"
+    }
+  },
+  "default": {
+    "apt-transport-https": "",
+    "libselinux-python": "",
+    "python-apt": ""
+  }
+}

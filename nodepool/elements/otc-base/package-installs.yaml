@@ -1,3 +1,2 @@
 cloud-init:
 network:
-openstack:

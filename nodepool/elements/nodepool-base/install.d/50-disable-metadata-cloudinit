@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (c) 2015 Hewlett-Packard Development Company, L.P.
+# Copyright (C) 2015 Hewlett-Packard Development Company, L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,5 +18,11 @@ if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
 fi
 set -e
 
-$DIB_PYTHON_VIRTUALENV /usr/os-testr-env
-/usr/os-testr-env/bin/pip install os-testr
+# Make all cloud-init data sources match rackspace- only attempt to look
+# at ConfigDrive, not at metadata service. This is not needed if there
+# is no cloud-init
+if [ -d /etc/cloud/cloud.cfg.d ] ; then
+    dd of=/etc/cloud/cloud.cfg.d/95_real_datasources.cfg <<EOF
+datasource_list: [ ConfigDrive, None ]
+EOF
+fi
