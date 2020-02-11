@@ -41,3 +41,24 @@
     nodeset: fedora-30
     secrets:
       - otc_cloud_logs
+
+- job:
+    name: tox-functional
+    parent: tox
+    description: |
+      Base job for executing functional tests against OTC.
+
+      Responds to these variables:
+      .. zuul:jobvar:: cloud_config
+         Content of the clouds.yaml file.
+
+    pre-run: playbooks/otc/functest-pre.yaml
+    roles:
+      - zuul: opentelekomcloud-infra/zuul-jobs
+    vars:
+      tox_envlist: functional
+      OS_CLOUD: functest_cloud
+      OS_ADMIN_CLOUD: functest_cloud
+    secrets:
+      - cloud_config
+
