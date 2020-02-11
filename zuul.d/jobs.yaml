@@ -57,8 +57,9 @@
       - zuul: opentelekomcloud-infra/zuul-jobs
     vars:
       tox_envlist: functional
-      OS_CLOUD: functest_cloud
-      OS_ADMIN_CLOUD: functest_cloud
+      tox_environment:
+        OS_CLOUD: functest_cloud
+        OS_ADMIN_CLOUD: functest_cloud
     secrets:
       - cloud_config
 
