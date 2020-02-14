@@ -56,5 +56,5 @@
         OS_CLOUD: functest_cloud
         OS_ADMIN_CLOUD: functest_cloud
     secrets:
-      - cloud_config
+      - functest_cloud_config
 
