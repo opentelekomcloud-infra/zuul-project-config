@@ -1,12 +1,11 @@
-- hosts: localhost
+- hosts: all
   tasks:
     - name: Get temporary token
       os_auth:
         cloud: "{{ functest_cloud_config }}"
       register: os_auth
+      delegate_to: localhost
 
-- hosts: all
-  tasks:
     - name: Include deploy-clouds-config role
       include_role:
         name: deploy-clouds-config
