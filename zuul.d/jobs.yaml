@@ -46,15 +46,10 @@
     name: tox-functional
     parent: tox
     description: |
-      Base job for executing functional tests against OTC.
-
-      Responds to these variables:
-      .. zuul:jobvar:: cloud_config
-         Content of the clouds.yaml file.
-
-    pre-run: playbooks/otc/functest-pre.yaml
-    roles:
-      - zuul: opentelekomcloud-infra/zuul-jobs
+      Base job for executing functional tests with tox against OTC
+    pre-run:
+      - playbooks/otc/functest-pre.yaml
+    post-run: playbooks/otc/functest-post.yaml
     vars:
       tox_envlist: functional
       tox_environment:

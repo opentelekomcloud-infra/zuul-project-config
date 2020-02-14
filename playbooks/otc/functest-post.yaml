@@ -1,0 +1,5 @@
+- hosts: all
+  tasks:
+    # TODO:
+    # - clean the resources, which might have been created
+    # - revoke the temp token explicitely

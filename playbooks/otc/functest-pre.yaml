@@ -1,7 +1,21 @@
 - hosts: all
   tasks:
+    - name: Get temporary token
+      os_auth:
+        cloud: "{{ functest_cloud_config }}"
+      register: os_auth
+
     - name: Include deploy-clouds-config role
       include_role:
         name: deploy-clouds-config
       vars:
-        cloud_config: "{{ cloud_config }}"
+        cloud_config:
+          clouds:
+            functest_cloud:
+              profile: "{{ functest_cloud_config.profile | default(omit) }}"
+              auth_type: token
+              auth:
+                auth_url: "{{ functest_cloud_config.auth.auth_url | default(omit) }}"
+                project_name: "{{ functest_cloud_config.auth.project_name }}"
+                token: "{{ os_auth.ansible_facts.auth_token }}"
+
