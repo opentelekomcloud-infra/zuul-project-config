@@ -1,0 +1,7 @@
+- project:
+    name: opendev.org/openstack/refstack-client
+    default-branch: master
+    periodic:
+      jobs:
+        - refstack-client-run:
+            branches: master

@@ -31,7 +31,8 @@
       - playbooks/base/post-logs.yaml
     cleanup-run: playbooks/base/cleanup.yaml
     roles:
-      - zuul: opentelekomcloud-infra/zuul-jobs
+      - zuul: zuul/zuul-jobs
+      - zuul: opentelekomcloud-infra/otc-zuul-jobs
     timeout: 1800
     post-timeout: 1800
     vars:
