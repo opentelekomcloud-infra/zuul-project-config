@@ -55,8 +55,9 @@
         open: True
     trigger:
       github:
-        - event: pull_request_review
-          state: approved
+        - event: pull_request
+          action: comment
+          comment: /merge
     start:
       github:
         status: pending
