@@ -6,8 +6,13 @@
     - name: read token
       delegate_to: localhost
       set_fact:
-        token_data: "{{ lookup('file', zuul.executor.work_dir + '/.' +  zuul.build)"
+        token_data: "{{ lookup('file', zuul.executor.work_root + '/.' +  zuul.build)"
       no_log: true
+
+    - name: delete data file
+      file:
+        path: "{{ zuul.executor.work_root }}/.{{ zuul.build }}"
+        state: absent
 
     - include_role:
         name: revoke_token

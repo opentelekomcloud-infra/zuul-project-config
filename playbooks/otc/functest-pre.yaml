@@ -23,5 +23,5 @@
     - name: Save token
       delegate_to: localhost
       copy:
-        dest: "{{ zuul.executor.work_dir }}/.{{ zuul.build }}"
+        dest: "{{ zuul.executor.work_root }}/.{{ zuul.build }}"
         content: "{{ os_auth.ansible_facts.auth_token }}"
