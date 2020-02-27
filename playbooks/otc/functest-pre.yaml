@@ -21,6 +21,6 @@
                 token: "{{ os_auth.ansible_facts.auth_token }}"
 
     - zuul_return:
+      delegate_to: localhost
         data:
           job_token: "{{ os_auth_ansible_facts.auth_token }}"
-      no_log: true
