@@ -3,8 +3,9 @@
     # TODO:
     # - clean the resources, which might have been created
     # - revoke the temp token explicitely
+
     - include_role:
         name: revoke_token
       vars:
         cloud: "{{ functest_cloud_config }}"
-        token: "{{ temp_token.auth_token }}"
+        token: "{{ job_token }}"

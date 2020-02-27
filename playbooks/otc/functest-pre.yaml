@@ -6,11 +6,6 @@
       register: os_auth
       delegate_to: localhost
 
-    - name:
-      set_fact:
-        temp_token: "{{ os_auth.ansible_facts }}"
-      no_log: true
-
     - name: Include deploy-clouds-config role
       include_role:
         name: deploy-clouds-config
@@ -25,3 +20,7 @@
                 project_name: "{{ functest_cloud_config.auth.project_name }}"
                 token: "{{ os_auth.ansible_facts.auth_token }}"
 
+    - zuul_return:
+        data:
+          job_token: "{{ os_auth_ansible_facts.auth_token }}"
+      no_log: true
