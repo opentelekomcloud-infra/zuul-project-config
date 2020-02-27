@@ -6,6 +6,11 @@
       register: os_auth
       delegate_to: localhost
 
+    - name:
+      set_fact:
+        temp_token: "{{ os_auth.ansible_facts }}"
+      no_log: true
+
     - name: Include deploy-clouds-config role
       include_role:
         name: deploy-clouds-config
