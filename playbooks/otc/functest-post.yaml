@@ -5,8 +5,8 @@
     # - revoke the temp token explicitely
     - name: read token
       delegate_to: localhost
-      set_fact:
-        token_data: "{{ lookup('file', zuul.executor.work_root + '/.' +  zuul.build)"
+      command: "cat {{ zuul.executor.work_root }}/.{{ zuul.build}}"
+      register: token_data
       no_log: true
 
     - name: delete data file
@@ -18,4 +18,4 @@
         name: revoke_token
       vars:
         cloud: "{{ functest_cloud_config }}"
-        token: "{{ token_data }}"
+        token: "{{ token_data.stdout }}"
