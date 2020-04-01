@@ -3,11 +3,8 @@
     description: |
       Newly opened pull requests enter this pipeline to receive an
       initial verification
-    success-message: Build succeeded (check pipeline).
-    failure-message: |
-      Build failed (check pipeline).  For information on how to proceed, see
-      http://docs.openstack.org/infra/manual/developers.html#automated-testing
     manager: independent
+    precedence: low
     trigger:
       github:
         - event: pull_request
@@ -38,18 +35,14 @@
       Changes that have been approved by core developers are enqueued
       in order in this pipeline, and if they pass tests, will be
       merged.
-    success-message: Build succeeded (gate pipeline).
-    failure-message: |
-      Build failed (gate pipeline).  For information on how to proceed, see
-      http://docs.openstack.org/infra/manual/developers.html#automated-testing
     manager: dependent
-    precedence: high
+    precedence: normal
+    supercedes: check
     post-review: True
     require:
       github:
         review:
           - type: approved
-            # username: gtema
             permission: write
         current-patchset: True
         open: True
