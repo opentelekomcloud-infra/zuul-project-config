@@ -5,5 +5,5 @@
       jobs:
         - refstack-client-run:
             branches: master
-        - restack-client-run-preprod:
+        - refstack-client-run-preprod:
             branches: master
