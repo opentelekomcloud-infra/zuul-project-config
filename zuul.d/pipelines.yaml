@@ -74,7 +74,7 @@
     success-message: Build succeeded (promote pipeline).
     failure-message: |
       Build failed (promote pipeline).  For information on how to proceed, see
-    manager: supercedent
+    manager: serial
     precedence: high
     post-review: True
     trigger:
