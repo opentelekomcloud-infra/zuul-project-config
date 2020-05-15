@@ -66,6 +66,27 @@
       zuul_db:
 
 - pipeline:
+    name: promote
+    description: |
+      This pipeline runs jobs that operate after each change is merged
+      in order to promote artifacts generated in the gate
+      pipeline.
+    success-message: Build succeeded (promote pipeline).
+    failure-message: |
+      Build failed (promote pipeline).  For information on how to proceed, see
+    manager: supercedent
+    precedence: high
+    post-review: True
+    trigger:
+      github:
+        - event: push
+          ref: ^refs/heads/.*$
+    success:
+      zuul_db:
+    failure:
+      zuul_db:
+
+- pipeline:
     name: periodic
     post-review: true
     description: Jobs in this queue are triggered on a timer.
@@ -83,12 +104,6 @@
     name: third-party-check
     description: |
       Newly uploaded patchsets to projects that are external to OTC.
-      Only internal tracking is done.
-    success-message: Build succeeded (third-party-check pipeline).
-    failure-message: |
-      Build failed (third-party-check pipeline) integration testing with
-      OpenStack. For information on how to proceed, see
-      http://docs.openstack.org/infra/manual/developers.html#automated-testing
     manager: independent
     trigger:
       github:
