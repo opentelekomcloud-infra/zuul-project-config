@@ -59,3 +59,9 @@
     secrets:
       - functest_cloud_config
 
+- job:
+    name: otcinfra-upload-image
+    parent: upload-docker-image
+    secrets:
+      name: otcinfra_credentials
+      secret: otcinfra_dockerhub
