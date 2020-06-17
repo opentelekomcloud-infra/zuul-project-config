@@ -63,5 +63,5 @@
     name: otcinfra-upload-image
     parent: upload-docker-image
     secrets:
-      name: otcinfra_credentials
+      name: docker_credentials
       secret: otcinfra_dockerhub
