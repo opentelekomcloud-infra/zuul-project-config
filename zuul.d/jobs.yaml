@@ -65,3 +65,4 @@
     secrets:
       name: docker_credentials
       secret: otcinfra_dockerhub
+      pass-to-parent: true
