@@ -4,3 +4,8 @@
       - name: fedora-30
         label: fedora-30
 
+- nodeset:
+    name: centos-8
+    nodes:
+      - name: centos-8
+        label: centos-8
