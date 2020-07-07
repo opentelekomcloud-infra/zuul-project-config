@@ -39,7 +39,7 @@
       ara_report_type: html
       ara_report_path: ara-report
       ara_compress_html: false
-    nodeset: centos-8
+    nodeset: fedora-30
     secrets:
       - otc_cloud_logs
 
