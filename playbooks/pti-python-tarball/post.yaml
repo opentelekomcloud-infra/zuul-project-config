@@ -18,7 +18,8 @@
         path: "{{ zuul.executor.work_root }}/artifacts"
         state: directory
       delegate_to: localhost
-
+      
+    # Do not sync group/owner, since when running in the container we might fail
     - name: Collect tarball artifacts.
       synchronize:
         dest: "{{ zuul.executor.work_root }}/artifacts/"
