@@ -1,0 +1,7 @@
+- hosts: all
+  roles:
+    - bindep
+    - ensure-pip
+    - ensure-tox
+    - revoke-sudo
+

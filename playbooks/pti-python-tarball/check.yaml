@@ -1,0 +1,9 @@
+- hosts: all
+  roles:
+    - build-python-release
+    - ensure-twine
+  post_tasks:
+    - name: Run twine check on python dist tarball
+      command: "{{ pypi_twine_executable }} check dist/*"
+      args:
+        chdir: "{{ zuul.project.src_dir }}"

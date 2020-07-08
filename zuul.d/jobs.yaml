@@ -40,6 +40,39 @@
       - otc_cloud_logs
 
 - job:
+    name: release-python
+    parent: publish-artifacts
+    description: |
+      Release python tarballs / wheels to pypi.
+    pre-run: playbooks/pti-python-tarball/pre.yaml
+    run: playbooks/pti-python-tarball/run.yaml
+    post-run:
+      - playbooks/pti-python-tarball/post.yaml
+      - playbooks/publish/pypi.yaml
+    secrets:
+      - secret: pypi_secret
+        name: pypi_info
+      - gpg_key
+    vars:
+      release_python: python3
+      twine_python: python3
+
+- job:
+    name: test-release
+    parent: base
+    description: |
+      Test building python tarballs / wheels and the packaging metadata.
+    pre-run: playbooks/pti-python-tarball/pre.yaml
+    run: playbooks/pti-python-tarball/check.yaml
+    vars:
+      release_python: python3
+      twine_python: python3
+    files:
+      - setup.cfg
+      - setup.py
+      - README.rst
+
+- job:
     name: tox-functional
     parent: tox
     description: |
