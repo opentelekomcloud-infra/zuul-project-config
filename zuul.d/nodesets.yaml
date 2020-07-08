@@ -3,6 +3,12 @@
     nodes:
       - name: fedora-30
         label: fedora-30
+        
+- nodeset:
+    name: fedora-31
+    nodes:
+      - name: fedora-31
+        label: fedora-31
 
 - nodeset:
     name: centos-8
@@ -21,3 +27,9 @@
     nodes:
       - name: ubuntu-bionic
         label: ubuntu-bionic
+        
+- nodeset:
+    name: ubuntu-focal
+    nodes:
+      - name: ubuntu-focal
+        label: ubuntu-focal
