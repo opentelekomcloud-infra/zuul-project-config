@@ -25,6 +25,8 @@
         mode: pull
         src: "{{ item.path }}"
         verify_host: true
+        group: false
+        owner: false
       with_items: "{{ result.files }}"
 
 - hosts: localhost
