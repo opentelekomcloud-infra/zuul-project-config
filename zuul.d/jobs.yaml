@@ -41,7 +41,6 @@
 
 - job:
     name: release-python
-    parent: publish-artifacts
     description: |
       Release python tarballs / wheels to pypi.
     pre-run: playbooks/pti-python-tarball/pre.yaml
