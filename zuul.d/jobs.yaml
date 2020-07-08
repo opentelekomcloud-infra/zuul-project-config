@@ -35,7 +35,7 @@
       - zuul: opentelekomcloud-infra/otc-zuul-jobs
     timeout: 1800
     post-timeout: 1800
-    nodeset: fedora-30
+    nodeset: ubuntu-bionic
     secrets:
       - otc_cloud_logs
 
