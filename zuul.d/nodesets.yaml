@@ -9,3 +9,15 @@
     nodes:
       - name: centos-8
         label: centos-8
+        
+- nodeset:
+    name: debian-buster
+    nodes:
+      - name: debian-buster
+        label: debian-buster
+        
+- nodeset:
+    name: ubuntu-bionic
+    nodes:
+      - name: ubuntu-bionic
+        label: ubuntu-bionic
