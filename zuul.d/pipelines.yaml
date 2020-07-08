@@ -87,6 +87,22 @@
       zuul_db:
 
 - pipeline:
+    name: release
+    description: When a commit is tagged as a release, this pipeline runs jobs that publish archives and documentation.
+    manager: independent
+    precedence: high
+    post-review: True
+    trigger:
+      github:
+        - event: push
+          ref: ^refs/heads/.*$
+          #ref: ^refs/tags/[0-9]+(\.[0-9]+)*$
+    success:
+      zuul_db:
+    failure:
+      zuul_db:
+
+- pipeline:
     name: periodic
     post-review: true
     description: Jobs in this queue are triggered on a timer.
