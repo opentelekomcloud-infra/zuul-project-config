@@ -36,7 +36,7 @@
     timeout: 1800
     post-timeout: 1800
     # nodeset: ubuntu-bionic
-    nodeset: fedora-31
+    nodeset: centos-8
     secrets:
       - otc_cloud_logs
 
