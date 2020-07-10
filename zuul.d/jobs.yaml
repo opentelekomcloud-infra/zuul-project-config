@@ -36,7 +36,7 @@
     timeout: 1800
     post-timeout: 1800
     # nodeset: ubuntu-bionic
-    nodeset: centos-8
+    nodeset: debian-buster
     secrets:
       - otc_cloud_logs
 
