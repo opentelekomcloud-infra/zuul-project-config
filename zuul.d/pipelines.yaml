@@ -56,14 +56,14 @@
             permission: write
         current-patchset: True
         open: True
-        # label:
-        #  - 'gate'
+        label:
+          - 'gate'
         # status: "otc-zuul\\[bot\\]:eco/check:success"
     trigger:
       github:
-        # - event: pull_request
-        #   action: comment
-        #   comment: /merge
+        - event: pull_request
+          action: comment
+          comment: /merge
         - event: pull_request
           action: labeled
           label:
