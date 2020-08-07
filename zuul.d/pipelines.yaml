@@ -26,11 +26,13 @@
         label: 
           - 'ci_verified'
         review: 'approve'
+        review-body: ''
         comment: false
       zuul_db:
     failure:
       github:
         check: failure
+        comment: false
         unlabel: 
           - 'ci_verified'
       zuul_db:
