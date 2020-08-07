@@ -23,13 +23,15 @@
     success:
       github:
         status: 'success'
-        label: 'ci_verified'
+        label: 
+          - 'ci_verified'
         review: 'approve'
       zuul_db:
     failure:
       github:
         status: 'failure'
-        unlabel: 'ci_verified'
+        unlabel: 
+          - 'ci_verified'
         review: 'request-changes'
       zuul_db:
 
