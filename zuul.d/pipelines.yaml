@@ -33,8 +33,6 @@
         check: failure
         unlabel: 
           - 'ci_verified'
-        review: 'request-changes'
-        review-body: 'Zuul tests fail'
       zuul_db:
 
 - pipeline:
