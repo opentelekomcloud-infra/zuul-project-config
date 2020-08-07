@@ -19,20 +19,23 @@
     start:
       github:
         status: pending
+        check: in_progress
         comment: false
     success:
       github:
+        check: success
         status: 'success'
-#        label: 
-#          - 'ci_verified'
-#        review: 'approve'
+        label: 
+          - 'ci_verified'
+        review: 'approve'
       zuul_db:
     failure:
       github:
+        check: failure
         status: 'failure'
-#        unlabel: 
-#          - 'ci_verified'
-#        review: 'request-changes'
+        unlabel: 
+          - 'ci_verified'
+        review: 'request-changes'
       zuul_db:
 
 - pipeline:
@@ -52,9 +55,9 @@
             permission: write
         current-patchset: True
         open: True
-#        label: 
-#          - 'ci_verified'
-#          - 'merge'
+        label: 
+          - 'ci_verified'
+          - 'merge'
     trigger:
       github:
         - event: pull_request
