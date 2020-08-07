@@ -23,6 +23,7 @@
     success:
       github:
         check: success
+        status: success
         label: 
           - 'ci_verified'
         review: 'approve'
@@ -32,6 +33,7 @@
     failure:
       github:
         check: failure
+        status: failure
         comment: false
         unlabel: 
           - 'ci_verified'
@@ -56,7 +58,7 @@
         open: True
         label:
           - 'gate'
-        status: "otc-zuul\\[bot\\]:eco/check:success"
+        # status: "otc-zuul\\[bot\\]:eco/check:success"
     trigger:
       github:
        # - event: pull_request
