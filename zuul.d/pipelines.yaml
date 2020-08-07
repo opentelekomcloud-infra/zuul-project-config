@@ -32,7 +32,7 @@
         check: failure
         unlabel: 'ci_verified'
         review: 'request-changes'
-        review-body: "Zuul tests fail'
+        review-body: 'Zuul tests fail'
       zuul_db:
 
 - pipeline:
@@ -54,7 +54,7 @@
         open: True
         label:
           - 'gate'
-        # status: "otc-zuul\\[bot\\]:eco/check:success"
+        status: "otc-zuul\\[bot\\]:eco/check:success"
     trigger:
       github:
        # - event: pull_request
