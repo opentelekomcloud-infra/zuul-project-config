@@ -18,13 +18,11 @@
         - event: push
     start:
       github:
-        status: pending
         check: in_progress
         comment: false
     success:
       github:
         check: success
-        status: 'success'
         label: 'ci_verified'
         review: 'approve'
         comment: false
@@ -32,10 +30,9 @@
     failure:
       github:
         check: failure
-        status: 'failure'
         unlabel: 'ci_verified'
         review: 'request-changes'
-        comment: false
+        review-body: "Zuul tests fail'
       zuul_db:
 
 - pipeline:
@@ -55,14 +52,18 @@
             permission: write
         current-patchset: True
         open: True
-        label: 
-          - 'ci_verified'
-          - 'merge'
+        label:
+          - 'gate'
+        status: "otc-zuul\\[bot\\]:eco/check:success"
     trigger:
       github:
+       # - event: pull_request
+       #   action: comment
+       #   comment: /merge
         - event: pull_request
-          action: comment
-          comment: /merge
+          action: labeled
+          label:
+            - gate
     start:
       github:
         status: pending
