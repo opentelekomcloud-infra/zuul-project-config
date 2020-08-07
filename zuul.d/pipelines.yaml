@@ -51,9 +51,9 @@
     post-review: True
     require:
       github:
-        review:
-          - type: approved
-            permission: write
+        #review:
+        #  - type: approved
+        #    permission: write
         current-patchset: True
         open: True
         #label:
