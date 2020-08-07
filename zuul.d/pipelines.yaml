@@ -68,16 +68,16 @@
             - gate
     start:
       github:
-        status: pending
+        check: in_progress
         comment: false
     success:
       github:
-        status: 'success'
+        check: 'success'
         merge: yes
       zuul_db:
     failure:
       github:
-        status: 'failure'
+        check: 'failure'
       zuul_db:
 
 - pipeline:
