@@ -54,7 +54,7 @@
         open: True
         label:
           - 'gate'
-        status: "otc-zuul\\[bot\\]:eco/check:success"
+        # status: "otc-zuul\\[bot\\]:eco/check:success"
     trigger:
       github:
        # - event: pull_request
