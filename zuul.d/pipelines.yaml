@@ -46,9 +46,9 @@
       in order in this pipeline, and if they pass tests, will be
       merged.
     manager: dependent
-    precedence: normal
-    supercedes: check
-    post-review: True
+    precedence: high
+    # supercedes: check
+    # post-review: True
     require:
       github:
         #review:
@@ -56,8 +56,8 @@
         #    permission: write
         current-patchset: True
         open: True
-        #label:
-        #  - 'gate'
+        label:
+          - 'gate'
         # status: "otc-zuul\\[bot\\]:eco/check:success"
     trigger:
       github:
