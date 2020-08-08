@@ -19,6 +19,7 @@
     start:
       github:
         check: in_progress
+        status-url: https://zuul.eco.tsi-dev.otc-service.com/t/eco/status
         comment: false
     success:
       github:
