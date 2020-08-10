@@ -48,7 +48,7 @@
       merged.
     manager: dependent
     precedence: high
-    # supercedes: check
+    supercedes: check
     # post-review: True
     require:
       github:
