@@ -76,7 +76,7 @@
     name: tox-functional
     parent: tox
     description: |
-      Base job for executing functional tests with tox against OTC
+      Base job for executing python functional tests against OTC
     pre-run:
       - playbooks/otc/functest-pre.yaml
     post-run: playbooks/otc/functest-post.yaml
@@ -95,3 +95,14 @@
       name: docker_credentials
       secret: otcinfra_dockerhub
       pass-to-parent: true
+
+- job:
+    name: golang-functional
+    description: |
+      Base job for executing golang functional tests against OTC
+    pre-run:
+      - playbooks/otc/functest-pre.yaml
+    post-run: playbooks/otc/functest-post.yaml
+    parent: golang-go-test
+    secrets:
+      - functest_cloud_config
