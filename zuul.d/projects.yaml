@@ -1,5 +1,5 @@
 - project:
-    name: opendev.org/openstack/refstack-client
+    name: opendev.org/osf/refstack-client
     default-branch: master
     periodic:
       jobs:
