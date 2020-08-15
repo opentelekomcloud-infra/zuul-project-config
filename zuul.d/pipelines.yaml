@@ -23,7 +23,7 @@
     success:
       github:
         check: success
-        status: success
+#        status: success
 #        label: 
 #          - 'ci_verified'
         review: 'approve'
@@ -33,7 +33,7 @@
     failure:
       github:
         check: failure
-        status: failure
+#        status: failure
         comment: false
 #        unlabel: 
 #          - 'ci_verified'
@@ -67,13 +67,13 @@
     success:
       github:
         check: success
-        status: success
+#        status: success
         comment: false
       zuul_db:
     failure:
       github:
         check: failure
-        status: failure
+#        status: failure
         comment: false
       zuul_db:
       
@@ -116,13 +116,13 @@
     success:
       github:
         check: 'success'
-        status: 'success'
+ #       status: 'success'
         merge: yes
       zuul_db:
     failure:
       github:
         check: 'failure'
-        status: failure
+#        status: failure
       zuul_db:
     window-floor: 20
     window-increase-factor: 2
