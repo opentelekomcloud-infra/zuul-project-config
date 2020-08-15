@@ -19,7 +19,6 @@
     start:
       github:
         check: in_progress
-        status-url: https://zuul.eco.tsi-dev.otc-service.com/t/eco/status
         comment: false
     success:
       github:
@@ -41,15 +40,53 @@
       zuul_db:
 
 - pipeline:
+    name: check-post
+    description: |
+      Newly opened pull requests enter this pipeline after a first review to execute post-review checks
+    manager: independent
+    precedence: low
+    post-review: True
+    require:
+      github:
+        review:
+          - type: approved
+            permission: write
+        current-patchset: True
+        open: True
+        label:
+          - 'reviewed'
+    trigger:
+      github:
+        - event: pull_request
+          action: comment
+          comment: (?i)^\s*recheck post\s*$
+    start:
+      github:
+        check: in_progress
+        comment: false
+    success:
+      github:
+        check: success
+        status: success
+        comment: false
+      zuul_db:
+    failure:
+      github:
+        check: failure
+        status: failure
+        comment: false
+      zuul_db:
+      
+- pipeline:
     name: gate
     description: |
       Changes that have been approved by core developers are enqueued
       in order in this pipeline, and if they pass tests, will be
       merged.
     manager: dependent
-    precedence: high
-    supercedes: check
-    # post-review: True
+    precedence: normal
+    #supercedes: check
+    post-review: True
     require:
       github:
         review:
@@ -65,6 +102,9 @@
         - event: pull_request
           action: comment
           comment: /merge
+        - event: pull_request
+          action: comment
+          comment: (?i)^\s*regate\s*$
         - event: pull_request
           action: labeled
           label:
@@ -84,6 +124,26 @@
         check: 'failure'
         status: failure
       zuul_db:
+    window-floor: 20
+    window-increase-factor: 2
+
+- pipeline:
+    name: post
+    description: |
+      This pipeline runs jobs that operate after each change is
+      merged. Queue items are identified by the abbreviated hash (git
+      log --format=%h) of the merge commit.
+    manager: supercedent
+    precedence: high
+    post-review: True
+    trigger:
+      github:
+        - event: push
+          ref: ^refs/heads/.*$
+    success:
+      zuul_db:
+    failure:
+      zuul_db:
 
 - pipeline:
     name: promote
@@ -93,14 +153,29 @@
       pipeline.
     success-message: Build succeeded (promote pipeline).
     failure-message: |
-      Build failed (promote pipeline).  For information on how to proceed, see
-    manager: independent
+      Build failed (promote pipeline).
+    manager: supercedent
     precedence: high
     post-review: True
     trigger:
       github:
         - event: push
           ref: ^refs/heads/.*$
+    success:
+      zuul_db:
+    failure:
+      zuul_db:
+      
+- pipeline:
+    name: pre-release
+    description: When a commit is tagged with a pre-release tag, this pipeline runs jobs that publish archives and documentation.
+    manager: independent
+    precedence: high
+    post-review: True
+    trigger:
+      github:
+        - event: push
+          ref: ^refs/tags/[0-9]+(\.[0-9]+)*(a|b|rc)[0-9]+$
     success:
       zuul_db:
     failure:
@@ -114,8 +189,8 @@
     post-review: True
     trigger:
       github:
-        - event: push
-          ref: ^refs/heads/master$
+#        - event: push
+#          ref: ^refs/heads/master$
         - event: push
           ref: ^refs/tags/[0-9]+(\.[0-9]+)*$
     success:
@@ -123,6 +198,41 @@
     failure:
       zuul_db:
 
+- pipeline:
+    name: tag
+    post-review: true
+    description: This pipeline runs jobs in response to any tag event.
+    manager: independent
+    precedence: high
+    trigger:
+      github:
+        - event: push
+          ref: ^refs/tags/.*$
+    success:
+      zuul_db:
+    failure:
+      zuul_db:
+
+- pipeline:
+    name: deploy
+    description: |
+      This pipeline runs jobs that operate after each change is merged
+      in order to run production deployment playbooks.
+    success-message: Build succeeded (deploy pipeline).
+    failure-message: |
+      Build failed (deploy pipeline).
+    manager: serial
+    precedence: high
+    post-review: True
+    trigger:
+      github:
+        - event: push
+          ref: ^refs/heads/master$
+    success:
+      zuul_db:
+    failure:
+      zuul_db:
+    
 - pipeline:
     name: periodic
     post-review: true
@@ -132,6 +242,37 @@
     trigger:
       timer:
         - time: '0 0 * * *'
+    success:
+      zuul_db:
+    failure:
+      zuul_db:
+      
+- pipeline:
+    name: periodic-hourly
+    post-review: true
+    description: |
+      Jobs in this queue are triggered on a hourly timer.
+    manager: independent
+    precedence: low
+    trigger:
+      timer:
+       # Run with a 2 minute jitter
+        - time: '0 * * * * * 120'
+    success:
+      zuul_db:
+    failure:
+      zuul_db:
+
+- pipeline:
+    name: periodic-weekly
+    post-review: true
+    description: Jobs in this queue are triggered on a weekly timer.
+    manager: independent
+    precedence: low
+    trigger:
+      timer:
+        # Saturday 8am UTC is a better time to start weekend jobs.
+        - time: '0 8 * * 6'
     success:
       zuul_db:
     failure:
