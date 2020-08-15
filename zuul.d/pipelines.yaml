@@ -106,12 +106,12 @@
         comment: false
     success:
       github:
-        check: 'success'
+        check: success
         merge: yes
       zuul_db:
     failure:
       github:
-        check: 'failure'
+        check: failure
       zuul_db:
     window-floor: 20
     window-increase-factor: 2
