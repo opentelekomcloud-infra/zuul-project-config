@@ -23,9 +23,6 @@
     success:
       github:
         check: success
-#        status: success
-#        label: 
-#          - 'ci_verified'
         review: 'approve'
         review-body: ''
         comment: false
@@ -33,10 +30,7 @@
     failure:
       github:
         check: failure
-#        status: failure
         comment: false
-#        unlabel: 
-#          - 'ci_verified'
       zuul_db:
 
 - pipeline:
@@ -67,13 +61,11 @@
     success:
       github:
         check: success
-#        status: success
         comment: false
       zuul_db:
     failure:
       github:
         check: failure
-#        status: failure
         comment: false
       zuul_db:
       
@@ -85,7 +77,6 @@
       merged.
     manager: dependent
     precedence: normal
-    #supercedes: check
     post-review: True
     require:
       github:
@@ -116,13 +107,11 @@
     success:
       github:
         check: 'success'
- #       status: 'success'
         merge: yes
       zuul_db:
     failure:
       github:
         check: 'failure'
-#        status: failure
       zuul_db:
     window-floor: 20
     window-increase-factor: 2
