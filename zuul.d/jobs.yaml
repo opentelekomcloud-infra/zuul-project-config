@@ -1,3 +1,4 @@
+---
 - job:
     name: base
     parent: null
@@ -85,6 +86,17 @@
       tox_environment:
         OS_CLOUD: functest_cloud
         OS_ADMIN_CLOUD: functest_cloud
+    secrets:
+      - functest_cloud_config
+
+- job:
+    name: golang-functional
+    description: |
+      Base job for executing golang functional tests against OTC
+    pre-run:
+      - playbooks/otc/functest-pre.yaml
+    post-run: playbooks/otc/functest-post.yaml
+    parent: golang-go-test
     secrets:
       - functest_cloud_config
 
