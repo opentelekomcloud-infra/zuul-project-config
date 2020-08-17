@@ -2,7 +2,17 @@
   tasks:
     - name: Get temporary token
       os_auth:
-        cloud: "{{ functest_cloud_config }}"
+        cloud:
+          profile: "{{ functest_cloud_config.profile | default(omit) }}"
+          auth:
+            auth_url: "{{ functest_cloud_config.auth_url }}"
+            username: "{{ functest_cloud_config.username }}"
+            password: "{{ functest_cloud_config.password }}"
+            user_domain_name: "{{ functest_cloud_config.user_domain_name | default(omit) }}"
+            user_domain_id: "{{ functest_cloud_config.user_domain_id | default(omit) }}"
+            domain_name: "{{ functest_cloud_config.domain_name | default(omit) }}"
+            domain_id: "{{ functest_cloud_config.domain_id | default(omit) }}"
+            project_name: "{{ functest_project_name | default(functest_cloud_config.project_name) | default(omit) }}"
       register: os_auth
       delegate_to: localhost
 
@@ -17,7 +27,9 @@
               auth_type: token
               auth:
                 auth_url: "{{ functest_cloud_config.auth.auth_url | default(omit) }}"
-                project_name: "{{ functest_cloud_config.auth.project_name }}"
+                # project_name: "{{ functest_cloud_config.auth.project_name }}"
+
+                project_name: "{{ functest_project_name | default(functest_cloud_config.project_name) | default(omit) }}"
                 token: "{{ os_auth.ansible_facts.auth_token }}"
 
     - name: Save token
