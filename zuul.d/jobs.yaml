@@ -86,8 +86,7 @@
         OS_CLOUD: functest_cloud
         OS_ADMIN_CLOUD: functest_cloud
     secrets:
-      name: functest_cloud_config
-      secret: functest_cloud_config
+      - functest_cloud_config
 
 - job:
     name: otcinfra-upload-image
@@ -106,5 +105,4 @@
     post-run: playbooks/otc/functest-post.yaml
     parent: golang-go-test
     secrets:
-      name: functest_cloud_config
-      secret: some_new_credentials
+      - functest_cloud_config
