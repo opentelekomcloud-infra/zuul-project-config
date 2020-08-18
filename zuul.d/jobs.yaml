@@ -73,6 +73,13 @@
       - setup.py
       - README.rst
 
+#   - job:
+#       name: release-ansible-collection
+#       description: |
+#         Release ansible collection to galaxy
+#       post-run:
+#         - playbooks/release/ansible-collection.yaml
+
 - job:
     name: tox-functional
     parent: tox
@@ -90,13 +97,17 @@
       - functest_cloud_config
 
 - job:
-    name: golang-functional
+    name: golang-make-functional
     description: |
       Base job for executing golang functional tests against OTC
     pre-run:
       - playbooks/otc/functest-pre.yaml
     post-run: playbooks/otc/functest-post.yaml
-    parent: golang-go-test
+    parent: golang-make
+    vars:
+      make_command: acceptance
+      make_env:
+        OS_CLOUD: functest_cloud
     secrets:
       - functest_cloud_config
 
