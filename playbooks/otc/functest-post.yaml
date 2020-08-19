@@ -10,9 +10,7 @@
       no_log: true
 
     - name: delete data file
-      file:
-        path: "{{ zuul.executor.work_root }}/.{{ zuul.build }}"
-        state: absent
+      command: "shred {{ zuul.executor.work_root }}/.{{ zuul.build }}"
 
     - include_role:
         name: revoke_token
