@@ -1,4 +1,7 @@
 ---
 - hosts: localhost
   roles:
+    - role: ensure-ansible
+      when: zuul_success | bool
     - role: ansible-collection-publish
+      when: zuul_success | bool
