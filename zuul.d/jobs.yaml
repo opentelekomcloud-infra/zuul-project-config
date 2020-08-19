@@ -73,12 +73,18 @@
       - setup.py
       - README.rst
 
-#   - job:
-#       name: release-ansible-collection
-#       description: |
-#         Release ansible collection to galaxy
-#       post-run:
-#         - playbooks/release/ansible-collection.yaml
+- job:
+    name: release-ansible-collection
+    description: |
+      Release ansible collection tarball to Galaxy.
+    pre-run: playbooks/pti-ansible-collection-tarball/pre.yaml
+    run: playbooks/pti-ansible-collection-tarball/run.yaml
+    post-run:
+      - playbooks/publish/ansible-collection.yaml
+    secrets:
+      - secret: ansible_galaxy_api_key
+        name: ansible_collection_publish_galaxy_info
+    vars:
 
 - job:
     name: tox-functional
