@@ -84,7 +84,6 @@
     secrets:
       - secret: ansible_galaxy_api_key
         name: ansible_collection_publish_galaxy_info
-    vars:
 
 - job:
     name: tox-functional
