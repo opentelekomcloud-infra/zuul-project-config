@@ -32,6 +32,7 @@
         chdir: "{{ zuul.project.src_dir }}"
       environment:
         GITHUB_TOKEN: "{{ goreleaser_github_token.token | default('fake') }}"
+        PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
 
           #    - name: Delete keyring directory
           #      file:
