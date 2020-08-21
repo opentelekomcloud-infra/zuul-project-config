@@ -27,6 +27,8 @@
 
     - name: Trigger goreleaser
       command: "{{ zuul.project.src_dir }}/bin/goreleaser"
+      args:
+        chdir: "{{ zuul.project.src_dir }}"
       environment:
         GITHUB_TOKEN: "{{ goreleaser_github_token | default('fake') }}"
 
