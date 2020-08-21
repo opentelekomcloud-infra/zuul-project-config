@@ -1,0 +1,37 @@
+---
+- hosts: all
+  tasks:
+    - name: Make GPG directory
+      tempfile:
+        state: directory
+      register: gnupg_tmpdir
+
+    - name: Create GPG private key tempfile
+      tempfile:
+        state: file
+      register: gpg_private_key_tmp
+
+    - name: Create GPG private key
+      copy:
+        content: "{{ gpg_key.private }}"
+        dest: "{{ gpg_private_key_tmp.path }}"
+        mode: 0400
+
+    - name: Import GPG private key
+      command: "gpg --homedir {{ gnupg_tmpdir.path }} --allow-secret-key-import --import {{ gpg_private_key_tmp.path }}"
+
+    - name: Delete GPG private key
+      file:
+        path: "{{ gpg_private_key_tmp.path }}"
+        state: absent
+
+    - name: Trigger goreleaser
+      command: "{{ zuul.project.src_dir }}/bin/goreleaser"
+      environment:
+        GITHUB_TOKEN: "{{ goreleaser_github_token | default('fake') }}"
+
+    - name: Delete keyring directory
+      file:
+        path: "{{ gnupg_tmpdir.path }}"
+        state: absent
+

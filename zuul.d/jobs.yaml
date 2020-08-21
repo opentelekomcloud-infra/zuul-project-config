@@ -86,6 +86,19 @@
         name: ansible_collection_publish_galaxy_info
 
 - job:
+    name: release-goreleaser
+    description: |
+      Release go binaries.
+    pre-run: playbooks/pti-goreleaser/pre.yaml
+    run: playbooks/pti-goreleaser/run.yaml
+    secrets:
+      - gpg_key
+    vars:
+      release_python: python3
+      twine_python: python3
+
+
+- job:
     name: tox-functional
     parent: tox
     description: |
