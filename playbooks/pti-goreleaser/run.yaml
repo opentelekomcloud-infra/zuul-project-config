@@ -27,7 +27,7 @@
         state: absent
 
     - name: Trigger goreleaser
-      command: "bin/goreleaser --snapshot"
+      command: "bin/goreleaser release"
       args:
         chdir: "{{ zuul.project.src_dir }}"
       environment:
