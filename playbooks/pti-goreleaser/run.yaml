@@ -26,7 +26,7 @@
         state: absent
 
     - name: Trigger goreleaser
-      command: "{{ zuul.project.src_dir }}/bin/goreleaser"
+      command: "bin/goreleaser"
       args:
         chdir: "{{ zuul.project.src_dir }}"
       environment:
