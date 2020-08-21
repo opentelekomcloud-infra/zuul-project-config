@@ -96,8 +96,7 @@
       - secret: github_key_public_repo
         name: goreleaser_github_token
     vars:
-      release_python: python3
-      twine_python: python3
+      go_version: "1.15"
 
 - job:
     name: tox-functional
