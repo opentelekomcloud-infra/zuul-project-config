@@ -152,10 +152,13 @@
     manager: supercedent
     precedence: high
     post-review: True
+    require:
+      github:
+        merged: true
     trigger:
       github:
-        - event: push
-          ref: ^refs/heads/.*$
+        - event: pull_request
+          action: closed
     success:
       zuul_db:
     failure:
