@@ -16,6 +16,9 @@
           action: comment
           comment: (?i)^\s*recheck\s*$
         - event: push
+        # When using the checks API to report results, failed runs
+        # will have a "re-run" button which emits this event.
+        - event: check_run
     start:
       github:
         check: in_progress
@@ -76,7 +79,8 @@
       in order in this pipeline, and if they pass tests, will be
       merged.
     manager: dependent
-    precedence: normal
+    precedence: high
+    supercedes: check
     post-review: True
     require:
       github:
