@@ -130,6 +130,20 @@
       - functest_cloud_config
 
 - job:
+    name: otc-ansible-collection-test-integration
+    parent: ansible-collection-test-integration
+    description: |
+      Execute ansible-test integration tests for the collection with provided cloud
+    pre-run:
+      - playbooks/otc/functest-pre.yaml
+    post-run: playbooks/otc/functest-post.yaml
+    vars:
+      ansible_test_integration_env:
+        OS_CLOUD: functest_cloud
+    secrets:
+      - functest_cloud_config
+
+- job:
     name: otcinfra-upload-image
     parent: upload-docker-image
     secrets:
