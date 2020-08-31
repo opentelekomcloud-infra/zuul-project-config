@@ -75,12 +75,13 @@
 
 - job:
     name: release-ansible-collection
+    parent: ansible-collection-release
     description: |
       Release ansible collection tarball to Galaxy.
-    pre-run: playbooks/pti-ansible-collection-tarball/pre.yaml
-    run: playbooks/pti-ansible-collection-tarball/run.yaml
-    post-run:
-      - playbooks/publish/ansible-collection.yaml
+    # pre-run: playbooks/pti-ansible-collection-tarball/pre.yaml
+    # run: playbooks/pti-ansible-collection-tarball/run.yaml
+    # post-run:
+    #   - playbooks/publish/ansible-collection.yaml
     secrets:
       - secret: ansible_galaxy_api_key
         name: ansible_collection_publish_galaxy_info
