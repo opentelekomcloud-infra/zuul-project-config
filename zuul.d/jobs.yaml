@@ -75,7 +75,7 @@
 
 - job:
     name: release-ansible-collection
-    parent: ansible-collection-release
+    parent: ansible-collection-publish
     description: |
       Release ansible collection tarball to Galaxy.
     # pre-run: playbooks/pti-ansible-collection-tarball/pre.yaml
