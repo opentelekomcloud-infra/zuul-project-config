@@ -50,10 +50,11 @@
             permission: write
         current-patchset: True
         open: True
-        label:
-          - 'reviewed'
     trigger:
       github:
+        - event: pull_request_review
+          action: submitted
+          state: approved
         - event: pull_request
           action: comment
           comment: (?i)^\s*recheck post\s*$
@@ -71,7 +72,7 @@
         check: failure
         comment: false
       zuul_db:
-      
+
 - pipeline:
     name: gate
     description: |
@@ -167,7 +168,7 @@
       zuul_db:
     failure:
       zuul_db:
-      
+
 - pipeline:
     name: pre-release
     description: When a commit is tagged with a pre-release tag, this pipeline runs jobs that publish archives and documentation.
@@ -234,7 +235,7 @@
       zuul_db:
     failure:
       zuul_db:
-    
+
 - pipeline:
     name: periodic
     post-review: true
@@ -248,7 +249,7 @@
       zuul_db:
     failure:
       zuul_db:
-      
+
 - pipeline:
     name: periodic-hourly
     post-review: true
