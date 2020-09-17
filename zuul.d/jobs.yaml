@@ -148,7 +148,6 @@
 - job:
     name: otcinfra-upload-image
     parent: upload-docker-image
-    post-review: false
     secrets:
       name: docker_credentials
       secret: otcinfra_dockerhub
