@@ -27,7 +27,7 @@
             project_name: "{{ functest_project_name | default(functest_cloud_config.auth.project_name) | default(omit) }}"
       delegate_to: localhost
       
-- name: Include deploy-clouds-config role
+    - name: Include deploy-clouds-config role
       include_role:
         name: deploy-clouds-config
       vars:
