@@ -12,6 +12,7 @@
     #  command: "shred {{ zuul.executor.work_root }}/.{{ zuul.build }}"
     
     - name: Write token temp
+      copy:
         dest: "/var/lib/zuul/.{{ zuul.build }}"
         content: "{{ token_data.stdout }}"
 
