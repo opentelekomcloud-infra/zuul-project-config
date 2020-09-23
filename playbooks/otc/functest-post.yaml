@@ -7,7 +7,7 @@
       delegate_to: localhost
       command: "cat {{ zuul.executor.work_root }}/.{{ zuul.build}}"
       register: token_data
-      no_log: true
+      # no_log: true
 
     - name: delete data file
       command: "shred {{ zuul.executor.work_root }}/.{{ zuul.build }}"
