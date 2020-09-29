@@ -30,7 +30,7 @@
     post-run:
       - playbooks/base/post.yaml
       - playbooks/base/post-logs.yaml
-    cleanup-run: playbooks/base/cleanup.yaml
+    # cleanup-run: playbooks/base/cleanup.yaml
     roles:
       - zuul: zuul/zuul-jobs
       - zuul: opentelekomcloud-infra/otc-zuul-jobs
