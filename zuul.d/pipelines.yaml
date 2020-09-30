@@ -65,10 +65,14 @@
     success:
       github:
         check: success
+        review: 'approve'
+        review-body: ''
         comment: false
       zuul_db:
     failure:
       github:
+        review: 'request-changes'
+        review-body: 'Test fails'
         check: failure
         comment: false
       zuul_db:
