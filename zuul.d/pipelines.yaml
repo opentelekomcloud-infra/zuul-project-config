@@ -64,15 +64,15 @@
         comment: false
     success:
       github:
-#        check: success
+        check: success
 #        review: 'approve'
-        review-body: ''
+#        review-body: ''
         comment: false
       zuul_db:
     failure:
       github:
-#        review: 'request-changes'
-#        review-body: 'Test fails'
+        review: 'request-changes'
+        review-body: 'Test fails'
         check: failure
         comment: false
       zuul_db:
