@@ -142,6 +142,7 @@
     vars:
       ansible_test_integration_env:
         OS_CLOUD: functest_cloud
+      functest_project_name: eu-de_zuul_acc
     secrets:
       - functest_cloud_config
 
