@@ -36,6 +36,8 @@
       - zuul: opentelekomcloud-infra/otc-zuul-jobs
     timeout: 1800
     post-timeout: 1800
+    extra-vars:
+      zuul_use_fetch_output: true
     nodeset: ubuntu-bionic
     #nodeset: debian-buster
     secrets:
