@@ -2,6 +2,9 @@
   tasks:
     - block:
         - include_role: name=fetch-output
+        - include_role: 
+            name: remove-build-sshkey
+            ignore_errors: yes
       when:
         - "ansible_connection != 'kubectl'"
         - ansible_user_dir is defined
@@ -12,10 +15,3 @@
         - ansible_user_dir is defined
     - import_role: name=merge-output-to-logs
       when: ansible_user_dir is defined
-
-- hosts: all
-  # NOTE(pabelanger): We ignore_errors for the following tasks as not to fail
-  # successful jobs.
-  ignore_errors: yes
-  roles:
-    - remove-build-sshkey
