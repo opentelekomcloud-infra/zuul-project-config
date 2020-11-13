@@ -4,6 +4,7 @@
       zuul_log_path_shard_build: true
     - log-inventory
 
+- hosts: all
   tasks:
     - include_role: name=start-zuul-console
     - block:
