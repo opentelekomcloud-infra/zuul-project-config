@@ -4,12 +4,6 @@
       zuul_log_path_shard_build: true
     - log-inventory
 
-- hosts: all
-  pre_tasks:
-    - name: Gather network facts
-      setup:
-        gather_subset: 'network'
-
   tasks:
     - include_role: name=start-zuul-console
     - block:
