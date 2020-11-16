@@ -33,3 +33,9 @@
     nodes:
       - name: ubuntu-focal
         label: ubuntu-focal
+    
+- nodeset:
+    name: fedora-pod
+    nodes:
+      - name: fedora-pod
+        label: pod-fedora-latest
