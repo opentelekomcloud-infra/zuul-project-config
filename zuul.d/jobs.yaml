@@ -34,8 +34,8 @@
     roles:
       - zuul: zuul/zuul-jobs
       - zuul: opentelekomcloud-infra/otc-zuul-jobs
-    timeout: 1800
-    post-timeout: 1800
+    timeout: 3600
+    post-timeout: 3600
     extra-vars:
       zuul_use_fetch_output: true
     nodeset: ubuntu-bionic
