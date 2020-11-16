@@ -1,0 +1,18 @@
+FROM quay.io/fedora/fedora:33
+ 
+ENV XDG_CACHE_HOME=/root/.cache
+RUN dnf update -y && dnf install -y iproute rsync git traceroute unzip bzip2 \
+  bzip2-devel libffi-devel sqlite-devel sqlite-devel rpm-sign expect \
+  make curl wget tar procps-ng which sudo unzip findutils grep ncurses-devel \
+  openssl-devel zlib-devel krb5-devel make cmake gcc gcc-c++ rpm-build \
+  python3.6 python3.7 python3.8 python3.9 \
+  python3-setuptools python3 python3-devel python3-wheel python3-pip && \
+  dnf clean all
+
+RUN ln -sf /bin/pip3 /bin/pip && /bin/pip3 install --user 'tox>=3.8.0' os-testr
+
+RUN mv /etc/sudoers /etc/sudoers.d/zuul && grep includedir /etc/sudoers.d/zuul > /etc/sudoers && sed -e 's/.*includedir.*//' -i /etc/sudoers.d/zuul && chmod 440 /etc/sudoers
+
+RUN echo 'zuul:x:0:0:root:/root:/bin/bash' >> /etc/passwd
+ENV PATH=/root/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+WORKDIR /root
