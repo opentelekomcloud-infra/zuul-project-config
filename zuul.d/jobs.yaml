@@ -122,6 +122,7 @@
     name: golang-make-functional
     description: |
       Base job for executing golang functional tests against OTC
+    nodeset: fedora-pod
     pre-run:
       - playbooks/otc/functest-pre.yaml
     post-run: playbooks/otc/functest-post.yaml
