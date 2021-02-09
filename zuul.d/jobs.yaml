@@ -56,6 +56,7 @@
       - secret: pypi_secret
         name: pypi_info
       - gpg_key
+    nodeset: fedora-pod
     vars:
       release_python: python3
       twine_python: python3
@@ -67,6 +68,7 @@
       Test building python tarballs / wheels and the packaging metadata.
     pre-run: playbooks/pti-python-tarball/pre.yaml
     run: playbooks/pti-python-tarball/check.yaml
+    nodeset: fedora-pod
     vars:
       release_python: python3
       twine_python: python3
@@ -85,6 +87,7 @@
     run: playbooks/pti-ansible-collection-tarball/run.yaml
     post-run:
       - playbooks/publish/ansible-collection.yaml
+    nodeset: fedora-pod
     secrets:
       - secret: ansible_galaxy_api_key
         name: ansible_collection_publish_galaxy_info
@@ -99,6 +102,7 @@
       - gpg_key
       - secret: github_key_public_repo
         name: goreleaser_github_token
+    nodeset: fedora-pod
     vars:
       go_version: "1.15"
 
@@ -115,6 +119,7 @@
       tox_environment:
         OS_CLOUD: functest_cloud
         OS_ADMIN_CLOUD: functest_cloud
+    nodeset: fedora-pod
     secrets:
       - functest_cloud_config
 
@@ -130,6 +135,7 @@
       make_command: acceptance
       make_env:
         OS_CLOUD: functest_cloud
+    nodeset: fedora-pod
     secrets:
       - functest_cloud_config
 
@@ -145,12 +151,14 @@
       ansible_test_integration_env:
         OS_CLOUD: functest_cloud
       functest_project_name: eu-de_zuul_acc
+    nodeset: fedora-pod
     secrets:
       - functest_cloud_config
 
 - job:
     name: otcinfra-upload-image
     parent: upload-docker-image
+    nodeset: fedora-pod
     secrets:
       name: docker_credentials
       secret: otcinfra_dockerhub
@@ -159,6 +167,7 @@
 - job:
     name: otcinfra-promote-image
     parent: promote-docker-image
+    nodeset: fedora-pod
     secrets:
       name: docker_credentials
       secret: otcinfra_dockerhub
