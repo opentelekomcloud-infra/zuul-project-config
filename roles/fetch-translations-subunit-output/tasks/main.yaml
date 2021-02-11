@@ -4,10 +4,9 @@
   register: subunit
 
 - name: Collect test-results
-  synchronize:
+  fetch:
     dest: "{{ zuul.executor.log_root }}"
-    mode: pull
     src: "{{ zuul_work_dir }}/testrepository.subunit.gz"
-    verify_host: true
+    flat: true
   when:
     - subunit.stat.exists

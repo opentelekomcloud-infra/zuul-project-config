@@ -18,17 +18,15 @@
         path: "{{ zuul.executor.work_root }}/artifacts"
         state: directory
       delegate_to: localhost
-      
-    # Do not sync group/owner, since when running in the container we might fail
+
     - name: Collect tarball artifacts.
-      synchronize:
+      fetch:
         dest: "{{ zuul.executor.work_root }}/artifacts/"
-        mode: pull
-        src: "{{ item.path }}"
-        verify_host: true
-        group: false
-        owner: false
-      with_items: "{{ result.files }}"
+        src: "{{ zj_tb.path }}"
+        flat: true
+      loop: "{{ result.files }}"
+      loop_control:
+        loop_var: zj_tb
 
 - hosts: localhost
   roles:
