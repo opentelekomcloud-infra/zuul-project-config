@@ -4,7 +4,7 @@
     - name: Find tarballs and wheels in dist folder.
       find:
         file_type: file
-        paths: "src/{{ zuul.project.canonical_name }}/dist"
+        paths: "{{ ansible_user_dir }}/src/{{ zuul.project.canonical_name }}/dist"
         patterns: "*.tar.gz,*.whl"
       register: result
 
