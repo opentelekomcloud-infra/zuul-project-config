@@ -1,0 +1,8 @@
+- hosts: all
+  roles:
+    - role: fetch-refstack-subunit-output
+      vars:
+- hosts: localhost
+  roles:
+    - role: publish-refstack-results
+      vars:

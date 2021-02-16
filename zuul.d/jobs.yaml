@@ -163,7 +163,7 @@
       name: docker_credentials
       secret: otcinfra_dockerhub
       pass-to-parent: true
-      
+
 - job:
     name: otcinfra-promote-image
     parent: promote-docker-image
@@ -172,3 +172,25 @@
       name: docker_credentials
       secret: otcinfra_dockerhub
       pass-to-parent: true
+
+- job:
+    name: refstack-client-run-base
+    parent: unittests
+    attempts: 1
+    required-projects:
+      - opendev.org/osf/refstack-client
+    pre-run: playbooks/refstack-client/pre.yaml
+    run: playbooks/refstack-client/run.yaml
+    post-run: playbooks/refstack-client/post.yaml
+    roles:
+      - zuul: opentelekomcloud-infra/otc-zuul-jobs
+    nodeset:
+      nodes:
+        - name: refstack
+          label: debian-buster
+    timeout: 10800
+    vars:
+      tempest_tests_url: https://refstack.openstack.org/api/v1/guidelines/2019.11/tests?target=platform&type=required&alias=true&flag=false
+      refstack_tempest_tag: tags/23.0.0
+      zuul_work_dir: "{{ ansible_user_dir }}/{{ zuul.projects['opendev.org/osf/refstack-client'].src_dir }}"
+      refstack_environment: "dummy"
