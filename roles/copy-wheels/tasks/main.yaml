@@ -1,5 +1,0 @@
-- name: Copy the wheels to AFS
-  script: wheel-copy.sh {{ wheel_dir }} {{ afs_dir }}
-
-- name: Rebuild mirror index
-  script: wheel-index.sh {{ afs_dir }}
