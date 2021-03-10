@@ -6,6 +6,13 @@
         "ntp": "chrony",
         "ntpdate": ""
        }
+    },
+    "ubuntu": {
+      "focal": {
+        "ntp": "",
+        "ntpdate": "",
+        "python-dev": ""
+      }
     }
   },
   "distro": {
