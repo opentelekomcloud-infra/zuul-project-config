@@ -32,3 +32,5 @@ redhat-rpm-config:
 redhat-lsb-core:
 curl:
 tox:
+bzip2:
+gnupg2:

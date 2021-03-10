@@ -1,2 +1,4 @@
 cloud-init:
-network:
+coreutils:
+bash:
+        #network:

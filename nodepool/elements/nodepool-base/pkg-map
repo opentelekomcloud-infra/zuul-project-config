@@ -1,0 +1,8 @@
+{
+  "distro": {
+    "fedora": {
+      "pip": "python3-pip python3-setuptools",
+      "virtualenv": "python3-virtualenv"
+    }
+  }
+}

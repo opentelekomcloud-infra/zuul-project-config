@@ -4,6 +4,7 @@
       "cloud-init": "cloud-init",
       "dhcp-client": "dhclient",
       "network": "NetworkManager",
+      "coreutils": "coreutils"
     },
     "suse": {
       "cloud-init": "cloud-init",
@@ -20,6 +21,7 @@
     }
   },
   "default": {
-    "cloud-init": "cloud-init"
+    "cloud-init": "cloud-init",
+    "coreutils": ""
   }
 }
