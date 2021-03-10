@@ -15,7 +15,7 @@
         - event: pull_request
           action: comment
           comment: (?i)^\s*recheck\s*$
-        - event: push
+        # - event: push
         # When using the checks API to report results, failed runs
         # will have a "re-run" button which emits this event.
         - event: check_run
