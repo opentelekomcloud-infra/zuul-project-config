@@ -235,6 +235,8 @@
       github:
         - event: push
           ref: ^refs/heads/master$
+        - event: push
+          ref: ^refs/heads/main$
     success:
       zuul_db:
     failure:
