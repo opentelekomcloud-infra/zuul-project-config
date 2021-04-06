@@ -132,7 +132,6 @@
 - job:
     name: otcinfra-upload-image-quay
     parent: upload-docker-image
-    nodeset: fedora-pod
     vars:
       docker_registry: quay.io
     secrets:
@@ -143,7 +142,6 @@
 - job:
     name: otcinfra-promote-image-quay
     parent: promote-docker-image
-    nodeset: fedora-pod
     vars:
       docker_registry: quay.io
     secrets:
