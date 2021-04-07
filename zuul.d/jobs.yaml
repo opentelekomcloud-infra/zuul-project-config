@@ -140,16 +140,6 @@
       pass-to-parent: true
 
 - job:
-    name: otcinfra-promote-image-quay
-    parent: promote-docker-image
-    vars:
-      docker_registry: quay.io
-    secrets:
-      name: docker_credentials
-      secret: otcinfra_quay
-      pass-to-parent: true
-
-- job:
     name: refstack-client-run-base
     parent: unittests
     attempts: 1
