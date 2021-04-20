@@ -1,4 +1,6 @@
 # zuul-project-config
 
-Repository with the Zuul project configuration. It is consumed by the Windmill
-project to manage the installation of Zuul.
+Repository with the Zuul Eco tenant configuration.
+
+It defines most of the basic trusted jobs, pipelines, tenant-level data.
+Base jobs are defined in https://github.com/opentelekomcloud-infra/base-jobs.
