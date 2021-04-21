@@ -94,8 +94,7 @@
             permission: write
         current-patchset: True
         open: True
-        label:
-          - 'gate'
+        label: 'gate'
         # status: "otc-zuul\\[bot\\]:eco/check:success"
     trigger:
       github:
@@ -104,13 +103,13 @@
           state: approved
         - event: pull_request
           action: comment
-          comment: /merge
-        - event: pull_request
-          action: comment
           comment: (?i)^\s*regate\s*$
         - event: pull_request_review
           action: dismissed
           state: request_changes
+        - event: pull_request
+          action: status
+          status: ".*:success"
         - event: pull_request
           action: labeled
           label:
