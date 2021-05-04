@@ -50,14 +50,16 @@
             permission: write
         current-patchset: True
         open: True
+        label: 'post'
     trigger:
       github:
-        - event: pull_request_review
-          action: submitted
-          state: approved
         - event: pull_request
           action: comment
           comment: (?i)^\s*recheck post\s*$
+        - event: pull_request
+          action: labeled
+          label:
+            - post
     start:
       github:
         check: in_progress
