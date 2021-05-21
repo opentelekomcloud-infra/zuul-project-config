@@ -71,15 +71,11 @@
     success:
       github:
         check: success
-#        review: 'approve'
-#        review-body: ''
         comment: false
-      zuul_db:
     failure:
       github:
         check: failure
         comment: false
-      zuul_db:
 
 - pipeline:
     name: gate
@@ -126,11 +122,9 @@
       github:
         check: success
         merge: yes
-      zuul_db:
     failure:
       github:
         check: failure
-      zuul_db:
     dequeue:
       github:
         check: cancelled
@@ -151,10 +145,6 @@
       github:
         - event: push
           ref: ^refs/heads/.*$
-    success:
-      zuul_db:
-    failure:
-      zuul_db:
 
 - pipeline:
     name: promote
@@ -175,10 +165,6 @@
       github:
         - event: pull_request
           action: closed
-    success:
-      zuul_db:
-    failure:
-      zuul_db:
 
 - pipeline:
     name: pre-release
@@ -190,10 +176,6 @@
       github:
         - event: push
           ref: ^refs/tags/[0-9]+(\.[0-9]+)*(a|b|rc)[0-9]+$
-    success:
-      zuul_db:
-    failure:
-      zuul_db:
 
 - pipeline:
     name: release
@@ -207,10 +189,6 @@
 #          ref: ^refs/heads/master$
         - event: push
           ref: ^refs/tags/[0-9]+(\.[0-9]+)*$
-    success:
-      zuul_db:
-    failure:
-      zuul_db:
 
 - pipeline:
     name: tag
@@ -222,10 +200,6 @@
       github:
         - event: push
           ref: ^refs/tags/.*$
-    success:
-      zuul_db:
-    failure:
-      zuul_db:
 
 - pipeline:
     name: deploy
@@ -244,10 +218,6 @@
           ref: ^refs/heads/master$
         - event: push
           ref: ^refs/heads/main$
-    success:
-      zuul_db:
-    failure:
-      zuul_db:
 
 - pipeline:
     name: periodic
@@ -258,10 +228,6 @@
     trigger:
       timer:
         - time: '0 0 * * *'
-    success:
-      zuul_db:
-    failure:
-      zuul_db:
 
 - pipeline:
     name: periodic-hourly
@@ -274,10 +240,6 @@
       timer:
        # Run with a 2 minute jitter
         - time: '0 * * * * * 120'
-    success:
-      zuul_db:
-    failure:
-      zuul_db:
 
 - pipeline:
     name: periodic-weekly
@@ -289,10 +251,6 @@
       timer:
         # Saturday 8am UTC is a better time to start weekend jobs.
         - time: '0 8 * * 6'
-    success:
-      zuul_db:
-    failure:
-      zuul_db:
 
 - pipeline:
     name: third-party-check
@@ -309,7 +267,3 @@
         - event: pull_request
           action: comment
           comment: (?i)^\s*recheck\s*$
-    success:
-      zuul_db:
-    failure:
-      zuul_db:
