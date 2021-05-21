@@ -19,6 +19,8 @@
         # When using the checks API to report results, failed runs
         # will have a "re-run" button which emits this event.
         - event: check_run
+          action: rerequested
+          check: .*/check:.*
     start:
       github:
         check: in_progress
@@ -35,6 +37,10 @@
         check: failure
         comment: false
       zuul_db:
+    dequeue:
+      github:
+        check: cancelled
+        comment: false
 
 - pipeline:
     name: check-post
@@ -127,6 +133,10 @@
       github:
         check: failure
       zuul_db:
+    dequeue:
+      github:
+        check: cancelled
+        comment: false
     window-floor: 20
     window-increase-factor: 2
 
