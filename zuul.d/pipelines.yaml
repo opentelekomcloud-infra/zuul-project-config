@@ -31,12 +31,10 @@
         review: 'approve'
         review-body: ''
         comment: false
-      zuul_db:
     failure:
       github:
         check: failure
         comment: false
-      zuul_db:
     dequeue:
       github:
         check: cancelled
