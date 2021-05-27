@@ -112,7 +112,7 @@
           status: ".*:success"
         - event: check_run
           action: rerequested
-          check: .*/check:.*
+          check: .*/gate:.*
         - event: pull_request
           action: labeled
           label:
