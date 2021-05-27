@@ -110,6 +110,9 @@
         - event: pull_request
           action: status
           status: ".*:success"
+        - event: check_run
+          action: rerequested
+          check: .*/check:.*
         - event: pull_request
           action: labeled
           label:
