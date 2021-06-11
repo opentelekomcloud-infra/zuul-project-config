@@ -60,7 +60,7 @@
         name: goreleaser_github_token
     nodeset: fedora-pod
     vars:
-      go_version: "1.15"
+      go_version: "1.16.3"
 
 - job:
     name: tox-functional
