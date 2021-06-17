@@ -1,0 +1,36 @@
+- hosts: localhost
+  tasks:
+    - name: Check execution context
+      when: "zuul.branch is not defined"
+      fail:
+        msg: "This playbook must be run in a branch-based pipeline (e.g., 'promote')."
+
+    - name: Download docs archive
+      include_role:
+        name: download-artifact
+      vars:
+        # download_artifact_job: provided by zuul job
+        download_artifact_api: "https://zuul.eco.tsi-dev.otc-service.com/api/tenant/{{ zuul.tenant }}"
+        download_artifact_type:
+          - docs_archive
+          - docs_pdf
+        download_artifact_pipeline: gate
+
+    - name: Set container name
+      set_fact:
+        container_name: "{{ zuul.project.short_name }}"
+
+    - name: Get token
+      os_auth:
+        cloud: "{{ cloud_docs }}"
+      register: os_auth
+
+    - name: Upload docs to Swift
+      uri:
+        url: "{{ cloud_docs.object_store_endpoint_override }}/{{ container_name }}/?extract-archive=tar.gz"
+        method: "PUT"
+        src: "{{ zuul.executor.work_root }}/docs-html.tar.bz2"
+        headers:
+          X-Auth-Token: "{{ os_auth.ansible_facts.auth_token }}"
+          X-Detect-Content-Type: "true"
+          Content-Type: "application/gzip"
