@@ -162,6 +162,52 @@
       refstack_environment: "dummy"
 
 - job:
+    name: otc-promote-docs-base
+    description: |
+      Publish a previously built branch-tip documentation tarball.
+      Use this in the promote pipeline to publish a branch tip tarball
+      built in the gate pipeline.
+      This is an abstract job intended to be inherited from in an
+      Eco tenant and an appropriate secret added.
+      #      .. zuul:jobvar:: afs
+      #         :type: dict
+      #         This is expected to be a Zuul Secret with these keys:
+      #        .. zuul:jobvar:: keytab
+      #           The AFS keytab for the service principal.
+      #        .. zuul:jobvar:: service_name
+      #           The name of the service princpal.
+      #        .. zuul:jobvar:: docs_master_path
+      #           The full docs publication path to use if the job is run on
+      #           the master branch.
+      #        .. zuul:jobvar:: docs_branch_path
+      #           The full docs publication path to use if the job is run on
+      #           any other branch.
+      #        .. zuul:jobvar:: docs_tag_path
+      #           The full docs publication path to use if the job is run on
+      #           a tag.
+      #        .. zuul:jobvar:: docs_redirect_path
+      #           If this variable is present, a .htaccess redirect will be
+      #           created at this path when the job is run on the master
+      #           branch.  For example, it can be used to redirect "project/"
+      #           to "project/latest".
+      #        .. zuul:jobvar:: docs_redirect_content
+      #           The contents of the .htaccess file in docs_redirect_path.
+      .. zuul:jobvar:: download_artifact_job
+         The name of the job which built the docs artifact which this
+         job should download and promote.
+       .. zuul:jobvar:: write_root_marker
+          If this is set to false, then the root marker file is not
+          written.
+
+          Warning: setting this parameter incorrectly can result in loss of published data.
+    abstract: True
+    run: playbooks/docs/promote.yaml
+    vars:
+      write_root_marker: true
+    nodeset:
+      nodes: []
+
+- job:
     name: promote-otc-tox-docs
     parent: otc-promote-docs-base
     description: |
