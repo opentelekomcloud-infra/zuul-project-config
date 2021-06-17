@@ -15,9 +15,9 @@
     check:
       queue: project-config
       jobs:
-        - otc-tox-linters
+        - otc-zuul-jobs-linters
     gate:
       queue: project-config
       jobs:
-        - otc-tox-linters
+        - otc-zuul-jobs-linters
 
