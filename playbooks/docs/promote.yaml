@@ -32,6 +32,7 @@
         headers:
           X-Auth-Token: "{{ os_auth.ansible_facts.auth_token }}"
           X-Container-Read: ".r:*,.rlistings"
+        status_code: [200, 201, 202]
 
     - name: Upload docs to Swift
       uri:
@@ -42,3 +43,4 @@
           X-Auth-Token: "{{ os_auth.ansible_facts.auth_token }}"
           X-Detect-Content-Type: "true"
           Content-Type: "application/gzip"
+        status_code: 201
