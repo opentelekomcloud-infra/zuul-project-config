@@ -24,6 +24,7 @@
       os_auth:
         cloud: "{{ cloud_docs }}"
       register: os_auth
+      no_log: true
 
     - name: Create Swift container
       uri:
