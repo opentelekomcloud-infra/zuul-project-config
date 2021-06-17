@@ -25,6 +25,14 @@
         cloud: "{{ cloud_docs }}"
       register: os_auth
 
+    - name: Create Swift container
+      uri:
+        url: "{{ cloud_docs.object_store_endpoint_override }}/{{ container_name }}"
+        method: "PUT"
+        headers:
+          X-Auth-Token: "{{ os_auth.ansible_facts.auth_token }}"
+          X-Container-Read: ".r:*,.rlistings"
+
     - name: Upload docs to Swift
       uri:
         url: "{{ cloud_docs.object_store_endpoint_override }}/{{ container_name }}?extract-archive=tar.gz"
