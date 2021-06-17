@@ -7,3 +7,17 @@
             branches: master
         - refstack-client-run-preprod:
             branches: master
+
+- project:
+    name: opentelekomcloud-infra/zuul-project-config
+    merge-mode: squash-merge
+    default-branch: master
+    check:
+      queue: project-config
+      jobs:
+        - otc-tox-linters
+    gate:
+      queue: project-config
+      jobs:
+        - otc-tox-linters
+
