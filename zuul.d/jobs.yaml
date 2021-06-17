@@ -160,3 +160,21 @@
       refstack_tempest_tag: tags/23.0.0
       zuul_work_dir: "{{ ansible_user_dir }}/{{ zuul.projects['opendev.org/osf/refstack-client'].src_dir }}"
       refstack_environment: "dummy"
+
+- job:
+    name: promote-otc-tox-docs
+    parent: otc-promote-docs-base
+    description: |
+      Promote content from openstack-tox-docs job for projects that
+      run tox using the docs environment following Open Telekom Cloud PTI.
+      Publish the results of the docs tox job to
+      SWIFT/{{ zuul.project.short_name }}.
+      Publishes depending on branch to latest/ (for master).
+      This is the promote job for ``otc-tox-docs``.
+    final: true
+    vars:
+      download_artifact_job: otc-tox-docs
+    secrets:
+      - secret: otc_cloud_docs
+        name: cloud_docs
+        pass-to-parent: true
