@@ -158,7 +158,7 @@
     vars:
       tempest_tests_url: https://refstack.openstack.org/api/v1/guidelines/2019.11/tests?target=platform&type=required&alias=true&flag=false
       refstack_tempest_tag: tags/23.0.0
-      zuul_work_dir: "{{ ansible_user_dir }}/{{ zuul.projects['opendev.org/osf/refstack-client'].src_dir }}"
+      zuul_work_dir: "{{ zuul.projects['opendev.org/osf/refstack-client'].src_dir }}"
       refstack_environment: "dummy"
 
 - job:
