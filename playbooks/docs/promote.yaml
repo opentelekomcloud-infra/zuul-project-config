@@ -10,7 +10,7 @@
         name: download-artifact
       vars:
         # download_artifact_job: provided by zuul job
-        download_artifact_api: "https://zuul.eco.tsi-dev.otc-service.com/api/tenant/{{ zuul.tenant }}"
+        download_artifact_api: "https://zuul.otc-service.com/api/tenant/{{ zuul.tenant }}"
         download_artifact_type:
           - docs_archive
           - docs_pdf
