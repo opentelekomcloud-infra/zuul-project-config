@@ -1,10 +1,12 @@
-- hosts: localhost
+- hosts: all
   roles:
     - role: fetch-sphinx-tarball
       sphinx_output_suffix: "/"
       zuul_executor_dest: "{{ zuul.executor.work_root }}/artifacts"
       when: zuul_success | bool
 
+- hosts: localhost
+  roles:
     - role: upload-otc-docs
       upload_otc_docs_artifact: "docs-html.tar.gz"
       when: zuul_success | bool
