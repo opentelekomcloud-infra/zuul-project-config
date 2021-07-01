@@ -1,6 +1,10 @@
+- name: debug var
+  debug:
+    msg: "{{ ansible_user_dir }}/zuul-output/logs/docs-html.tar.gz"
+
 - name: Check artifact
   stat:
-    path: "{{ zuul.executor.log_root }}/docs-html.tar.gz"
+    path: "{{ ansible_user_dir }}/zuul-output/logs/docs-html.tar.gz"
   register: "artifact_stat"
 
 - name: Set container name
