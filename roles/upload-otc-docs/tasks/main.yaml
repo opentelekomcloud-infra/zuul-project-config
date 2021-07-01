@@ -3,10 +3,6 @@
     path: "{{ artifact_src }}"
   register: "artifact_stat"
 
-- name: Set container name
-  set_fact:
-    container_name: "{{ upload_otc_docs_container | default(zuul.project.short_name) }}"
-
 - name: Get token
   os_auth:
     cloud: "{{ cloud_docs }}"

@@ -1,2 +1,3 @@
 ---
 prefix: ""
+container_name: "{{ zuul.project.short_name }}"
