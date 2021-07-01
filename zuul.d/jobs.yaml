@@ -237,3 +237,27 @@
       - secret: otc_cloud_docs
         name: cloud_docs
         pass-to-parent: true
+
+- job:
+    name: publish-otc-releasenotes
+    description: |
+      Publish the results of build-otc-releasenotes to Swift.
+      This job is triggered upon the release of the project.
+    final: true
+    pre-run: playbooks/releasenotes/pre.yaml
+    run: playbooks/releasenotes/run.yaml
+    post-run:
+      - playbooks/publish/releasenotes.yaml
+    override-branch: master
+    # Building translated releasenotes can take long for large repositories
+    timeout: 3600
+    nodeset: fedora-pod
+    vars:
+      sphinx_python: python3
+      container: "releasenotes"
+      prefix: "{{ zuul.project.short_name }}"
+      sphinx_build_dir: releasenotes/build
+    secrets:
+      - secret: otc_cloud_docs
+        name: cloud_docs
+        pass-to-parent: true

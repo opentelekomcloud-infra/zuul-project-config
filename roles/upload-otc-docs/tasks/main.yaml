@@ -1,0 +1,38 @@
+- name: Check artifact
+  stat:
+    path: "{{ zuul.executor.work_root }}/artifacts/{{ upload_otc_docs_artifact }}"
+  register: "artifact_stat"
+
+- name: Set container name
+  set_fact:
+    container_name: "{{ upload_otc_docs_container | default(zuul.project.short_name) }}"
+
+- name: Get token
+  os_auth:
+    cloud: "{{ cloud_docs }}"
+  register: os_auth
+  no_log: true
+
+- name: Create Swift container
+  uri:
+    url: "{{ cloud_docs.object_store_endpoint_override }}/{{ container_name }}"
+    method: "PUT"
+    headers:
+      X-Auth-Token: "{{ os_auth.ansible_facts.auth_token }}"
+      X-Container-Read: ".r:*,.rlistings"
+      X-Container-Meta-Web-Index: "index.html"
+      X-Container-Meta-Web-Listing: "false"
+    status_code: [200, 201, 202]
+  when: "artifact_stat.stat.exists"
+
+- name: Upload docs to Swift
+  uri:
+    url: "{{ cloud_docs.object_store_endpoint_override }}/{{ container_name }}/{{ prefix }}?extract-archive=tar.gz"
+    method: "PUT"
+    src: "{{ artifact_stat.stat.path }}"
+    headers:
+      X-Auth-Token: "{{ os_auth.ansible_facts.auth_token }}"
+      X-Detect-Content-Type: "true"
+      Content-Type: "application/gzip"
+    status_code: [200, 201]
+  when: "artifact_stat.stat.exists"
