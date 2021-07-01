@@ -6,7 +6,7 @@
 
     - name: Fetch archive
       fetch:
-        dest: "{{ zuul.executor.work_root }}"
+        dest: "{{ zuul.executor.work_root }}/"
         src: "{{ ansible_user_dir }}/zuul-output/logs/docs-html.tar.gz"
         flat: "true"
       when: zuul_success | bool
