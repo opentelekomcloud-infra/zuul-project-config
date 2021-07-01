@@ -1,6 +1,6 @@
 - name: Check artifact
   stat:
-    path: "{{ ansible_user_dir }}/zuul-output/logs/docs-html.tar.gz"
+    path: "{{ zuul.executor.log_root }}/docs-html.tar.gz"
   register: "artifact_stat"
 
 - name: Set container name
@@ -12,6 +12,7 @@
     cloud: "{{ cloud_docs }}"
   register: os_auth
   no_log: true
+  when: "artifact_stat.stat.exists"
 
 - name: Create Swift container
   uri:
