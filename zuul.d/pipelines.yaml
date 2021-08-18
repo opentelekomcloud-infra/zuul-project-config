@@ -21,20 +21,37 @@
         - event: check_run
           action: rerequested
           check: .*/check:.*
+      gitlab:
+        - event: gl_merge_request
+          action: comment
+          comment: (?i)^\s*recheck\s*$
+        - event: gl_merge_request
+          action:
+            - opened
+            - changed
     start:
       github:
         check: in_progress
         comment: false
+      gitlab:
+        comment: true
+        approval: false
     success:
       github:
         check: success
         review: 'approve'
         review-body: ''
         comment: false
+      gitlab:
+        comment: true
+        approval: true
     failure:
       github:
         check: failure
         comment: false
+      gitlab:
+        comment: true
+        approval: false
     dequeue:
       github:
         check: cancelled
@@ -96,6 +113,11 @@
         open: True
         label: 'gate'
         # status: "otc-zuul\\[bot\\]:eco/check:success"
+      gitlab:
+        approved: true
+        open: true
+        labels:
+          - 'gate'
     trigger:
       github:
         - event: pull_request_review
@@ -117,17 +139,36 @@
           action: labeled
           label:
             - gate
+      gitlab:
+        - event: gl_merge_request
+          action:
+            - approved
+        - event: gl_merge_request
+          action:
+            - labeled
+          labels:
+            - gate
     start:
       github:
         check: in_progress
         comment: false
+      gitlab:
+        comment: true
+        approval: false
     success:
       github:
         check: success
         merge: yes
+      gitlab:
+        comment: true
+        approval: true
+        merge: true
     failure:
       github:
         check: failure
+      gitlab:
+        comment: true
+        approval: false
     dequeue:
       github:
         check: cancelled
@@ -148,6 +189,9 @@
       github:
         - event: push
           ref: ^refs/heads/.*$
+      gitlab:
+        - event: gl_push
+          ref: ^refs/heads/.*$
 
 - pipeline:
     name: promote
@@ -155,19 +199,21 @@
       This pipeline runs jobs that operate after each change is merged
       in order to promote artifacts generated in the gate
       pipeline.
-    success-message: Build succeeded (promote pipeline).
-    failure-message: |
-      Build failed (promote pipeline).
     manager: supercedent
     precedence: high
     post-review: True
     require:
       github:
         merged: true
+      gitlab:
+        merged: true
     trigger:
       github:
         - event: pull_request
           action: closed
+      gitlab:
+         - event: gl_merge_request
+           action: merged
 
 - pipeline:
     name: pre-release
@@ -202,6 +248,9 @@
     trigger:
       github:
         - event: push
+          ref: ^refs/tags/.*$
+      gitlab:
+        - event: gl_push
           ref: ^refs/tags/.*$
 
 - pipeline:
