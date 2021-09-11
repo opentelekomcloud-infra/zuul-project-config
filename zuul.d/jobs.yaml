@@ -199,6 +199,7 @@
     vars:
       download_artifact_job: "otc-tox-docs"
       prefix: ""
+      make_public: true
     secrets:
       - secret: otc_cloud_docs
         name: cloud_docs
