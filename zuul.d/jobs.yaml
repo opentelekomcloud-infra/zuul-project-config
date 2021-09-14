@@ -234,6 +234,7 @@
       download_artifact_job: build-otc-releasenotes
       container: "releasenotes"
       prefix: "{{ zuul.project.short_name }}"
+      make_public: true
     secrets:
       - secret: otc_cloud_docs
         name: cloud_docs
