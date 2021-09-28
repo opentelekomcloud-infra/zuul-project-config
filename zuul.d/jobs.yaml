@@ -219,7 +219,7 @@
       - main
     final: true
     vars:
-      container_name: "api-ref"
+      container: "api-ref"
       prefix: "{{ zuul.project.short_name }}"
       download_artifact_job: build-otc-api-ref
       make_public: true
