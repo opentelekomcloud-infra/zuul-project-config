@@ -209,7 +209,7 @@
     name: promote-api-ref
     parent: otc-promote-docs-base
     description: |
-      Publish api-ref document to.
+      Publish api-ref document.
       This job is run in a promote pipeline to publish documents built
       in the gate pipeline.
     # We only publish the master branch, so no need to run
@@ -222,6 +222,29 @@
       container: "api-ref"
       prefix: "{{ zuul.project.short_name }}"
       download_artifact_job: build-otc-api-ref
+      make_public: true
+    secrets:
+      - secret: otc_cloud_docs
+        name: cloud_docs
+        pass-to-parent: true
+
+- job:
+    name: promote-umn
+    parent: otc-promote-docs-base
+    description: |
+      Publish UMN document.
+      This job is run in a promote pipeline to publish documents built
+      in the gate pipeline.
+    # We only publish the master branch, so no need to run
+    # for changes on other branches.
+    branches:
+      - master
+      - main
+    final: true
+    vars:
+      container: "umn"
+      prefix: "{{ zuul.project.short_name }}"
+      download_artifact_job: build-otc-umn
       make_public: true
     secrets:
       - secret: otc_cloud_docs
