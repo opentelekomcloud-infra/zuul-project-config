@@ -1,6 +1,7 @@
 - hosts: all
   tasks:
     - name: Get temporary token
+      delegate_to: localhost
       # no_log: true
       vault_cloud_token:
         vault_addr: "{{ zuul_vault.vault_addr }}"
