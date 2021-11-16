@@ -71,13 +71,16 @@
       - playbooks/otc/functest-pre.yaml
     post-run: playbooks/otc/functest-post.yaml
     vars:
+      vault_cloud_secret_name: "clouds/otcci_functional"
+      functest_project_name: "eu-de_zuul_otce"
       tox_envlist: functional
       tox_environment:
         OS_CLOUD: functest_cloud
         OS_ADMIN_CLOUD: functest_cloud
     nodeset: fedora-pod
     secrets:
-      - functest_cloud_config
+      - secret: zuul_project_config_vault
+        name: zuul_vault
 
 - job:
     name: golang-make-functional
@@ -88,12 +91,15 @@
     post-run: playbooks/otc/functest-post.yaml
     parent: golang-make
     vars:
+      vault_cloud_secret_name: "clouds/otcci_functional"
+      functest_project_name: "eu-de_zuul_tf"
       make_command: acceptance
       make_env:
         OS_CLOUD: functest_cloud
     nodeset: fedora-pod
     secrets:
-      - functest_cloud_config
+      - secret: zuul_project_config_vault
+        name: zuul_vault
 
 - job:
     name: otc-ansible-collection-test-integration
@@ -104,12 +110,14 @@
       - playbooks/otc/functest-pre.yaml
     post-run: playbooks/otc/functest-post.yaml
     vars:
+      vault_cloud_secret_name: "clouds/otcci_functional"
+      functest_project_name: eu-de_zuul_acc
       ansible_test_integration_env:
         OS_CLOUD: functest_cloud
-      functest_project_name: eu-de_zuul_acc
     nodeset: fedora-pod
     secrets:
-      - functest_cloud_config
+      - secret: zuul_project_config_vault
+        name: zuul_vault
 
 - job:
     name: otcinfra-upload-image
@@ -197,10 +205,14 @@
       This is the promote job for ``otc-tox-docs``.
     final: true
     vars:
+      vault_cloud_secret_name: "clouds/otcci_logs"
       download_artifact_job: "otc-tox-docs"
       prefix: ""
       make_public: true
     secrets:
+      - secret: zuul_project_config_vault
+        name: zuul_vault
+        pass-to-parent: true
       - secret: otc_cloud_docs
         name: cloud_docs
         pass-to-parent: true
@@ -219,11 +231,15 @@
       - main
     final: true
     vars:
+      vault_cloud_secret_name: "clouds/otcci_logs"
       container: "api-ref"
       prefix: "{{ zuul.project.short_name }}"
       download_artifact_job: build-otc-api-ref
       make_public: true
     secrets:
+      - secret: zuul_project_config_vault
+        name: zuul_vault
+        pass-to-parent: true
       - secret: otc_cloud_docs
         name: cloud_docs
         pass-to-parent: true
@@ -242,11 +258,15 @@
       - main
     final: true
     vars:
+      vault_cloud_secret_name: "clouds/otcci_logs"
       container: "umn"
       prefix: "{{ zuul.project.short_name }}"
       download_artifact_job: build-otc-umn
       make_public: true
     secrets:
+      - secret: zuul_project_config_vault
+        name: zuul_vault
+        pass-to-parent: true
       - secret: otc_cloud_docs
         name: cloud_docs
         pass-to-parent: true
@@ -263,9 +283,13 @@
       This is the promote job for ``onsible-collection-docs``.
     final: true
     vars:
+      vault_cloud_secret_name: "clouds/otcci_logs"
       download_artifact_job: "ansible-collection-docs"
       prefix: ""
     secrets:
+      - secret: zuul_project_config_vault
+        name: zuul_vault
+        pass-to-parent: true
       - secret: otc_cloud_docs
         name: cloud_docs
         pass-to-parent: true
@@ -301,10 +325,14 @@
     timeout: 3600
     nodeset: fedora-pod
     vars:
+      vault_cloud_secret_name: "clouds/otcci_logs"
       sphinx_python: python3
       container_name: "releasenotes"
       prefix: "{{ zuul.project.short_name }}"
       sphinx_build_dir: releasenotes/build
     secrets:
+      - secret: zuul_project_config_vault
+        name: zuul_vault
+        pass-to-parent: true
       - secret: otc_cloud_docs
         name: cloud_docs

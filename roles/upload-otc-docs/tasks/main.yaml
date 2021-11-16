@@ -3,19 +3,23 @@
     path: "{{ artifact_src }}"
   register: "artifact_stat"
 
-- name: Get token
-  os_auth:
-    cloud: "{{ cloud_docs }}"
-  register: os_auth
+- name: Get temporary token
   no_log: true
-  when: "artifact_stat.stat.exists"
+  vault_cloud_token:
+    vault_addr: "{{ zuul_vault.vault_addr }}"
+    role_id: "{{ zuul_vault.role_id }}"
+    secret_id: "{{ zuul_vault.secret_id }}"
+    project_name: "{{ cloud_docs.auth.project_name }}"
+    secret_name: "{{ vault_cloud_secret_name }}"
+  register: token
 
 - name: Create Swift container
+  no_log: true
   uri:
     url: "{{ cloud_docs.object_store_endpoint_override }}/{{ container_name }}"
     method: "PUT"
     headers:
-      X-Auth-Token: "{{ os_auth.ansible_facts.auth_token }}"
+      X-Auth-Token: "{{ token.token }}"
       X-Container-Read: ".r:*,.rlistings"
       X-Container-Meta-Web-Index: "index.html"
       X-Container-Meta-Web-Listing: "false"
@@ -23,12 +27,13 @@
   when: "artifact_stat.stat.exists"
 
 - name: Upload docs to Swift
+  no_log: true
   uri:
     url: "{{ cloud_docs.object_store_endpoint_override }}/{{ container_name }}/{{ prefix }}?extract-archive=tar.gz"
     method: "PUT"
     src: "{{ artifact_stat.stat.path }}"
     headers:
-      X-Auth-Token: "{{ os_auth.ansible_facts.auth_token }}"
+      X-Auth-Token: "{{ token.token }}"
       X-Detect-Content-Type: "true"
       Content-Type: "application/gzip"
     status_code: [200, 201]
