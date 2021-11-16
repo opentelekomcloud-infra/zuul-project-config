@@ -189,9 +189,15 @@
     abstract: True
     run: playbooks/docs/promote.yaml
     vars:
+      vault_cloud_secret_name: "clouds/otcci_logs"
       write_root_marker: true
     nodeset:
       nodes: []
+    secrets:
+      - secret: zuul_project_config_vault
+        name: zuul_vault
+      - secret: otc_cloud_docs
+        name: cloud_docs
 
 - job:
     name: promote-otc-tox-docs
@@ -205,17 +211,9 @@
       This is the promote job for ``otc-tox-docs``.
     final: true
     vars:
-      vault_cloud_secret_name: "clouds/otcci_logs"
       download_artifact_job: "otc-tox-docs"
       prefix: ""
       make_public: true
-    secrets:
-      - secret: zuul_project_config_vault
-        name: zuul_vault
-        pass-to-parent: true
-      - secret: otc_cloud_docs
-        name: cloud_docs
-        pass-to-parent: true
 
 - job:
     name: promote-api-ref
@@ -231,18 +229,10 @@
       - main
     final: true
     vars:
-      vault_cloud_secret_name: "clouds/otcci_logs"
       container: "api-ref"
       prefix: "{{ zuul.project.short_name }}"
       download_artifact_job: build-otc-api-ref
       make_public: true
-    secrets:
-      - secret: zuul_project_config_vault
-        name: zuul_vault
-        pass-to-parent: true
-      - secret: otc_cloud_docs
-        name: cloud_docs
-        pass-to-parent: true
 
 - job:
     name: promote-umn
@@ -258,18 +248,10 @@
       - main
     final: true
     vars:
-      vault_cloud_secret_name: "clouds/otcci_logs"
       container: "umn"
       prefix: "{{ zuul.project.short_name }}"
       download_artifact_job: build-otc-umn
       make_public: true
-    secrets:
-      - secret: zuul_project_config_vault
-        name: zuul_vault
-        pass-to-parent: true
-      - secret: otc_cloud_docs
-        name: cloud_docs
-        pass-to-parent: true
 
 - job:
     name: promote-ansible-collection-docs
@@ -286,13 +268,6 @@
       vault_cloud_secret_name: "clouds/otcci_logs"
       download_artifact_job: "ansible-collection-docs"
       prefix: ""
-    secrets:
-      - secret: zuul_project_config_vault
-        name: zuul_vault
-        pass-to-parent: true
-      - secret: otc_cloud_docs
-        name: cloud_docs
-        pass-to-parent: true
 
 - job:
     name: promote-otc-releasenotes
@@ -305,10 +280,6 @@
       container: "releasenotes"
       prefix: "{{ zuul.project.short_name }}"
       make_public: true
-    secrets:
-      - secret: otc_cloud_docs
-        name: cloud_docs
-        pass-to-parent: true
 
 - job:
     name: publish-otc-releasenotes

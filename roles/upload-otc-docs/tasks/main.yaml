@@ -20,7 +20,7 @@
     method: "PUT"
     headers:
       X-Auth-Token: "{{ token.token }}"
-      X-Container-Read: ".r:*,.rlistings"
+      X-Container-Read: "{{ make_public | ternary('.r:*,.rlistings', omit, omit) }}"
       X-Container-Meta-Web-Index: "index.html"
       X-Container-Meta-Web-Listing: "false"
     status_code: [200, 201, 202]
