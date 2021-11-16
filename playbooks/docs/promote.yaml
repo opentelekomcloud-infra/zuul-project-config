@@ -9,48 +9,16 @@
       include_role:
         name: download-artifact
       vars:
-        # download_artifact_job: provided by zuul job
+        # download_artifact_job provided by zuul job
         download_artifact_api: "https://zuul.otc-service.com/api/tenant/{{ zuul.tenant }}"
         download_artifact_type:
           - docs_archive
           - docs_pdf
         download_artifact_pipeline: gate
 
-    - name: Set container name
-      set_fact:
+    - include_role:
+        name: upload-otc-docs
+      vars:
+        artifact_src: "{{ zuul.executor.work_root }}/docs-html.tar.gz"
+        make_public: "{{ make_public | default(true) }}"
         container_name: "{{ container | default(zuul.project.short_name) }}"
-
-    # TODO(gtema): reuse upload-otc-docs role
-    - name: Get temporary token
-      no_log: true
-      vault_cloud_token:
-        vault_addr: "{{ zuul_vault.vault_addr }}"
-        role_id: "{{ zuul_vault.role_id }}"
-        secret_id: "{{ zuul_vault.secret_id }}"
-        project_name: "{{ cloud_docs.auth.project_name }}"
-        secret_name: "{{ vault_cloud_secret_name }}"
-      register: token
-
-    - name: Create Swift container
-      no_log: true
-      uri:
-        url: "{{ cloud_docs.object_store_endpoint_override }}/{{ container_name }}"
-        method: "PUT"
-        headers:
-          X-Auth-Token: "{{ token.token }}"
-          X-Container-Read: "{{ make_public | ternary('.r:*,.rlistings', omit) }}"
-          X-Container-Meta-Web-Index: "index.html"
-          X-Container-Meta-Web-Listing: "false"
-        status_code: [200, 201, 202]
-
-    - name: Upload docs to Swift
-      no_log: true
-      uri:
-        url: "{{ cloud_docs.object_store_endpoint_override }}/{{ container_name }}/{{ prefix }}?extract-archive=tar.gz"
-        method: "PUT"
-        src: "{{ zuul.executor.work_root }}/docs-html.tar.gz"
-        headers:
-          X-Auth-Token: "{{ token.token }}"
-          X-Detect-Content-Type: "true"
-          Content-Type: "application/gzip"
-        status_code: [200, 201]
