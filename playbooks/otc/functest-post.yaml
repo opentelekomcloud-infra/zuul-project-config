@@ -12,4 +12,5 @@
         url: "{{ temp_token.auth_url }}/auth/tokens"
         method: "DELETE"
         headers:
+          X-Auth-Token: "{{ temp_token.token }}"
           X-Subject-Token: "{{ temp_token.token }}"
