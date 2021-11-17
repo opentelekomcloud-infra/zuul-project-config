@@ -122,7 +122,7 @@ class VaultCloudTokenModule():
 
             try:
                 conn = openstack.connect(**cloud_config)
-                token = conn.config._auth.auth_ref.auth_token
+                token = conn.auth_token
                 new_auth = dict()
                 if 'profile' in secret:
                     result_config['profile'] = secret['profile']
