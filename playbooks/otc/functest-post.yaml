@@ -8,9 +8,12 @@
     - name: delete data file
       command: "shred {{ zuul.executor.work_root }}/.{{ zuul.build }}"
 
-    - uri:
+    - name: Revoke temporary token
+      uri:
+      no_log: true
         url: "{{ temp_token.auth_url }}/auth/tokens"
         method: "DELETE"
         headers:
           X-Auth-Token: "{{ temp_token.token }}"
           X-Subject-Token: "{{ temp_token.token }}"
+        status_code: 204
