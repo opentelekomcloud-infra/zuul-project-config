@@ -4,11 +4,11 @@
       delegate_to: localhost
       no_log: true
       vault_cloud_token:
-        vault_addr: "{{ zuul_vault.vault_addr }}"
-        role_id: "{{ zuul_vault.role_id }}"
-        secret_id: "{{ zuul_vault.secret_id }}"
+        vault_addr: "{{ zuul_project_config_vault.vault_addr }}"
+        role_id: "{{ zuul_project_config_vault.role_id }}"
+        secret_id: "{{ zuul_project_config_vault.secret_id }}"
         project_name: "{{ functest_project_name | default(omit) }}"
-        secret_name: "{{ vault_cloud_secret_name }}"
+        secret_name: "{{ vault_functional_cloud_secret_name }}"
       register: token
 
     - name: Include deploy-clouds-config role

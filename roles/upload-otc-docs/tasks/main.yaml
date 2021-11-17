@@ -6,11 +6,11 @@
 - name: Get temporary token
   no_log: true
   vault_cloud_token:
-    vault_addr: "{{ zuul_vault.vault_addr }}"
-    role_id: "{{ zuul_vault.role_id }}"
-    secret_id: "{{ zuul_vault.secret_id }}"
+    vault_addr: "{{ zuul_project_config_vault.vault_addr }}"
+    role_id: "{{ zuul_project_config_vault.role_id }}"
+    secret_id: "{{ zuul_project_config_vault.secret_id }}"
     project_name: "{{ cloud_docs.auth.project_name }}"
-    secret_name: "{{ vault_cloud_secret_name }}"
+    secret_name: "{{ vault_docs_cloud_secret_name }}"
   register: token
 
 - name: Create Swift container
