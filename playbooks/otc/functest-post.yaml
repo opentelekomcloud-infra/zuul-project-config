@@ -9,7 +9,7 @@
       command: "shred {{ zuul.executor.work_root }}/.{{ zuul.build }}"
 
     - uri:
-        url: "{{ temp_token.auth_url }}"
+        url: "{{ temp_token.auth_url }}/auth/tokens"
         method: "DELETE"
         headers:
           X-Subject-Token: "{{ temp_token.token }}"
