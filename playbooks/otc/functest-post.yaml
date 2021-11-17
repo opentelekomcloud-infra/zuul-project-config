@@ -3,16 +3,13 @@
     # TODO:
     # - clean the resources, which might have been created
     # - revoke the temp token explicitely
-    - name: read token
-      command: "cat {{ zuul.executor.work_root }}/.{{ zuul.build }}"
-      register: token_data
-      no_log: true
+    - include_vars: "{{ zuul.executor.work_root }}/.{{ zuul.build }}"
 
     - name: delete data file
       command: "shred {{ zuul.executor.work_root }}/.{{ zuul.build }}"
 
-    - include_role:
-        name: revoke_token
-      vars:
-        cloud: "{{ functest_cloud_config }}"
-        token: "{{ token_data.stdout }}"
+    - uri:
+        url: "{{ temp_token.auth_url }}"
+        method: "DELETE"
+        headers:
+          X-Subject-Token: "{{ temp_token.token }}"

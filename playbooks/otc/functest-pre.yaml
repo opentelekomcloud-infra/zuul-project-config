@@ -24,5 +24,8 @@
       delegate_to: localhost
       copy:
         dest: "{{ zuul.executor.work_root }}/.{{ zuul.build }}"
-        content: "{{ token.token }}"
+        content:
+          temp_token:
+            token: "{{ token.token }}"
+            auth_url: "{{ token.cloud_config.auth.auth_url }}"
         mode: "0440"
