@@ -2,7 +2,7 @@
   tasks:
     - name: Get temporary token
       delegate_to: localhost
-      # no_log: true
+      no_log: true
       vault_cloud_token:
         vault_addr: "{{ zuul_vault.vault_addr }}"
         role_id: "{{ zuul_vault.role_id }}"
