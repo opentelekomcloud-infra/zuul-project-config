@@ -14,7 +14,7 @@
   register: token
 
 - name: Create Swift container
-  no_log: true
+  # no_log: true
   uri:
     url: "{{ cloud_docs.object_store_endpoint_override }}/{{ container_name }}"
     method: "PUT"
