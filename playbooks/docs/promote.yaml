@@ -20,5 +20,4 @@
         name: upload-otc-docs
       vars:
         artifact_src: "{{ zuul.executor.work_root }}/docs-html.tar.gz"
-        make_public: "{{ make_public | default(true) }}"
         container_name: "{{ container | default(zuul.project.short_name) }}"
