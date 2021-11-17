@@ -9,8 +9,8 @@
       command: "shred {{ zuul.executor.work_root }}/.{{ zuul.build }}"
 
     - name: Revoke temporary token
-      uri:
       no_log: true
+      uri:
         url: "{{ temp_token.auth_url }}/auth/tokens"
         method: "DELETE"
         headers:
