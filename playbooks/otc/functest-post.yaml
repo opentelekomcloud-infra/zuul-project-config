@@ -3,7 +3,8 @@
     # TODO:
     # - clean the resources, which might have been created
     # - revoke the temp token explicitely
-    - include_vars: "{{ zuul.executor.work_root }}/.{{ zuul.build }}"
+    - name: Include vars
+      include_vars: "{{ zuul.executor.work_root }}/.{{ zuul.build }}"
 
     - name: delete data file
       command: "shred {{ zuul.executor.work_root }}/.{{ zuul.build }}"

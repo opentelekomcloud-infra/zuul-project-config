@@ -3,13 +3,14 @@
     - name: Get temporary token
       delegate_to: localhost
       no_log: true
-      vault_cloud_token:
+      vault_cloud_config:
         vault_addr: "{{ zuul_project_config_vault.vault_addr }}"
         role_id: "{{ zuul_project_config_vault.role_id }}"
         secret_id: "{{ zuul_project_config_vault.secret_id }}"
         project_name: "{{ functest_project_name | default(omit) }}"
-        secret_name: "{{ vault_functional_cloud_secret_name }}"
-      register: token
+        cloud_secret_name: "{{ vault_functional_cloud_secret_name }}"
+        mode: "token"
+      register: vault_data
 
     - name: Include deploy-clouds-config role
       no_log: true
@@ -18,7 +19,7 @@
       vars:
         cloud_config:
           clouds:
-            functest_cloud: "{{ token.cloud_config }}"
+            functest_cloud: "{{ vault_data.secret }}"
 
     - name: Save token
       delegate_to: localhost
@@ -26,6 +27,6 @@
         dest: "{{ zuul.executor.work_root }}/.{{ zuul.build }}"
         content:
           temp_token:
-            token: "{{ token.token }}"
-            auth_url: "{{ token.cloud_config.auth.auth_url }}"
+            token: "{{ vault_data.secret.auth.token }}"
+            auth_url: "{{ vault_data.secret.auth.auth_url }}"
         mode: "0440"
