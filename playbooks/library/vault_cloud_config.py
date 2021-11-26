@@ -69,8 +69,8 @@ class VaultCloudConfigModule():
         )
         return json.loads(response)['data']['data']
 
-    def get_vault_token(self, vault_url, role_id, secret_id):
-        url = f"{vault_url}/v1/auth/approle/login"
+    def get_vault_token(self, role_id, secret_id):
+        url = f"{self.vault_addr}/v1/auth/approle/login"
 
         data = self.ansible.jsonify(dict(
             role_id=role_id,

@@ -9,6 +9,7 @@
 
     - name: delete data file
       command: "shred {{ zuul.executor.work_root }}/.{{ zuul.build }}"
+      when: "temp_token is defined"
 
     - name: Revoke temporary token
       no_log: true
