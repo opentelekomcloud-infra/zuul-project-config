@@ -5,6 +5,7 @@
     # - revoke the temp token explicitely
     - name: Include vars
       include_vars: "{{ zuul.executor.work_root }}/.{{ zuul.build }}"
+      failed_when: false
 
     - name: delete data file
       command: "shred {{ zuul.executor.work_root }}/.{{ zuul.build }}"
@@ -18,3 +19,4 @@
           X-Auth-Token: "{{ temp_token.token }}"
           X-Subject-Token: "{{ temp_token.token }}"
         status_code: 204
+      when: "temp_token is defined"
