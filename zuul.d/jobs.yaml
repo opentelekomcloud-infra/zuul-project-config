@@ -9,13 +9,14 @@
       - playbooks/pti-python-tarball/post.yaml
       - playbooks/publish/pypi.yaml
     secrets:
-      - secret: pypi_secret
-        name: pypi_info
+      - secret: zuul_project_config_vault
+        name: zuul_project_config_vault
       - gpg_key
     nodeset: fedora-pod
     vars:
-      release_python: python3
-      twine_python: python3
+      release_python: "python3"
+      twine_python: "python3"
+      secret_name: "otcci-pypi"
 
 - job:
     name: test-release
