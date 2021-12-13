@@ -11,7 +11,7 @@
         vault_addr: "{{ zuul_project_config_vault.vault_addr }}"
         role_id: "{{ zuul_project_config_vault.role_id }}"
         secret_id: "{{ zuul_project_config_vault.secret_id }}"
-        secret_name: "{{ secret_name }}"
+        secret_name: "{{ zuul_project_config_vault.secret_name }}"
       register: secret
       when: zuul_success | bool
 
