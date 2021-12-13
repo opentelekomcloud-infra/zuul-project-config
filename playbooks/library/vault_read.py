@@ -9,12 +9,15 @@ from ansible.module_utils.urls import fetch_url
 class VaultReadModule():
     argument_spec = dict(
         vault_addr=dict(type='str', required=True),
-        role_id=dict(type='str', required=True),
-        secret_id=dict(type='str', no_log=True, required=True),
+        token=dict(type='str', required=False, no_log=True),
+        role_id=dict(type='str', required=False),
+        secret_id=dict(type='str', no_log=True, required=False),
         secret_name=dict(type='str', required=True),
     )
     module_kwargs = {
-        'supports_check_mode': True
+        'supports_check_mode': True,
+        'required_together': [('role_id', 'secret_id')],
+        'required_one_of': [('token', 'role_id')]
     }
 
     def __init__(self):
@@ -80,13 +83,14 @@ class VaultReadModule():
 
     def __call__(self):
         self.vault_addr = self.params['vault_addr']
-        role_id = self.params['role_id']
-        secret_id = self.params['secret_id']
         secret_name = self.params['secret_name']
         result = {}
 
-        self.token = self.get_vault_token(
-            role_id, secret_id)
+        if self.params['role_id'] and self.params['secret_id']:
+            self.token = self.get_vault_token(
+                self.params['role_id'], self.params['secret_id'])
+        elif self.params['token']:
+            self.token = self.params['token']
 
         result = self._get_secret_data(secret_name)
 

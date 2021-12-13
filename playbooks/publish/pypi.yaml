@@ -12,7 +12,7 @@
         role_id: "{{ zuul_project_config_vault.role_id }}"
         secret_id: "{{ zuul_project_config_vault.secret_id }}"
         secret_name: "{{ secret_name }}"
-      register: secret
+      register: pypi_secret
       when: zuul_success | bool
 
     - name: Invoke upload-pypi role
@@ -22,6 +22,6 @@
       vars:
         pypi_path: "{{ zuul.executor.work_root }}/artifacts"
         pypi_info:
-          username: "{{ secret.username }}"
-          password: "{{ secret_password }}"
+          username: "{{ pypi_secret.secret.username }}"
+          password: "{{ pypi_secret.secret.password }}"
       when: zuul_success | bool
