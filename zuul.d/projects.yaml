@@ -15,9 +15,11 @@
     check:
       queue: project-config
       jobs:
-        - otc-zuul-jobs-linters
+        - otc-tox-linters: &otc-tox-linters
+            required-projects:
+              - zuul/zuul-jobs
+              - opentelekomcloud-infra/otc-zuul-jobs
     gate:
       queue: project-config
       jobs:
-        - otc-zuul-jobs-linters
-
+        - otc-tox-linters: *otc-tox-linters
