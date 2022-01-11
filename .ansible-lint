@@ -5,6 +5,9 @@ exclude_paths:
     - ../../zuul
 parseable: true
 quiet: false
+mock_modules:
+  - zuul_console
+  - zuul_return
 skip_list:
     - '106'  # Role name does not match ``^[a-z][a-z0-9_]+$`` pattern
     - '204'  # [E204] Lines should be no longer than 120 chars

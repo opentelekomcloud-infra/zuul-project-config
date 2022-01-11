@@ -1,6 +1,7 @@
 - hosts: all
   tasks:
-    - include_role:
+    - name: Fetch sphinx tarball
+      include_role:
         name: fetch-sphinx-tarball
       when: zuul_success | bool
 
