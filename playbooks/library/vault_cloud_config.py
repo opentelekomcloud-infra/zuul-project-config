@@ -3,9 +3,8 @@
 import json
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.urls import fetch_url
 from ansible.module_utils.basic import missing_required_lib
-
+from ansible.module_utils.urls import fetch_url
 
 try:
     import openstack
@@ -17,15 +16,18 @@ except ImportError:
 class VaultCloudConfigModule():
     argument_spec = dict(
         vault_addr=dict(type='str', required=True),
-        role_id=dict(type='str', required=True),
-        secret_id=dict(type='str', no_log=True, required=True),
-        cloud_secret_name=dict(type='str', required=True),
-        project_name=dict(type='str', required=False),
+        vault_role_id=dict(type='str'),
+        vault_secret_id=dict(type='str', no_log=True),
+        vault_token=dict(type='str', no_log=True),
+        cloud_secret_path=dict(type='str'),
+        project_name=dict(type='str'),
         mode=dict(type='str', defualt='config',
                   chocies=['config', 'token'])
     )
     module_kwargs = {
-        'supports_check_mode': True
+        'supports_check_mode': True,
+        'required_together': [('vault_role_id', 'vault_secret_id')],
+        'required_one_of': [('vault_token', 'vault_role_id')]
     }
 
     def __init__(self):
@@ -59,9 +61,9 @@ class VaultCloudConfigModule():
             content = response.read()
         return (content, status)
 
-    def _get_secret_data(self, secret_name):
+    def _get_secret_data(self, secret_path):
         response, info = self._fetch(
-            f"{self.vault_addr}/v1/secret/data/{secret_name}",
+            f"{self.vault_addr}/v1/secret/data/{secret_path}",
             "GET",
             headers={
                 'X-Vault-Token': self.token
@@ -91,16 +93,18 @@ class VaultCloudConfigModule():
 
     def __call__(self):
         self.vault_addr = self.params['vault_addr']
-        role_id = self.params['role_id']
-        secret_id = self.params['secret_id']
-        cloud_secret_name = self.params['cloud_secret_name']
+        cloud_secret_path = self.params['cloud_secret_path']
         project_name = self.params['project_name']
-        result = dict()
 
-        self.token = self.get_vault_token(
-            role_id, secret_id
-        )
-        cloud_data = self._get_secret_data(cloud_secret_name)
+        result = {}
+
+        if self.params['vault_role_id'] and self.params['vault_secret_id']:
+            self.token = self.get_vault_token(
+                self.params['vault_role_id'], self.params['vault_secret_id'])
+        elif self.params['vault_token']:
+            self.token = self.params['vault_token']
+
+        cloud_data = self._get_secret_data(cloud_secret_path)
         user_secret_name = cloud_data.pop('user_secret_name', '')
         if user_secret_name:
             # user_secret_name is found in cloud_data. Resolve it's value
@@ -157,7 +161,7 @@ class VaultCloudConfigModule():
         self.exit_json(
             changed=False,
             token=token,
-            secret=result
+            config=result
         )
 
 

@@ -5,10 +5,10 @@
       no_log: true
       vault_cloud_config:
         vault_addr: "{{ zuul_project_config_vault.vault_addr }}"
-        role_id: "{{ zuul_project_config_vault.role_id }}"
-        secret_id: "{{ zuul_project_config_vault.secret_id }}"
+        vault_role_id: "{{ zuul_project_config_vault.role_id }}"
+        vault_secret_id: "{{ zuul_project_config_vault.secret_id }}"
         project_name: "{{ functest_project_name | default(omit) }}"
-        cloud_secret_name: "{{ vault_functional_cloud_secret_name }}"
+        cloud_secret_path: "{{ vault_functional_cloud_secret_name }}"
         mode: "token"
       register: vault_data
 
@@ -19,7 +19,7 @@
       vars:
         cloud_config:
           clouds:
-            functest_cloud: "{{ vault_data.secret }}"
+            functest_cloud: "{{ vault_data.config }}"
 
     - name: Save token
       delegate_to: localhost
@@ -27,6 +27,6 @@
         dest: "{{ zuul.executor.work_root }}/.{{ zuul.build }}"
         content:
           temp_token:
-            token: "{{ vault_data.secret.auth.token }}"
-            auth_url: "{{ vault_data.secret.auth.auth_url }}"
+            token: "{{ vault_data.config.auth.token }}"
+            auth_url: "{{ vault_data.config.auth.auth_url }}"
         mode: "0440"

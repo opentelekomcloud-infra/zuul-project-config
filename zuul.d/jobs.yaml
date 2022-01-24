@@ -190,15 +190,12 @@
     abstract: True
     run: playbooks/docs/promote.yaml
     vars:
-      vault_docs_cloud_secret_name: "clouds/otcci_logs"
       write_root_marker: true
     nodeset:
       nodes: []
     secrets:
-      - secret: zuul_project_config_vault
-        name: zuul_project_config_vault
-      - secret: otc_cloud_docs
-        name: cloud_docs
+      - secret: zuul_eco_project_config_docs
+        name: promote_docs_data
 
 - job:
     name: promote-otc-tox-docs
@@ -297,14 +294,10 @@
     timeout: 3600
     nodeset: fedora-pod
     vars:
-      vault_docs_cloud_secret_name: "clouds/otcci_logs"
       sphinx_python: python3
-      container_name: "releasenotes"
+      container: "releasenotes"
       prefix: "{{ zuul.project.short_name }}"
       sphinx_build_dir: releasenotes/build
     secrets:
-      - secret: zuul_project_config_vault
-        name: zuul_project_config_vault
-        pass-to-parent: true
-      - secret: otc_cloud_docs
-        name: cloud_docs
+      - secret: zuul_eco_project_config_docs
+        name: promote_docs_data
