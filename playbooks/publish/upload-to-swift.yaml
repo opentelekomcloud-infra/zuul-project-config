@@ -18,6 +18,44 @@
 
   tasks:
     - block:
+
+        - name: Find PDF files
+          find:
+            paths: "{{ zuul.executor.work_root }}/"
+            file_type: file
+            patterns: "*.pdf"
+          register: pdf_files
+
+        # If we have PDF we want to add it into the artifacts archive and upload at once
+        # For this unpack>add>archive
+        - name: Create working directory
+          file:
+            path: "{{ zuul.executor.work_root }}/docs"
+            state: directory
+            mode: 0755
+          when: pdf_files.matched > 0
+
+        - name: Extract docs archive
+          vars:
+            findme:
+              - "{{ zuul.executor.work_root }}/docs-html.tar.bz2"
+              - "{{ zuul.executor.work_root }}/docs-html.tar.gz"
+          unarchive:  # noqa 208
+            src: "{{ lookup('first_found', findme) }}"
+            dest: "{{ zuul.executor.work_root }}/docs"
+          when: pdf_files.matched > 0
+
+        - name: Move found PDF file into doc dir
+          command: "mv {{ item.path }} {{ zuul.executor.work_root }}/docs"
+          with_items: "{{ pdf_files.files }}"
+          when: pdf_files.matched > 0
+
+        - name: Archive Docs - now with PDF inside
+          command: "tar -f docs-html.tar.gz -C {{ zuul_work_dir }}/docs --exclude=.doctrees -cz ."
+          args:
+            warn: false
+          when: pdf_files.matched > 0
+
         - name: Get cloud config from vault
           no_log: true
           vault_cloud_config:

@@ -1,0 +1,11 @@
+- hosts: all
+  roles:
+    - role: bindep
+      bindep_profile: doc
+    - role: ensure-tox
+    - role: ensure-sphinx
+      doc_building_packages:
+        - sphinx
+    - role: prepare-build-pdf-docs
+      when: not tox_skip_pdf
+    - revoke-sudo
