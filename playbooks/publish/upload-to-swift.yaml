@@ -5,7 +5,7 @@
     vault_secret_dest: "{{ ansible_user_dir }}/.approle-secret"
     vault_token_dest: "{{ ansible_user_dir }}/.approle-token"
 
-    vault_role_name: "{{ promote_data.vault_role_name }}"
+    vault_role_name: "{{ vault_data.vault_role_name }}"
 
   roles:
     - role: create-vault-approle-secret
