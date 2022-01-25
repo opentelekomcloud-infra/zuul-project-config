@@ -1,0 +1,140 @@
+---
+- project-template:
+    name: publish-to-pypi
+    description: |
+      Publish a Python package to PyPI, then send release announcement
+      emails and propose updates to upper-constraints as needed.
+    check:
+      jobs:
+        - test-release
+    gate:
+      jobs:
+        - test-release
+    release:
+      jobs:
+        - release-python
+
+- project-template:
+    name: ansible-collection
+    description: |
+      Perform multiple required tests on any ansible-collection project
+    check:
+      jobs:
+        - otc-tox-pep8
+        # - tox-functional
+        # - tox-linters-ansible-devel
+        - otc-tox-linters
+        - ansible-collection-build
+        - ansible-collection-test-sanity
+        - ansible-collection-test-units
+        - ansible-collection-docs
+        - otc-ansible-collection-test-integration
+    gate:
+      jobs:
+        - otc-tox-pep8
+        # - tox-linters-ansible-devel
+        - otc-tox-linters
+        - ansible-collection-build
+        - ansible-collection-test-sanity
+        - ansible-collection-test-units
+        - ansible-collection-docs
+        - otc-ansible-collection-test-integration
+    release:
+      jobs:
+        - release-ansible-collection
+    promote:
+      jobs:
+        - promote-ansible-collection-docs
+
+- project-template:
+    name: publish-otc-docs-pti
+    description: |
+      Runs normal `Open Telekom Cloud PTI documentation build jobs
+      following the project testing interface and publishes the result
+      using a promote job.
+    check:
+      jobs:
+        - otc-tox-docs
+    gate:
+      jobs:
+        - otc-tox-docs
+    promote:
+      jobs:
+        - promote-otc-tox-docs
+
+- project-template:
+    name: api-ref-jobs
+    description: |
+      Build the api-ref document and publish the result
+      using a promote job.
+    check:
+      jobs:
+        - build-otc-api-ref:
+            files: &api-ref-triggers
+              - ^os_api_ref/.*
+              - ^api-ref/.*
+              - ^doc/api_samples/.*
+              - bindep.txt
+              - doc/requirements.txt
+              - test-requirements.txt
+              - tox.ini
+    gate:
+      jobs:
+        - build-otc-api-ref:
+            files: *api-ref-triggers
+    promote:
+      jobs:
+        - promote-api-ref:
+            files: *api-ref-triggers
+
+- project-template:
+    name: umn-jobs
+    description: |
+      Build the UMN document and publish the result
+      using a promote job.
+    check:
+      jobs:
+        - build-otc-umn:
+            files: &docs-umn-triggers
+              - ^umn/.*
+              - bindep.txt
+              - doc/requirements.txt
+              - test-requirements.txt
+              - tox.ini
+    gate:
+      jobs:
+        - build-otc-umn:
+            files: *docs-umn-triggers
+    promote:
+      jobs:
+        - promote-umn:
+            files: *docs-umn-triggers
+
+- project-template:
+    name: release-notes-jobs
+    description: |
+      Builds the release notes jobs under python 3 and publishes the
+      result using a promote job.
+      .. note::
+         Only repos listed in ``openstack/governance`` repository are
+         allowed to publish to the `OpenStack docs website
+         <https://docs.openstack.org>`_ .
+    check:
+      jobs:
+        - build-otc-releasenotes:
+            vars:
+              sphinx_python: python3
+    gate:
+      jobs:
+        - build-otc-releasenotes:
+            vars:
+              sphinx_python: python3
+    tag:
+      jobs:
+        - publish-otc-releasenotes
+    release:
+      jobs:
+        - publish-otc-releasenotes
+    promote:
+      jobs:
+        - promote-otc-releasenotes
