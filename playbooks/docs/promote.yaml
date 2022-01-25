@@ -1,4 +1,19 @@
 - hosts: localhost
+  vars:
+    vault_addr: "{{ zuul_vault_addr }}"
+    vault_token: "{{ lookup('file', zuul_base_vault_token_path) }}"
+    vault_secret_dest: "{{ ansible_user_dir }}/.approle-secret"
+    vault_token_dest: "{{ ansible_user_dir }}/.approle-token"
+
+    vault_role_name: "{{ promote_docs_data.vault_role_name }}"
+
+  roles:
+    - role: create-vault-approle-secret
+
+    - role: create-vault-approle-token
+      vault_role_id: "{{ promote_docs_data.vault_role_id }}"
+      vault_wrapping_token_id: "{{ lookup('file', vault_secret_dest) }}"
+
   tasks:
     - name: Check execution context
       when: "zuul.branch is not defined"
@@ -16,9 +31,32 @@
           - docs_pdf
         download_artifact_pipeline: gate
 
+    - name: Get cloud config from vault
+      no_log: true
+      vault_cloud_config:
+        vault_addr: "{{ vault_addr }}"
+        vault_token: "{{ lookup('file', vault_token_dest) }}"
+        cloud_secret_path: "{{ promote_docs_data.vault_cloud_secret_path }}"
+        mode: "token"
+      register: cloud_config
+
     - name: Upload docs
       include_role:
-        name: upload-otc-docs
+        name: upload-artifact-swift
       vars:
         artifact_src: "{{ zuul.executor.work_root }}/docs-html.tar.gz"
-        container_name: "{{ container | default(zuul.project.short_name) }}"
+        upload_artifact_swift_cloud: "{{ cloud_config.config }}"
+        upload_artifact_swift_container_name: "{{ container | default(zuul.project.short_name) }}"
+        upload_artifact_swift_object_store_endpoint: "{{ swift_endpoint }}"
+        upload_artifact_swift_prefix: "{{ prefix | default(omit) }}"
+
+    - name: Destroy vault token
+      include_role:
+        name: destroy-vault-token
+      vars:
+        vault_token: "{{ lookup('file', vault_token_dest) }}"
+
+    - name: Remove vault token file
+      file:
+        path: "{{ vault_token_dest }}"
+        state: "absent"
