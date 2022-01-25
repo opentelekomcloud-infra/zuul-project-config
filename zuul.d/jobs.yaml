@@ -188,14 +188,16 @@
          {zuul.project.short_name} is used
 
     abstract: True
-    run: playbooks/docs/promote.yaml
+    post-review: true
+    run: playbooks/publish/fetch-zuul-artifact.yaml
+    post-run: playbooks/publish/upload-to-swift.yaml
     vars:
       write_root_marker: true
     nodeset:
       nodes: []
     secrets:
       - secret: zuul_eco_project_config_docs
-        name: promote_docs_data
+        name: promote_data
 
 - job:
     name: promote-otc-tox-docs
@@ -263,7 +265,6 @@
       This is the promote job for ``onsible-collection-docs``.
     final: true
     vars:
-      vault_docs_cloud_secret_name: "clouds/otcci_logs"
       download_artifact_job: "ansible-collection-docs"
       prefix: ""
 
@@ -281,6 +282,7 @@
 
 - job:
     name: publish-otc-releasenotes
+    parent: otc-promote-docs-base
     description: |
       Publish the releasenotes to Swift.
       This job is building RN and is intended to be executed in tag/release pipeline.
@@ -288,7 +290,8 @@
     pre-run: playbooks/releasenotes/pre.yaml
     run: playbooks/releasenotes/run.yaml
     post-run:
-      - playbooks/publish/releasenotes.yaml
+      - playbooks/releasenotes/fetch.yaml
+      - playbooks/publish/upload-to-swift.yaml
     override-branch: master
     # Building translated releasenotes can take long for large repositories
     timeout: 3600
@@ -300,4 +303,4 @@
       sphinx_build_dir: releasenotes/build
     secrets:
       - secret: zuul_eco_project_config_docs
-        name: promote_docs_data
+        name: promote_data
