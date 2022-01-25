@@ -51,7 +51,7 @@
     description: |
       Runs normal `Open Telekom Cloud PTI documentation build jobs
       following the project testing interface and publishes the result
-      using a promote job.
+      using a promote job to https://docs.otc-service.com
     check:
       jobs:
         - otc-tox-docs
@@ -61,6 +61,22 @@
     promote:
       jobs:
         - promote-otc-tox-docs
+
+- project-template:
+    name: publish-otc-docs-hc-pti
+    description: |
+      Runs normal `Open Telekom Cloud PTI documentation build jobs
+      following the project testing interface and publishes the result
+      using a promote job to https://docs.otc.t-systems.com
+    check:
+      jobs:
+        - otc-tox-docs
+    gate:
+      jobs:
+        - otc-tox-docs
+    promote:
+      jobs:
+        - promote-otc-tox-docs-hc
 
 - project-template:
     name: api-ref-jobs
@@ -88,6 +104,31 @@
             files: *api-ref-triggers
 
 - project-template:
+    name: api-ref-hc-jobs
+    description: |
+      Build the api-ref document and publish the result
+      using a promote job.
+    check:
+      jobs:
+        - build-otc-api-ref:
+            files: &api-ref-hc-triggers
+              - ^os_api_ref/.*
+              - ^api-ref/.*
+              - ^doc/api_samples/.*
+              - bindep.txt
+              - doc/requirements.txt
+              - test-requirements.txt
+              - tox.ini
+    gate:
+      jobs:
+        - build-otc-api-ref:
+            files: *api-ref-hc-triggers
+    promote:
+      jobs:
+        - promote-api-ref-hc:
+            files: *api-ref-hc-triggers
+
+- project-template:
     name: umn-jobs
     description: |
       Build the UMN document and publish the result
@@ -109,6 +150,29 @@
       jobs:
         - promote-umn:
             files: *docs-umn-triggers
+
+- project-template:
+    name: umn-hc-jobs
+    description: |
+      Build the UMN document and publish the result
+      using a promote job.
+    check:
+      jobs:
+        - build-otc-umn:
+            files: &docs-umn-hc-triggers
+              - ^umn/.*
+              - bindep.txt
+              - doc/requirements.txt
+              - test-requirements.txt
+              - tox.ini
+    gate:
+      jobs:
+        - build-otc-umn:
+            files: *docs-umn-hc-triggers
+    promote:
+      jobs:
+        - promote-umn-hc:
+            files: *docs-umn-hc-triggers
 
 - project-template:
     name: release-notes-jobs

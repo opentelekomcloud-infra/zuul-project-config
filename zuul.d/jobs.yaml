@@ -196,12 +196,61 @@
     nodeset:
       nodes: []
     secrets:
+      - secret: zuul_eco_project_config_vault_new
+        name: vault_data
       - secret: zuul_eco_project_config_docs
+        name: promote_data
+
+- job:
+    name: otc-promote-docs-hc-base
+    description: |
+      Publish a previously built branch-tip documentation tarball.
+      Use this in the promote pipeline to publish a branch tip tarball
+      built in the gate pipeline.
+      This is an abstract job intended to be inherited from in an
+      Eco tenant and an appropriate secret added.
+      .. zuul:jobvar:: download_artifact_job
+         The name of the job which built the docs artifact which this
+         job should download and promote.
+      .. zuul:jobvar:: prefix
+         Prefix path for the resulting files in the container.
+      .. zuul:jobvar:: container
+         Name of the container to upload data into. If not set
+         {zuul.project.short_name} is used
+
+    abstract: True
+    post-review: true
+    run: playbooks/publish/fetch-zuul-artifact.yaml
+    post-run: playbooks/publish/upload-to-swift.yaml
+    vars:
+      write_root_marker: true
+    nodeset:
+      nodes: []
+    secrets:
+      - secret: zuul_eco_project_config_vault_new
+        name: vault_data
+      - secret: zuul_eco_project_config_docs_hc
         name: promote_data
 
 - job:
     name: promote-otc-tox-docs
     parent: otc-promote-docs-base
+    description: |
+      Promote content from otc-tox-docs job for projects that
+      run tox using the docs environment following Open Telekom Cloud PTI.
+      Publish the results of the docs tox job to
+      SWIFT/{{ zuul.project.short_name }}.
+      Publishes depending on branch to latest/ (for master).
+      This is the promote job for ``otc-tox-docs``.
+    final: true
+    vars:
+      download_artifact_job: "otc-tox-docs"
+      prefix: ""
+      make_public: true
+
+- job:
+    name: promote-otc-tox-docs-hc
+    parent: otc-promote-docs-hc-base
     description: |
       Promote content from otc-tox-docs job for projects that
       run tox using the docs environment following Open Telekom Cloud PTI.
@@ -235,8 +284,46 @@
       make_public: true
 
 - job:
+    name: promote-api-ref-hc
+    parent: otc-promote-docs-hc-base
+    description: |
+      Publish api-ref document.
+      This job is run in a promote pipeline to publish documents built
+      in the gate pipeline.
+    # We only publish the master branch, so no need to run
+    # for changes on other branches.
+    branches:
+      - master
+      - main
+    final: true
+    vars:
+      container: "api-ref"
+      prefix: "{{ zuul.project.short_name }}"
+      download_artifact_job: build-otc-api-ref
+      make_public: true
+
+- job:
     name: promote-umn
     parent: otc-promote-docs-base
+    description: |
+      Publish UMN document.
+      This job is run in a promote pipeline to publish documents built
+      in the gate pipeline.
+    # We only publish the master branch, so no need to run
+    # for changes on other branches.
+    branches:
+      - master
+      - main
+    final: true
+    vars:
+      container: "umn"
+      prefix: "{{ zuul.project.short_name }}"
+      download_artifact_job: build-otc-umn
+      make_public: true
+
+- job:
+    name: promote-umn-hc
+    parent: otc-promote-docs-hc-base
     description: |
       Publish UMN document.
       This job is run in a promote pipeline to publish documents built
@@ -302,5 +389,7 @@
       prefix: "{{ zuul.project.short_name }}"
       sphinx_build_dir: releasenotes/build
     secrets:
-      - secret: zuul_eco_project_config_docs
+      - secret: zuul_eco_project_config_vault_new
+        name: vault_data
+      - secret: zuul_eco_project_config_docs_hc
         name: promote_data
