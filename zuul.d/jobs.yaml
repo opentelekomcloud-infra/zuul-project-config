@@ -357,7 +357,7 @@
 
 - job:
     name: promote-otc-releasenotes
-    parent: otc-promote-docs-base
+    parent: otc-promote-docs-hc-base
     description: |
       Promote content from build-otc-releasenotes job.
     final: true
