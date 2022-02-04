@@ -392,3 +392,16 @@
         name: vault_data
       - secret: zuul_eco_project_config_docs_hc
         name: promote_data
+
+- job:
+    name: publish-otc-docs-hc
+    parent: otc-promote-docs-hc-base
+    description: |
+      Publish the docs to Swift.
+      This job is building Docs from scratch and it intended to
+      be executed in manual/periodic pipeline.
+    final: true
+    pre-run: playbooks/docs/pre.yaml
+    run: playbooks/docs/run.yaml
+    vars:
+      sphinx_python: python3

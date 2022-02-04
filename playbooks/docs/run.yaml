@@ -1,0 +1,28 @@
+- hosts: localhost
+  tasks:
+    - name: Check execution context
+      when: "zuul.branch is not defined"
+      fail:
+        msg: "This playbook must be run in a branch-based pipeline (e.g., 'promote')."
+
+- hosts: all
+  roles:
+    - role: ensure-if-python
+      # docs do not need the package itself to be installed
+      install_package: false
+    - role: tox
+      tox_envlist: docs
+      bindep_profile: compile doc
+    - role: build-pdf-docs
+      when: not tox_skip_pdf
+    - role: fetch-sphinx-tarball
+
+- hosts: localhost
+  tasks:
+    - name: Move fetched files to where upload is going to search for them
+      command: "cp -av {{ item }} {{ zuul.executor.work_root }}"
+      with_items:
+        - "{{ zuul.executor.log_root }}/docs-html.tar.gz*"
+        - "{{ zuul.executor.log_root }}/pdf/*"
+      when: pdf_files.matched > 0
+      failed_when: false
