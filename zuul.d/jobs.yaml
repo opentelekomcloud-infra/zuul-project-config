@@ -369,7 +369,6 @@
 
 - job:
     name: publish-otc-releasenotes
-    parent: otc-promote-docs-base
     description: |
       Publish the releasenotes to Swift.
       This job is building RN and is intended to be executed in tag/release pipeline.
@@ -389,7 +388,7 @@
       prefix: "{{ zuul.project.short_name }}"
       sphinx_build_dir: releasenotes/build
     secrets:
-      - secret: zuul_eco_project_config_vault_new
+      - secret: zuul_eco_project_config_vault
         name: vault_data
       - secret: zuul_eco_project_config_docs_hc
         name: promote_data
