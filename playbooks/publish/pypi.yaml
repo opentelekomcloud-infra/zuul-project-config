@@ -8,10 +8,9 @@
     - name: Fetch pypi credentials from vault
       no_log: true
       vault_read:
-        vault_addr: "{{ zuul_project_config_vault.vault_addr }}"
-        role_id: "{{ zuul_project_config_vault.role_id }}"
-        secret_id: "{{ zuul_project_config_vault.secret_id }}"
-        secret_name: "{{ secret_name }}"
+        vault_addr: "{{ vault_addr }}"
+        vault_token: "{{ lookup('file', vault_token_dest) }}"
+        secret_path: "{{ secret_path_pypi }}"
       register: pypi_secret
       when: zuul_success | bool
 

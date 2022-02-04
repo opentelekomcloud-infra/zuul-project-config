@@ -1,10 +1,15 @@
 ---
 - hosts: all
   tasks:
-    #    - name: Make GPG directory
-    #      tempfile:
-    #        state: directory
-    #      register: gnupg_tmpdir
+    - name: Fetch gpg key from vault
+      delegate_to: localhost
+      no_log: true
+      vault_read:
+        vault_addr: "{{ vault_addr }}"
+        vault_token: "{{ lookup('file', vault_token_dest) }}"
+        secret_path: "{{ secret_path_gpg }}"
+      register: gpg_secret
+      when: zuul_success | bool
 
     - name: Create GPG private key tempfile
       tempfile:
@@ -13,12 +18,11 @@
 
     - name: Create GPG private key
       copy:
-        content: "{{ gpg_key.private }}"
+        content: "{{ gpg_secret.secret.private_key }}"
         dest: "{{ gpg_private_key_tmp.path }}"
         mode: 0400
 
     - name: Import GPG private key
-      #command: "gpg --homedir {{ gnupg_tmpdir.path }} --allow-secret-key-import --import {{ gpg_private_key_tmp.path }}"
       command: "gpg --allow-secret-key-import --import {{ gpg_private_key_tmp.path }}"
 
     - name: Delete GPG private key
@@ -33,9 +37,3 @@
       environment:
         GITHUB_TOKEN: "{{ goreleaser_github_token.token | default('fake') }}"
         PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
-
-          #    - name: Delete keyring directory
-          #      file:
-          #        path: "{{ gnupg_tmpdir.path }}"
-          #        state: absent
-
