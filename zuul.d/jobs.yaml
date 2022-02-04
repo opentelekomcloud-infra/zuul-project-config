@@ -388,7 +388,7 @@
       prefix: "{{ zuul.project.short_name }}"
       sphinx_build_dir: releasenotes/build
     secrets:
-      - secret: zuul_eco_project_config_vault
+      - secret: zuul_eco_project_config_vault_new
         name: vault_data
       - secret: zuul_eco_project_config_docs_hc
         name: promote_data
