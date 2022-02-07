@@ -5,8 +5,7 @@
     vault_token: "{{ lookup('file', vault_token_dest) }}"
   tasks:
     - name: Fetch gpg key from vault
-      delegate_to: localhost
-      no_log: true
+      # no_log: true
       vault_read:
         vault_addr: "{{ vault_addr }}"
         vault_token: "{{ vault_token }}"
