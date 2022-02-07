@@ -21,6 +21,7 @@
     - name: Fetch GitHub token
       vars:
         project: "{{ zuul.project.name.split('/') }}"
+      no_log: true
       uri:
         url: "{{ vault_addr }}/v1/{{ vault_github_token_path }}"
         headers:
