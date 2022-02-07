@@ -1,0 +1,7 @@
+- hosts: localhost
+  vars:
+    vault_addr: "{{ zuul_vault_addr }}"
+    vault_token_dest: "{{ ansible_user_dir }}/.approle-token"
+    vault_token: "{{ lookup('file', vault_token_dest) }}"
+  roles:
+    - destroy-vault-token
