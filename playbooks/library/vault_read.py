@@ -16,8 +16,8 @@ class VaultReadModule():
     )
     module_kwargs = {
         'supports_check_mode': True,
-        'required_together': [('role_id', 'secret_id')],
-        'required_one_of': [('token', 'role_id')]
+        'required_together': [('vault_role_id', 'vault_secret_id')],
+        'required_one_of': [('vault_token', 'vault_role_id')]
     }
 
     def __init__(self):
