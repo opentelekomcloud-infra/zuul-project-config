@@ -1,14 +1,9 @@
 ---
-- hosts: all
+- hosts: localhost
   vars:
     vault_token_path: "{{ ansible_user_dir }}/.approle-token"
+    vault_token: "{{ lookup('file', vault_token_dest) }}"
   tasks:
-    - name: Read vault token
-      slurp:
-        src: "{{ vault_token_path }}"
-      delegate_to: localhost
-      register: vault_token_slurp
-
     - name: Fetch gpg key from vault
       delegate_to: localhost
       # no_log: true
@@ -33,6 +28,10 @@
           repositories: "{{ project[1] }}"
       register: github_token
 
+- hosts: all
+  vars:
+    gpg_secret: "{{ hostvars['localhost']['gpg_secret']['private_key'] }}"
+  tasks:
     - name: Create GPG private key tempfile
       tempfile:
         state: file
@@ -40,7 +39,7 @@
 
     - name: Create GPG private key
       copy:
-        content: "{{ gpg_secret.secret.private_key }}"
+        content: "{{ gpg_secret }}"
         dest: "{{ gpg_private_key_tmp.path }}"
         mode: 0400
 
