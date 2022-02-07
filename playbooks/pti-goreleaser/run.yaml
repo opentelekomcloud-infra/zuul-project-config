@@ -21,16 +21,16 @@
     - name: Fetch GitHub token
       vars:
         project: "{{ zuul.project.name.split('/') }}"
-      delegate_to: localhost
       uri:
         url: "{{ vault_addr }}/v1/{{ vault_github_token_path }}"
         headers:
           "X-Vault-Token": "{{ vault_token }}"
         method: "POST"
-        data:
+        body:
           permissions: "contents=write"
           org_name: "{{ project[0] }}"
           repositories: "{{ project[1] }}"
+        body_format: "json"
       register: github_token
 
     - name: Write github key into the file
