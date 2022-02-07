@@ -45,25 +45,29 @@
     gpg_key_path: "{{ zuul.executor.work_root }}/.gpg.key"
     github_token_path: "{{ zuul.executor.work_root }}/.github"
   tasks:
-    - name: Create GPG private key tempfile
-      tempfile:
-        state: file
-      register: gpg_private_key_tmp
-
     - name: Create GPG private key
       copy:
-        content: "{{ lookup('file', gpg_key_path) }}"
-        dest: "{{ gpg_private_key_tmp.path }}"
+        src: "{{ gpg_key_path }}"
+        dest: "{{ ansible_user_dir }}/.gpg.key"
         mode: "0400"
+      register: gpg_key
+
+    - name: Create GitHub token file
+      copy:
+        src: "{{ zuul.executor.work_root }}/.github_token"
+        dest: "{{ ansible_user_dir }}/.github_token"
+        mode: "0400"
+      register: github_token
 
     - name: Import GPG private key
-      command: "gpg --allow-secret-key-import --import {{ gpg_private_key_tmp.path }}"
+      command: "gpg --allow-secret-key-import --import {{ gpg_key.dest }}"
 
     - name: Delete GPG private key
       file:
-        path: "{{ gpg_private_key_tmp.path }}"
+        path: "{{ gpg_key.dest }}"
         state: "absent"
 
+    # TODO: Populate env_file (https://goreleaser.com/scm/github/?h=github)
     - name: Trigger goreleaser
       command: "bin/goreleaser release"
       args:
@@ -85,7 +89,7 @@
           "X-Vault-Token": "{{ lookup('file', vault_token_path) }}"
         method: "DELETE"
         data:
-          lease_id: "{{ github_token.lease_id }}"
+          lease_id: "{{ github_token.json.lease_id }}"
 
     - name: Delete secret files
       file:
