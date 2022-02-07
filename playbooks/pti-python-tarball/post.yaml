@@ -31,7 +31,7 @@
 - hosts: localhost
   tasks:
     - name: Fetch gpg key from vault
-      no_log: true
+      # no_log: true
       vault_read:
         vault_addr: "{{ vault_addr }}"
         vault_token: "{{ lookup('file', vault_token_dest) }}"
