@@ -42,8 +42,8 @@
 
 - hosts: all
   vars:
-    gpg_key_path: "{{ ansible_user_dir }}/.gpg.key"
-    github_token_path: "{{ ansible_user_dir }}/.github"
+    gpg_key: "{{ hostvars['localhost']['gpg_secret']['secret']['private_key']"
+    github_token: "{{ hostvars['localhost']['github_token']['json']['data']['token']"
   tasks:
     - name: Create GPG private key tempfile
       tempfile:
@@ -52,7 +52,7 @@
 
     - name: Create GPG private key
       copy:
-        content: "{{ lookup('file', gpg_key_path) }}"
+        content: "{{ gpg_key) }}"
         dest: "{{ gpg_private_key_tmp.path }}"
         mode: 0400
 
