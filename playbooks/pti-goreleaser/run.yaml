@@ -62,7 +62,7 @@
 
     - name: Delete GPG private key
       file:
-        path: "{{ gpg_private_key_tmp1.path }}"
+        path: "{{ gpg_private_key_tmp.path }}"
         state: absent
 
     - name: Trigger goreleaser
