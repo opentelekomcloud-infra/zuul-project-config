@@ -4,6 +4,8 @@
       when: zuul_success | bool
 
 - hosts: localhost
+  vars:
+    vault_token_dest: "{{ ansible_user_dir }}/.approle-token"
   tasks:
     - name: Fetch pypi credentials from vault
       no_log: true
