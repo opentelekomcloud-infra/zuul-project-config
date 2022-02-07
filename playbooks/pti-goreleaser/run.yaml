@@ -42,9 +42,8 @@
 
 - hosts: all
   vars:
-    gpg_key: "{{ hostvars['localhost']['gpg_secret']['secret']['private_key'] }}"
     gpg_key_path: "{{ zuul.executor.work_root }}/.gpg.key"
-    github_token: "{{ hostvars['localhost']['github_token']['json']['data']['token'] }}"
+    github_token_path: "{{ zuul.executor.work_root }}/.github"
   tasks:
     - name: Create GPG private key tempfile
       tempfile:
@@ -53,7 +52,7 @@
 
     - name: Create GPG private key
       copy:
-        content: "{{ lookup('file', gpg_key_path }}"
+        content: "{{ lookup('file', gpg_key_path) }}"
         dest: "{{ gpg_private_key_tmp.path }}"
         mode: 0400
 
@@ -70,7 +69,7 @@
       args:
         chdir: "{{ zuul.project.src_dir }}"
       environment:
-        GITHUB_TOKEN: "{{ github_token | default('fake') }}"
+        GITHUB_TOKEN: "{{ lookup('file', github_token_path) | default('fake') }}"
         PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
 
 - hosts: localhost
