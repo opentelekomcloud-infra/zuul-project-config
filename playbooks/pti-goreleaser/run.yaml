@@ -20,7 +20,7 @@
 
     - name: Fetch GitHub token
       vars:
-        project: "{{ zuul.project.name | split('/') }}"
+        project: "{{ zuul.project.name.split('/') }}"
       delegate_to: localhost
       uri:
         url: "{{ vault_addr }}/v1/{{ vault_github_token_path }}"
