@@ -12,7 +12,6 @@
         vault_token: "{{ vault_token }}"
         secret_path: "{{ secret_path_gpg }}"
       register: gpg_secret
-      when: zuul_success | bool
 
     - name: Fetch GitHub token
       vars:
