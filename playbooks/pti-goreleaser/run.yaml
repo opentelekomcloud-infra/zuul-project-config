@@ -5,13 +5,18 @@
     vault_token: "{{ lookup('file', vault_token_path) }}"
   tasks:
     - name: Fetch gpg key from vault
-      delegate_to: localhost
-      # no_log: true
+      no_log: true
       vault_read:
         vault_addr: "{{ vault_addr }}"
         vault_token: "{{ vault_token }}"
         secret_path: "{{ secret_path_gpg }}"
       register: gpg_secret
+
+    - name: Write gpg_secret token into the file
+      copy:
+        content: "{{ gpg_secret.secret.private_key }}"
+        dest: "{{ ansible_user_dir }}/.gpg.key"
+        mode: "0440"
 
     - name: Fetch GitHub token
       vars:
@@ -20,7 +25,7 @@
       uri:
         url: "{{ vault_addr }}/v1/{{ vault_github_token_path }}"
         headers:
-          "X-Vault-Token": "{{ lookup('file', vault_token_dest) }}"
+          "X-Vault-Token": "{{ vault_token }}"
         method: "POST"
         data:
           permissions: "contents=write"
@@ -28,9 +33,16 @@
           repositories: "{{ project[1] }}"
       register: github_token
 
+    - name: Write github key into the file
+      copy:
+        content: "{{ github_token.data.token }}"
+        dest: "{{ ansible_user_dir }}/.github"
+        mode: "0440"
+
 - hosts: all
   vars:
-    gpg_secret: "{{ hostvars['localhost']['gpg_secret']['private_key'] }}"
+    gpg_key_path: "{{ ansible_user }}/.gpg.key"
+    github_token_path: "{{ ansible_user }}/.github"
   tasks:
     - name: Create GPG private key tempfile
       tempfile:
@@ -39,7 +51,7 @@
 
     - name: Create GPG private key
       copy:
-        content: "{{ gpg_secret }}"
+        content: "{{ lookup('file', gpg_key_path) }}"
         dest: "{{ gpg_private_key_tmp.path }}"
         mode: 0400
 
@@ -56,11 +68,12 @@
       args:
         chdir: "{{ zuul.project.src_dir }}"
       environment:
-        GITHUB_TOKEN: "{{ github_token.data.token | default('fake') }}"
+        GITHUB_TOKEN: "{{ lookup('file', github_token_path) | default('fake') }}"
         PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
 
+- hosts: localhost
+  tasks:
     - name: Revoke GitHub token
-      delegate_to: localhost
       uri:
         url: "{{ vault_addr }}/v1/sys/leases/revoke"
         headers:
@@ -69,6 +82,12 @@
         data:
           lease_id: "{{ github_token.lease_id }}"
 
-    - name: Unset vault_token
-      set_fact:
-        vault_token: ''
+    - name: Delete gpg key
+      file:
+        path: "{{ ansible_user }}/.gpg.key"
+        state: "absent"
+
+    - name: Delete github key
+      file:
+        path: "{{ ansible_user }}/.github"
+        state: "absent"
