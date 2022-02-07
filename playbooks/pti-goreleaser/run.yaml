@@ -2,9 +2,14 @@
 - hosts: all
   vars:
     vault_token_dest: "{{ ansible_user_dir }}/.approle-token"
-    vault_token: "{{ lookup('file', vault_token_dest) }}"
   tasks:
+    - name: Read vault token
+      delegate_to: localhost
+      set_fact:
+        vault_token: "{{ lookup('file', vault_token_dest) }}"
+
     - name: Fetch gpg key from vault
+      delegate_to: localhost
       # no_log: true
       vault_read:
         vault_addr: "{{ vault_addr }}"
@@ -61,3 +66,7 @@
         method: "DELETE"
         data:
           lease_id: "{{ github_token.lease_id }}"
+
+    - name: Unset vault_token
+      set_fact:
+        vault_token: ''
