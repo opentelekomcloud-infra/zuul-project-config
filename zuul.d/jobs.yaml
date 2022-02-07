@@ -9,6 +9,7 @@
       - playbooks/get_vault_auth.yaml
       - playbooks/pti-python-tarball/post.yaml
       - playbooks/publish/pypi.yaml
+      - playbooks/delete_vault_auth.yaml
     secrets:
       - secret: zuul_eco_project_config_vault_new
         name: vault_data
@@ -59,6 +60,8 @@
     run:
       - playbooks/get_vault_auth.yaml
       - playbooks/pti-goreleaser/run.yaml
+    post-run:
+      - playbooks/delete_vault_auth.yaml
     secrets:
       - secret: zuul_eco_project_config_vault_new
         name: vault_data
@@ -69,6 +72,7 @@
       go_version: "1.16.3"
       secret_path_gpg: "otcci-gpg"
       vault_addr: "{{ zuul_vault_addr }}"
+      vault_github_token_path: "github_zuul/token"
 
 - job:
     name: tox-functional
