@@ -61,7 +61,7 @@
 
     - name: Delete GPG private key
       file:
-        path: "{{ gpg_private_key_tmp.path }}"
+        path: "{{ gpg_private_key_tmp1.path }}"
         state: absent
 
     - name: Trigger goreleaser
@@ -73,12 +73,14 @@
         PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
 
 - hosts: localhost
+  vars:
+    vault_token_path: "{{ ansible_user_dir }}/.approle-token"
   tasks:
     - name: Revoke GitHub token
       uri:
         url: "{{ vault_addr }}/v1/sys/leases/revoke"
         headers:
-          "X-Vault-Token": "{{ 'file', vault_token_dest) }}"
+          "X-Vault-Token": "{{ 'file', vault_token_path) }}"
         method: "DELETE"
         data:
           lease_id: "{{ github_token.lease_id }}"
