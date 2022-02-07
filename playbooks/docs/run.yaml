@@ -24,5 +24,4 @@
       with_items:
         - "{{ zuul.executor.log_root }}/docs-html.tar.gz*"
         - "{{ zuul.executor.log_root }}/pdf/*"
-      when: pdf_files.matched > 0
       failed_when: false
