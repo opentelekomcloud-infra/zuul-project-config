@@ -65,9 +65,7 @@
     secrets:
       - secret: zuul_eco_project_config_vault_new
         name: vault_data
-      - secret: github_key_public_repo
-        name: goreleaser_github_token
-    nodeset: fedora-pod
+    nodeset: fedora-32-large
     vars:
       go_version: "1.16.3"
       secret_path_gpg: "otcci-gpg"

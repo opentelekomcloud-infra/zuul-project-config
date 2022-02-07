@@ -16,7 +16,7 @@
       copy:
         content: "{{ gpg_secret.secret.private_key }}"
         dest: "{{ zuul.executor.work_root }}/.gpg.key"
-        mode: "0440"
+        mode: "0400"
 
     - name: Fetch GitHub token
       vars:
@@ -38,7 +38,7 @@
       copy:
         content: "{{ github_token.json.data.token }}"
         dest: "{{ zuul.executor.work_root }}/.github"
-        mode: "0440"
+        mode: "0400"
 
 - hosts: all
   vars:
@@ -54,7 +54,7 @@
       copy:
         content: "{{ lookup('file', gpg_key_path) }}"
         dest: "{{ gpg_private_key_tmp.path }}"
-        mode: 0400
+        mode: "0400"
 
     - name: Import GPG private key
       command: "gpg --allow-secret-key-import --import {{ gpg_private_key_tmp.path }}"
@@ -62,7 +62,7 @@
     - name: Delete GPG private key
       file:
         path: "{{ gpg_private_key_tmp.path }}"
-        state: absent
+        state: "absent"
 
     - name: Trigger goreleaser
       command: "bin/goreleaser release"
@@ -75,12 +75,14 @@
 - hosts: localhost
   vars:
     vault_token_path: "{{ ansible_user_dir }}/.approle-token"
+    gpg_key_path: "{{ zuul.executor.work_root }}/.gpg.key"
+    github_token_path: "{{ zuul.executor.work_root }}/.github"
   tasks:
     - name: Revoke GitHub token
       uri:
         url: "{{ vault_addr }}/v1/sys/leases/revoke"
         headers:
-          "X-Vault-Token": "{{ 'file', vault_token_path) }}"
+          "X-Vault-Token": "{{ lookup('file', vault_token_path) }}"
         method: "DELETE"
         data:
           lease_id: "{{ github_token.lease_id }}"
@@ -88,7 +90,7 @@
     - name: Delete secret files
       file:
         path: "{{ item }}"
-        state: absent
+        state: "absent"
       loop:
-        - "{{ zuul.executor.work_root }}/.gpg.key"
-        - "{{ zuul.executor.work_root }}/.github"
+        - "{{ gpg_key_path }}"
+        - "{{ github_token_path }}"
