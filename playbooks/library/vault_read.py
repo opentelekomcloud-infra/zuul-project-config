@@ -9,10 +9,10 @@ from ansible.module_utils.urls import fetch_url
 class VaultReadModule():
     argument_spec = dict(
         vault_addr=dict(type='str', required=True),
-        token=dict(type='str', required=False, no_log=True),
-        role_id=dict(type='str', required=False),
-        secret_id=dict(type='str', no_log=True, required=False),
-        secret_name=dict(type='str', required=True),
+        vault_token=dict(type='str', required=False, no_log=True),
+        vault_role_id=dict(type='str', required=False),
+        vault_secret_id=dict(type='str', no_log=True, required=False),
+        secret_path=dict(type='str', required=True),
     )
     module_kwargs = {
         'supports_check_mode': True,
@@ -83,16 +83,16 @@ class VaultReadModule():
 
     def __call__(self):
         self.vault_addr = self.params['vault_addr']
-        secret_name = self.params['secret_name']
+        secret_path = self.params['secret_path']
         result = {}
 
-        if self.params['role_id'] and self.params['secret_id']:
+        if self.params['vault_role_id'] and self.params['vault_secret_id']:
             self.token = self.get_vault_token(
-                self.params['role_id'], self.params['secret_id'])
-        elif self.params['token']:
-            self.token = self.params['token']
+                self.params['vault_role_id'], self.params['vault_secret_id'])
+        elif self.params['vault_token']:
+            self.token = self.params['vault_token']
 
-        result = self._get_secret_data(secret_name)
+        result = self._get_secret_data(secret_path)
 
         self.exit_json(
             changed=False,

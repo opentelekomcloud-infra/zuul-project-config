@@ -29,5 +29,20 @@
         loop_var: zj_tb
 
 - hosts: localhost
-  roles:
-    - sign-artifacts
+  tasks:
+    - name: Fetch gpg key from vault
+      no_log: true
+      vault_read:
+        vault_addr: "{{ vault_addr }}"
+        vault_token: "{{ lookup('file', vault_token_dest) }}"
+        secret_path: "{{ secret_path_gpg }}"
+      register: gpg_secret
+      when: zuul_success | bool
+
+    - name: Sign artifacts
+      no_log: true
+      vars:
+        gpg_key:
+          private: "{{ gpg_secret.secret.private_key }}"
+      include_role:
+        name: sign-artifacts

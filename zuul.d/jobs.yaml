@@ -6,17 +6,19 @@
     pre-run: playbooks/pti-python-tarball/pre.yaml
     run: playbooks/pti-python-tarball/run.yaml
     post-run:
+      - playbooks/get_vault_auth.yaml
       - playbooks/pti-python-tarball/post.yaml
       - playbooks/publish/pypi.yaml
     secrets:
-      - secret: zuul_project_config_vault
-        name: zuul_project_config_vault
-      - gpg_key
+      - secret: zuul_eco_project_config_vault_new
+        name: vault_data
     nodeset: fedora-pod
     vars:
       release_python: "python3"
       twine_python: "python3"
-      secret_name: "otcci-pypi"
+      secret_path_pypi: "otcci-pypi"
+      secret_path_gpg: "otcci-gpg"
+      vault_token_dest: "{{ ansible_user_dir }}/.approle-token"
 
 - job:
     name: test-release
@@ -54,14 +56,19 @@
     description: |
       Release go binaries.
     pre-run: playbooks/pti-goreleaser/pre.yaml
-    run: playbooks/pti-goreleaser/run.yaml
+    run:
+      - playbooks/get_vault_auth.yaml
+      - playbooks/pti-goreleaser/run.yaml
     secrets:
-      - gpg_key
+      - secret: zuul_eco_project_config_vault_new
+        name: vault_data
       - secret: github_key_public_repo
         name: goreleaser_github_token
     nodeset: fedora-pod
     vars:
       go_version: "1.16.3"
+      secret_path_gpg: "otcci-gpg"
+      vault_token_dest: "{{ ansible_user_dir }}/.approle-token"
 
 - job:
     name: tox-functional
