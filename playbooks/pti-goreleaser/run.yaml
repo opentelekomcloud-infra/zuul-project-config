@@ -15,7 +15,7 @@
     - name: Write gpg_secret token into the file
       copy:
         content: "{{ gpg_secret.secret.private_key }}"
-        dest: "{{ ansible_user_dir }}/.gpg.key"
+        dest: "{{ zuul.executor.work_root }}/.gpg.key"
         mode: "0440"
 
     - name: Fetch GitHub token
@@ -37,12 +37,13 @@
     - name: Write github key into the file
       copy:
         content: "{{ github_token.json.data.token }}"
-        dest: "{{ ansible_user_dir }}/.github"
+        dest: "{{ zuul.executor.work_root }}/.github"
         mode: "0440"
 
 - hosts: all
   vars:
     gpg_key: "{{ hostvars['localhost']['gpg_secret']['secret']['private_key'] }}"
+    gpg_key_path: "{{ zuul.executor.work_root }}/.gpg.key"
     github_token: "{{ hostvars['localhost']['github_token']['json']['data']['token'] }}"
   tasks:
     - name: Create GPG private key tempfile
@@ -52,7 +53,7 @@
 
     - name: Create GPG private key
       copy:
-        content: "{{ gpg_key }}"
+        content: "{{ lookup('file', gpg_key_path }}"
         dest: "{{ gpg_private_key_tmp.path }}"
         mode: 0400
 
@@ -84,3 +85,11 @@
         method: "DELETE"
         data:
           lease_id: "{{ github_token.lease_id }}"
+
+    - name: Delete secret files
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - "{{ zuul.executor.work_root }}/.gpg.key"
+        - "{{ zuul.executor.work_root }}/.github"
