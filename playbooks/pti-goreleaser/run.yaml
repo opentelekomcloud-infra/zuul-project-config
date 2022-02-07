@@ -79,7 +79,7 @@
         url: "{{ vault_addr }}/v1/sys/leases/revoke"
         headers:
           "X-Vault-Token": "{{ lookup('file', vault_token_path) }}"
-        method: "DELETE"
+        method: "PUT"
         body:
           lease_id: "{{ github_token.json.lease_id }}"
         body_format: "json"
