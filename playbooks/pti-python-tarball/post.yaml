@@ -29,6 +29,8 @@
         loop_var: zj_tb
 
 - hosts: localhost
+  vars:
+    vault_token_dest: "{{ ansible_user_dir }}/.approle-token"
   tasks:
     - name: Fetch gpg key from vault
       # no_log: true
