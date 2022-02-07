@@ -1,14 +1,20 @@
 ---
 - hosts: all
   vars:
-    vault_token_dest: "{{ ansible_user_dir }}/.approle-token"
+    vault_token_path: "{{ ansible_user_dir }}/.approle-token"
   tasks:
+    - name: Read vault token
+      slurp:
+        src: "{{ vault_token_path }}"
+      delegate_to: localhost
+      register: vault_token_slurp
+
     - name: Fetch gpg key from vault
       delegate_to: localhost
       # no_log: true
       vault_read:
         vault_addr: "{{ vault_addr }}"
-        vault_token: "{{ lookup('file', vault_token_dest) }}"
+        vault_token: "{{ vault_token_slurp['content'] }}"
         secret_path: "{{ secret_path_gpg }}"
       register: gpg_secret
 
