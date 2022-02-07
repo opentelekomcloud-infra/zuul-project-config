@@ -36,7 +36,7 @@
 
     - name: Write github key into the file
       copy:
-        content: "{{ github_token.data.token }}"
+        content: "{{ github_token.json.data.token }}"
         dest: "{{ ansible_user_dir }}/.github"
         mode: "0440"
 
