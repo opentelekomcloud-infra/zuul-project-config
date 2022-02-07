@@ -52,7 +52,7 @@
 
     - name: Create GPG private key
       copy:
-        content: "{{ gpg_key) }}"
+        content: "{{ gpg_key }}"
         dest: "{{ gpg_private_key_tmp.path }}"
         mode: 0400
 
@@ -69,7 +69,7 @@
       args:
         chdir: "{{ zuul.project.src_dir }}"
       environment:
-        GITHUB_TOKEN: "{{ lookup('file', github_token_path) | default('fake') }}"
+        GITHUB_TOKEN: "{{ github_token | default('fake') }}"
         PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
 
 - hosts: localhost
@@ -78,17 +78,7 @@
       uri:
         url: "{{ vault_addr }}/v1/sys/leases/revoke"
         headers:
-          "X-Vault-Token": "{{ lookup('file', vault_token_dest) }}"
+          "X-Vault-Token": "{{ 'file', vault_token_dest) }}"
         method: "DELETE"
         data:
           lease_id: "{{ github_token.lease_id }}"
-
-    - name: Delete gpg key
-      file:
-        path: "{{ ansible_user }}/.gpg.key"
-        state: "absent"
-
-    - name: Delete github key
-      file:
-        path: "{{ ansible_user }}/.github"
-        state: "absent"
