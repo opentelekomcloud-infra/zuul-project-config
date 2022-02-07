@@ -42,8 +42,8 @@
 
 - hosts: all
   vars:
-    gpg_key: "{{ hostvars['localhost']['gpg_secret']['secret']['private_key']"
-    github_token: "{{ hostvars['localhost']['github_token']['json']['data']['token']"
+    gpg_key: "{{ hostvars['localhost']['gpg_secret']['secret']['private_key'] }}"
+    github_token: "{{ hostvars['localhost']['github_token']['json']['data']['token'] }}"
   tasks:
     - name: Create GPG private key tempfile
       tempfile:
