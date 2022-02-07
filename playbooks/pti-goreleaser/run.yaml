@@ -52,13 +52,6 @@
         mode: "0400"
       register: gpg_key
 
-    - name: Create GitHub token file
-      copy:
-        src: "{{ zuul.executor.work_root }}/.github_token"
-        dest: "{{ ansible_user_dir }}/.github_token"
-        mode: "0400"
-      register: github_token
-
     - name: Import GPG private key
       command: "gpg --allow-secret-key-import --import {{ gpg_key.dest }}"
 
@@ -67,7 +60,6 @@
         path: "{{ gpg_key.dest }}"
         state: "absent"
 
-    # TODO: Populate env_file (https://goreleaser.com/scm/github/?h=github)
     - name: Trigger goreleaser
       command: "bin/goreleaser release"
       args:
