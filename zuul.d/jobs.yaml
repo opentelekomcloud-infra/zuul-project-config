@@ -18,6 +18,7 @@
       twine_python: "python3"
       secret_path_pypi: "otcci-pypi"
       secret_path_gpg: "otcci-gpg"
+      vault_addr: "{{ zuul_vault_addr }}"
       vault_token_dest: "{{ ansible_user_dir }}/.approle-token"
 
 - job:
@@ -68,6 +69,7 @@
     vars:
       go_version: "1.16.3"
       secret_path_gpg: "otcci-gpg"
+      vault_addr: "{{ zuul_vault_addr }}"
       vault_token_dest: "{{ ansible_user_dir }}/.approle-token"
 
 - job:
