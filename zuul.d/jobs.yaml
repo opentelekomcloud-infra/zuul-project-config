@@ -410,6 +410,7 @@
       This job is building Docs from scratch and it intended to
       be executed in manual/periodic pipeline.
     final: true
+    nodeset: fedora-pod
     pre-run: playbooks/docs/pre.yaml
     run: playbooks/docs/run.yaml
     vars:
