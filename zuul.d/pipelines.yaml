@@ -72,10 +72,6 @@
         label: 'post'
     trigger:
       github:
-        # Trigger if approval is given
-        - event: pull_request_review
-          action: submitted
-          state: approved
         # Trigger if comment posted
         - event: pull_request
           action: comment
