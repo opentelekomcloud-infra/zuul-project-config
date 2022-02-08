@@ -15,7 +15,6 @@
         - event: pull_request
           action: comment
           comment: (?i)^\s*recheck\s*$
-        # - event: push
         # When using the checks API to report results, failed runs
         # will have a "re-run" button which emits this event.
         - event: check_run
@@ -39,8 +38,6 @@
     success:
       github:
         check: success
-        review: 'approve'
-        review-body: ''
         comment: false
       gitlab:
         comment: true
@@ -60,7 +57,8 @@
 - pipeline:
     name: check-post
     description: |
-      Newly opened pull requests enter this pipeline after a first review to execute post-review checks
+      Existing requests enter this pipeline after a first review to execute
+      post-review checks by core reviewer.
     manager: independent
     precedence: low
     post-review: True
@@ -74,9 +72,19 @@
         label: 'post'
     trigger:
       github:
+        # Trigger if approval is given
+        - event: pull_request_review
+          action: submitted
+          state: approved
+        # Trigger if comment posted
         - event: pull_request
           action: comment
           comment: (?i)^\s*recheck post\s*$
+        # Trigger if re-run button used
+        - event: check_run
+          action: rerequested
+          check: .*/check-post:.*
+        # Trigger when label is added
         - event: pull_request
           action: labeled
           label:
@@ -196,9 +204,8 @@
 - pipeline:
     name: promote
     description: |
-      This pipeline runs jobs that operate after each change is merged
-      in order to promote artifacts generated in the gate
-      pipeline.
+      This pipeline runs jobs that operate after each change is merged in
+      order to promote artifacts generated in the gate pipeline.
     manager: supercedent
     precedence: high
     post-review: True
@@ -217,7 +224,9 @@
 
 - pipeline:
     name: pre-release
-    description: When a commit is tagged with a pre-release tag, this pipeline runs jobs that publish archives and documentation.
+    description: |
+      When a commit is tagged with a pre-release tag, this pipeline runs
+      jobs that publish archives and documentation.
     manager: independent
     precedence: high
     post-review: True
@@ -228,7 +237,9 @@
 
 - pipeline:
     name: release
-    description: When a commit is tagged as a release, this pipeline runs jobs that publish archives and documentation.
+    description: |
+      When a commit is tagged as a release, this pipeline runs jobs that
+      publish archives and documentation.
     manager: independent
     precedence: high
     post-review: True
@@ -242,7 +253,8 @@
 - pipeline:
     name: tag
     post-review: true
-    description: This pipeline runs jobs in response to any tag event.
+    description: |
+      This pipeline runs jobs in response to any tag event.
     manager: independent
     precedence: high
     trigger:
@@ -259,8 +271,7 @@
       This pipeline runs jobs that operate after each change is merged
       in order to run production deployment playbooks.
     success-message: Build succeeded (deploy pipeline).
-    failure-message: |
-      Build failed (deploy pipeline).
+    failure-message: Build failed (deploy pipeline).
     manager: serial
     precedence: high
     post-review: True
