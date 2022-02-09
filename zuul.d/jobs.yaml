@@ -415,3 +415,7 @@
     run: playbooks/docs/run.yaml
     vars:
       sphinx_python: python3
+      tox_envlist: docs
+      bindep_profile: compile doc
+      tox_pdf_envlist: pdf-docs
+      tox_skip_pdf: false
