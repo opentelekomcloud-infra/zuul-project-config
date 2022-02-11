@@ -5,12 +5,10 @@
         name: fetch-sphinx-tarball
       when: zuul_success | bool
 
-- hosts: localhost
-  tasks:
-    - name: Move fetched files to where upload is going to search for them
-      command: "cp -av {{ item }} {{ zuul.executor.work_root }}"
-      with_items:
-        - "{{ zuul.executor.log_root }}/docs-html.tar.gz*"
-        - "{{ zuul.executor.log_root }}/pdf/*"
-      when: pdf_files.matched > 0
-      failed_when: false
+    - name: Fetch archive
+      fetch:
+        dest: "{{ zuul.executor.work_root }}/"
+        src: "{{ ansible_user_dir }}/zuul-output/logs/docs-html.tar.gz"
+        flat: "true"
+      when: zuul_success | bool
+    #TODO: fetch PDF files
