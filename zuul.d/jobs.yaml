@@ -413,6 +413,7 @@
     nodeset: fedora-pod
     pre-run: playbooks/docs/pre.yaml
     run: playbooks/docs/run.yaml
+    post-run: playbooks/docs/fetch.yaml
     vars:
       sphinx_python: python3
       tox_envlist: docs

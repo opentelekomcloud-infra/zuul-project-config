@@ -15,15 +15,3 @@
       bindep_profile: compile doc
     - role: build-pdf-docs
       when: not tox_skip_pdf
-    - role: fetch-sphinx-tarball
-
-- hosts: localhost
-  tasks:
-    - name: Move fetched files to where upload is going to search for them
-      command: "cp -av {{ item }} {{ zuul.executor.work_root }}"
-      with_items:
-        - "{{ zuul.executor.log_root }}/docs-html.tar.gz"
-        - "{{ zuul.executor.log_root }}/pdf/*.pdf"
-        - "{{ ansible_user_dir }}/zuul-output/docs-html.tar.gz"
-        - "{{ ansible_user_dir }}/zuul-output/pdf/*.pdf"
-      failed_when: false
