@@ -141,7 +141,7 @@
 - job:
     name: otcinfra-promote-image
     parent: promote-docker-image
-    nodeset: fedora-pod
+    nodeset: ubuntu-focal
     secrets:
       name: docker_credentials
       secret: otcinfra_dockerhub
