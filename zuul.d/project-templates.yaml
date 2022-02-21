@@ -97,6 +97,8 @@
               - doc/requirements.txt
               - test-requirements.txt
               - tox.ini
+              - .zuul.yaml
+              - zuul.yaml
     gate:
       jobs:
         - build-otc-api-ref:
@@ -122,6 +124,8 @@
               - doc/requirements.txt
               - test-requirements.txt
               - tox.ini
+              - .zuul.yaml
+              - zuul.yaml
     gate:
       jobs:
         - build-otc-api-ref:
@@ -145,6 +149,8 @@
               - doc/requirements.txt
               - test-requirements.txt
               - tox.ini
+              - .zuul.yaml
+              - zuul.yaml
     gate:
       jobs:
         - build-otc-umn:
@@ -168,6 +174,8 @@
               - doc/requirements.txt
               - test-requirements.txt
               - tox.ini
+              - .zuul.yaml
+              - zuul.yaml
     gate:
       jobs:
         - build-otc-umn:
