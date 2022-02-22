@@ -188,12 +188,18 @@
       built in the gate pipeline.
       This is an abstract job intended to be inherited from in an
       Eco tenant and an appropriate secret added.
+
       .. zuul:jobvar:: download_artifact_job
+
          The name of the job which built the docs artifact which this
          job should download and promote.
+
       .. zuul:jobvar:: prefix
+
          Prefix path for the resulting files in the container.
+
       .. zuul:jobvar:: container
+
          Name of the container to upload data into. If not set
          {zuul.project.short_name} is used
 
@@ -219,12 +225,18 @@
       built in the gate pipeline.
       This is an abstract job intended to be inherited from in an
       Eco tenant and an appropriate secret added.
+
       .. zuul:jobvar:: download_artifact_job
+
          The name of the job which built the docs artifact which this
          job should download and promote.
+
       .. zuul:jobvar:: prefix
+
          Prefix path for the resulting files in the container.
+
       .. zuul:jobvar:: container
+
          Name of the container to upload data into. If not set
          {zuul.project.short_name} is used
 
