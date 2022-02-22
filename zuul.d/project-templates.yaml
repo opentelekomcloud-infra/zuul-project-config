@@ -55,11 +55,13 @@
     check:
       jobs:
         - otc-tox-docs
-        - build-otc-sphinx-json
+        - build-otc-sphinx-json:
+            voting: false
     gate:
       jobs:
         - otc-tox-docs
-        - build-otc-sphinx-json
+        - build-otc-sphinx-json:
+            voting: false
     promote:
       jobs:
         - promote-otc-tox-docs
@@ -73,11 +75,13 @@
     check:
       jobs:
         - otc-tox-docs
-        - build-otc-sphinx-json
+        - build-otc-sphinx-json:
+            voting: false
     gate:
       jobs:
         - otc-tox-docs
-        - build-otc-sphinx-json
+        - build-otc-sphinx-json:
+            voting: false
     promote:
       jobs:
         - promote-otc-tox-docs-hc
@@ -103,12 +107,14 @@
               - tox.ini
               - .zuul.yaml
               - zuul.yaml
-        - build-otc-sphinx-json
+        - build-otc-sphinx-json:
+            voting: false
     gate:
       jobs:
         - build-otc-api-ref:
             files: *api-ref-triggers
-        - build-otc-sphinx-json
+        - build-otc-sphinx-json:
+            voting: false
     promote:
       jobs:
         - promote-api-ref:
@@ -132,12 +138,14 @@
               - tox.ini
               - .zuul.yaml
               - zuul.yaml
-        - build-otc-sphinx-json
+        - build-otc-sphinx-json:
+            voting: false
     gate:
       jobs:
         - build-otc-api-ref:
             files: *api-ref-hc-triggers
-        - build-otc-sphinx-json
+        - build-otc-sphinx-json:
+            voting: false
     promote:
       jobs:
         - promote-api-ref-hc:
@@ -159,12 +167,14 @@
               - tox.ini
               - .zuul.yaml
               - zuul.yaml
-        - build-otc-sphinx-json
+        - build-otc-sphinx-json:
+            voting: false
     gate:
       jobs:
         - build-otc-umn:
             files: *docs-umn-triggers
-        - build-otc-sphinx-json
+        - build-otc-sphinx-json:
+            voting: false
     promote:
       jobs:
         - promote-umn:
@@ -186,12 +196,14 @@
               - tox.ini
               - .zuul.yaml
               - zuul.yaml
-        - build-otc-sphinx-json
+        - build-otc-sphinx-json:
+            voting: false
     gate:
       jobs:
         - build-otc-umn:
             files: *docs-umn-hc-triggers
-        - build-otc-sphinx-json
+        - build-otc-sphinx-json:
+            voting: false
     promote:
       jobs:
         - promote-umn-hc:
