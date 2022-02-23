@@ -13,7 +13,6 @@
     secrets:
       - secret: zuul_eco_project_config_vault_new
         name: vault_data
-    nodeset: fedora-pod
     vars:
       release_python: "python3"
       twine_python: "python3"
@@ -28,7 +27,6 @@
       Test building python tarballs / wheels and the packaging metadata.
     pre-run: playbooks/pti-python-tarball/pre.yaml
     run: playbooks/pti-python-tarball/check.yaml
-    nodeset: fedora-pod
     vars:
       release_python: python3
       twine_python: python3
@@ -47,7 +45,6 @@
     run: playbooks/pti-ansible-collection-tarball/run.yaml
     post-run:
       - playbooks/publish/ansible-collection.yaml
-    nodeset: fedora-pod
     secrets:
       - secret: ansible_galaxy_api_key
         name: ansible_collection_publish_galaxy_info
@@ -65,7 +62,7 @@
     secrets:
       - secret: zuul_eco_project_config_vault_new
         name: vault_data
-    nodeset: fedora-32-large
+    nodeset: ubuntu-focal
     vars:
       go_version: "1.16.3"
       secret_path_gpg: "otcci-gpg"
@@ -87,7 +84,6 @@
       tox_environment:
         OS_CLOUD: functest_cloud
         OS_ADMIN_CLOUD: functest_cloud
-    nodeset: fedora-pod
     secrets:
       - secret: zuul_project_config_vault
         name: zuul_project_config_vault
@@ -106,7 +102,6 @@
       make_command: acceptance
       make_env:
         OS_CLOUD: functest_cloud
-    nodeset: fedora-pod
     secrets:
       - secret: zuul_project_config_vault
         name: zuul_project_config_vault
@@ -124,7 +119,6 @@
       functest_project_name: eu-de_zuul_acc
       ansible_test_integration_env:
         OS_CLOUD: functest_cloud
-    nodeset: fedora-pod
     secrets:
       - secret: zuul_project_config_vault
         name: zuul_project_config_vault
@@ -132,7 +126,6 @@
 - job:
     name: otcinfra-upload-image
     parent: upload-docker-image
-    nodeset: fedora-pod
     secrets:
       name: docker_credentials
       secret: otcinfra_dockerhub
@@ -403,7 +396,6 @@
     override-branch: master
     # Building translated releasenotes can take long for large repositories
     timeout: 3600
-    nodeset: fedora-pod
     vars:
       sphinx_python: python3
       container: "releasenotes"
@@ -423,7 +415,6 @@
       This job is building Docs from scratch and it intended to
       be executed in manual/periodic pipeline.
     final: true
-    nodeset: fedora-pod
     pre-run: playbooks/docs/pre.yaml
     run: playbooks/docs/run.yaml
     post-run: playbooks/docs/fetch.yaml
