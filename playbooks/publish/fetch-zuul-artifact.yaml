@@ -13,5 +13,6 @@
         download_artifact_api: "https://zuul.otc-service.com/api/tenant/{{ zuul.tenant }}"
         download_artifact_type:
           - docs_archive
+          - docs_archive_json
           - docs_pdf
         download_artifact_pipeline: gate
