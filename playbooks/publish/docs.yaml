@@ -18,7 +18,6 @@
 
   tasks:
     - block:
-
         - name: Find PDF files
           find:
             paths: "{{ zuul.executor.work_root }}/"
@@ -74,6 +73,39 @@
             upload_artifact_swift_container_name: "{{ container | default(zuul.project.short_name) }}"
             upload_artifact_swift_prefix: "{{ prefix | default(omit) }}"
             upload_artifact_swift_container_public: "{{ make_public | default(omit) }}"
+
+        - block:
+            # Process json for search engine
+            - name: Find JSON files
+              stat:
+                path: "{{ zuul.executor.work_root }}/docs-json.tar.gz"
+              register: docs_json
+
+            - name: Extract docs-json archive
+              unarchive:
+                src: "{{ docs_json.stat.path }}"
+                dest: "{{ zuul.executor.work_root }}/docs-json"
+              when: docs_json.stat.exists
+
+            - name: Get Search engine upload credentials from vault
+              no_log: true
+              vault_read:
+                vault_addr: "{{ vault_addr }}"
+                vault_token: "{{ lookup('file', vault_token_dest) }}"
+                secret_path: "{{ promote_data.vault_search_secret_path }}"
+              register: search_credentials
+              when: docs_json.stat.exists
+
+            - name: Include upload-doc-index-opensearch
+              include_role:
+                name: upload-doc-index-opensearch
+              vars:
+                sphinx_json_dir: "{{ zuul.executor.work_root }}/docs-json"
+                search_engine_url: "{{ search_credentials.secret.url"
+                search_engine_base_url: "https://docs-beta.otc.t-systems.com"
+                search_engine_doc_url: "{{ container | default(zuul.project.short_name) }}/{{ prefix | default('') }}"
+              when: docs_json.stat.exists
+          ignore_errors: true
 
         - name: Destroy vault token
           include_role:

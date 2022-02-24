@@ -199,7 +199,9 @@
     abstract: True
     post-review: true
     run: playbooks/publish/fetch-zuul-artifact.yaml
-    post-run: playbooks/publish/upload-to-swift.yaml
+    post-run:
+      - playbooks/publish/docs.yaml
+      - playbooks/publish/search-index.yaml
     vars:
       write_root_marker: true
     nodeset:
@@ -236,7 +238,7 @@
     abstract: True
     post-review: true
     run: playbooks/publish/fetch-zuul-artifact.yaml
-    post-run: playbooks/publish/upload-to-swift.yaml
+    post-run: playbooks/publish/docs.yaml
     vars:
       write_root_marker: true
     nodeset:
@@ -392,7 +394,7 @@
     run: playbooks/releasenotes/run.yaml
     post-run:
       - playbooks/releasenotes/fetch.yaml
-      - playbooks/publish/upload-to-swift.yaml
+      - playbooks/publish/docs.yaml
     override-branch: master
     # Building translated releasenotes can take long for large repositories
     timeout: 3600
