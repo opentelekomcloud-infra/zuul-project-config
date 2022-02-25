@@ -357,7 +357,7 @@
 
 - job:
     name: promote-ansible-collection-docs
-    parent: otc-promote-docs-base
+    parent: otc-promote-docs-hc-base
     description: |
       Promote content from ansible-collection-docs job for projects that
       run tox using the docs environment following Open Telekom Cloud PTI.
@@ -369,6 +369,7 @@
     vars:
       download_artifact_job: "ansible-collection-docs"
       prefix: ""
+      make_public: true
 
 - job:
     name: promote-otc-releasenotes
