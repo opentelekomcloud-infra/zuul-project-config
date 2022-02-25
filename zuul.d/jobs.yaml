@@ -199,9 +199,7 @@
     abstract: True
     post-review: true
     run: playbooks/publish/fetch-zuul-artifact.yaml
-    post-run:
-      - playbooks/publish/docs.yaml
-      - playbooks/publish/search-index.yaml
+    post-run: playbooks/publish/docs.yaml
     vars:
       write_root_marker: true
     nodeset:
