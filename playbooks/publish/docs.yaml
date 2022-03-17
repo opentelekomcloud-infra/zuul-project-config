@@ -113,6 +113,7 @@
                 search_engine_password: "{{ search_credentials.secret.password }}"
                 search_engine_base_url: "https://docs-beta.otc.t-systems.com"
                 search_engine_doc_url: "{{ container | default(zuul.project.short_name) }}/{{ prefix | default('') }}"
+                search_engine_index_name: "helpcenter-{{ container | default('general') }}-{{ zuul.project.short_name }}"
               when: docs_json.stat.exists
           ignore_errors: true
 
