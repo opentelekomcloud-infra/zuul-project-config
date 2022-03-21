@@ -114,6 +114,7 @@
                 search_engine_base_url: "https://docs-beta.otc.t-systems.com"
                 search_engine_doc_url: "{{ container | default(zuul.project.short_name) }}/{{ prefix | default('') }}"
                 search_engine_index_name: "helpcenter-{{ container | default('general') }}-{{ zuul.project.short_name }}"
+                search_engine_doc_category: "{{ opensearch_doc_category | default(omit) }}"
               when: docs_json.stat.exists
           ignore_errors: true
 
