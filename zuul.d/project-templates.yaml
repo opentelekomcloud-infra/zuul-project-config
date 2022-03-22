@@ -186,6 +186,31 @@
             files: *docs-umn-hc-triggers
 
 - project-template:
+    name: dev-guide-hc-jobs
+    description: |
+      Build the Developer Guide document and publish the result
+      using a promote job.
+    check:
+      jobs:
+        - build-otc-dev-guide:
+            files: &docs-dg-hc-triggers
+              - ^dev/.*
+              - bindep.txt
+              - doc/requirements.txt
+              - test-requirements.txt
+              - tox.ini
+              - .zuul.yaml
+              - zuul.yaml
+    gate:
+      jobs:
+        - build-otc-dev-guide:
+            files: *docs-dg-hc-triggers
+    promote:
+      jobs:
+        - promote-dev-guide-hc:
+            files: *docs-dg-hc-triggers
+
+- project-template:
     name: release-notes-jobs
     description: |
       Builds the release notes jobs under python 3 and publishes the
