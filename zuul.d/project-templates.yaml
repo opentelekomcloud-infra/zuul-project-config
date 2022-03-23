@@ -94,6 +94,7 @@
               - ^api-ref/.*
               - ^doc/api_samples/.*
               - bindep.txt
+              - ^requirements.txt
               - doc/requirements.txt
               - test-requirements.txt
               - tox.ini
@@ -116,24 +117,15 @@
     check:
       jobs:
         - build-otc-api-ref:
-            files: &api-ref-hc-triggers
-              - ^os_api_ref/.*
-              - ^api-ref/.*
-              - ^doc/api_samples/.*
-              - bindep.txt
-              - doc/requirements.txt
-              - test-requirements.txt
-              - tox.ini
-              - .zuul.yaml
-              - zuul.yaml
+            files: *api-ref-triggers
     gate:
       jobs:
         - build-otc-api-ref:
-            files: *api-ref-hc-triggers
+            files: *api-ref-triggers
     promote:
       jobs:
         - promote-api-ref-hc:
-            files: *api-ref-hc-triggers
+            files: *api-ref-triggers
 
 - project-template:
     name: umn-jobs
@@ -146,6 +138,7 @@
             files: &docs-umn-triggers
               - ^umn/.*
               - bindep.txt
+              - ^requirements.txt
               - doc/requirements.txt
               - test-requirements.txt
               - tox.ini
@@ -168,22 +161,15 @@
     check:
       jobs:
         - build-otc-umn:
-            files: &docs-umn-hc-triggers
-              - ^umn/.*
-              - bindep.txt
-              - doc/requirements.txt
-              - test-requirements.txt
-              - tox.ini
-              - .zuul.yaml
-              - zuul.yaml
+            files: *docs-umn-triggers
     gate:
       jobs:
         - build-otc-umn:
-            files: *docs-umn-hc-triggers
+            files: *docs-umn-triggers
     promote:
       jobs:
         - promote-umn-hc:
-            files: *docs-umn-hc-triggers
+            files: *docs-umn-triggers
 
 - project-template:
     name: dev-guide-hc-jobs
