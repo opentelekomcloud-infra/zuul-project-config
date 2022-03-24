@@ -160,16 +160,13 @@
       using a promote job.
     check:
       jobs:
-        - build-otc-umn:
-            files: *docs-umn-triggers
+        - build-otc-umn
     gate:
       jobs:
-        - build-otc-umn:
-            files: *docs-umn-triggers
+        - build-otc-umn
     promote:
       jobs:
-        - promote-umn-hc:
-            files: *docs-umn-triggers
+        - promote-umn-hc
 
 - project-template:
     name: dev-guide-hc-jobs
