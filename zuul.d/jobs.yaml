@@ -416,6 +416,7 @@
     pre-run: playbooks/docs/pre.yaml
     run: playbooks/docs/run.yaml
     post-run: playbooks/docs/fetch.yaml
+    nodeset: ubuntu-focal
     vars:
       sphinx_python: python3
       tox_envlist: docs
