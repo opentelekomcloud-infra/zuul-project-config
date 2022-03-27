@@ -160,13 +160,18 @@
       using a promote job.
     check:
       jobs:
-        - build-otc-umn
+        - build-otc-umn:
+            files: *docs-umn-triggers
+        - noop
     gate:
       jobs:
-        - build-otc-umn
+        - build-otc-umn:
+            files: *docs-umn-triggers
+        - noop
     promote:
       jobs:
-        - promote-umn-hc
+        - promote-umn-hc:
+            files: *docs-umn-triggers
 
 - project-template:
     name: dev-guide-hc-jobs
