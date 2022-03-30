@@ -275,6 +275,7 @@
       prefix: "{{ zuul.project.short_name }}"
       download_artifact_job: build-otc-api-ref
       make_public: true
+      opensearch_doc_category: "api-ref"
 
 - job:
     name: promote-api-ref-hc
@@ -294,6 +295,7 @@
       prefix: "{{ zuul.project.short_name }}"
       download_artifact_job: build-otc-api-ref
       make_public: true
+      opensearch_doc_category: "api-ref"
 
 - job:
     name: promote-umn
@@ -313,6 +315,7 @@
       prefix: "{{ zuul.project.short_name }}"
       download_artifact_job: build-otc-umn
       make_public: true
+      opensearch_doc_category: "umn"
 
 - job:
     name: promote-umn-hc
@@ -332,6 +335,7 @@
       prefix: "{{ zuul.project.short_name }}"
       download_artifact_job: build-otc-umn
       make_public: true
+      opensearch_doc_category: "umn"
 
 - job:
     name: promote-dev-guide-hc
@@ -351,6 +355,7 @@
       prefix: "{{ zuul.project.short_name }}"
       download_artifact_job: build-otc-dev-guide
       make_public: true
+      opensearch_doc_category: "dev"
 
 - job:
     name: promote-ansible-collection-docs
@@ -379,6 +384,7 @@
       container: "releasenotes"
       prefix: "{{ zuul.project.short_name }}"
       make_public: true
+      opensearch_doc_category: "rn"
 
 - job:
     name: publish-otc-releasenotes
@@ -399,6 +405,7 @@
       container: "releasenotes"
       prefix: "{{ zuul.project.short_name }}"
       sphinx_build_dir: releasenotes/build
+      opensearch_doc_category: "rn"
     secrets:
       - secret: zuul_eco_project_config_vault_new
         name: vault_data
@@ -423,3 +430,4 @@
       bindep_profile: compile doc
       tox_pdf_envlist: pdf-docs
       tox_skip_pdf: false
+      opensearch_doc_category: "doc"
