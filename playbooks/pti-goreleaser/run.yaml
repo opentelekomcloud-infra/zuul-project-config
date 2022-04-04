@@ -60,8 +60,19 @@
         path: "{{ gpg_key.dest }}"
         state: "absent"
 
+    - name: Write release notes file
+      copy:
+        dest: "{{ ansible_user_dir }}/release-notes.md"
+        content: "{{ release_notes }}"
+      register: release_notes_file
+      when: release_notes is defined
+
     - name: Trigger goreleaser
-      command: "bin/goreleaser release"
+      command: >
+        bin/goreleaser release
+        {%- if release_notes is defined %}
+        --release-notes={{ release_notes_file.dest }}
+        {% endif %}
       args:
         chdir: "{{ zuul.project.src_dir }}"
       environment:
