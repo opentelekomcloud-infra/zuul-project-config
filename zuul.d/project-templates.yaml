@@ -82,6 +82,20 @@
         - publish-otc-docs-hc
 
 - project-template:
+    name: helpcenter-base-jobs
+    description: |
+      Base jobs for the HelpCenter projects.
+    check:
+      jobs:
+        - noop
+    gate:
+      jobs:
+        - noop
+    promote:
+      jobs:
+        - noop
+
+- project-template:
     name: api-ref-jobs
     description: |
       Build the api-ref document and publish the result
