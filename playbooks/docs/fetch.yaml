@@ -12,3 +12,10 @@
         flat: "true"
       when: zuul_success | bool
     #TODO: fetch PDF files
+
+    - name: Fetch sphinx json
+      include_role:
+        name: fetch-sphinx-json
+      when: zuul_success | bool
+
+

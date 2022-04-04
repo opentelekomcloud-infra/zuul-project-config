@@ -15,3 +15,13 @@
       bindep_profile: compile doc
     - role: build-pdf-docs
       when: not tox_skip_pdf
+  tasks:
+    - block:
+        # Build json output, but do not fail
+        - name: Execute sphinx to generate JSON output
+          include_role:
+            name: sphinx
+          vars:
+            sphinx_builders: json
+            zuul_work_virtualenv: "{{ ansible_user_dir }}/{{ zuul.project.src_dir }}/.tox/{{ tox_envlist }}"
+      ignore_errors: yes
