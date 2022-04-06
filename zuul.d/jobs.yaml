@@ -64,7 +64,7 @@
         name: vault_data
     nodeset: ubuntu-focal
     vars:
-      go_version: "1.16.3"
+      go_version: "1.18"
       secret_path_gpg: "otcci-gpg"
       vault_addr: "{{ zuul_vault_addr }}"
       vault_github_token_path: "github_zuul/token"
