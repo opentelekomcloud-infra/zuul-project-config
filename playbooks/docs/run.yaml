@@ -11,7 +11,6 @@
       # docs do not need the package itself to be installed
       install_package: false
     - role: tox
-      tox_envlist: "{{ tox_envlist | default('docs') }}"
       bindep_profile: compile doc
     - role: build-pdf-docs
       when: not tox_skip_pdf
