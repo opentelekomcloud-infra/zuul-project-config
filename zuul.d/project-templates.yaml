@@ -202,7 +202,7 @@
       jobs:
         - build-otc-dev-guide:
             files: &docs-dg-hc-triggers
-              - ^dev/.*
+              - ^dev_guide/.*
               - bindep.txt
               - doc/requirements.txt
               - test-requirements.txt
