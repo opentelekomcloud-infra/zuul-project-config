@@ -446,6 +446,7 @@
     nodeset: ubuntu-focal
     vars:
       sphinx_python: python3
+      sphinx_build_dir: umn/build
       tox_envlist: umn
       bindep_profile: compile doc
       tox_pdf_envlist: umn-pdf-docs
@@ -468,6 +469,7 @@
     nodeset: ubuntu-focal
     vars:
       sphinx_python: python3
+      sphinx_build_dir: api-ref/build
       tox_envlist: api-ref
       bindep_profile: compile doc
       tox_pdf_envlist: api-ref-pdf-docs
