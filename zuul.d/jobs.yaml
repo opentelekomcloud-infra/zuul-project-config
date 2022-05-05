@@ -62,9 +62,9 @@
     secrets:
       - secret: zuul_eco_project_config_vault_new
         name: vault_data
-    nodeset: ubuntu-focal
+    nodeset: ubuntu-jammy
     vars:
-      go_version: "1.18"
+      go_version: "1.18.1"
       secret_path_gpg: "otcci-gpg"
       vault_addr: "{{ zuul_vault_addr }}"
       vault_github_token_path: "github_zuul/token"
@@ -134,7 +134,7 @@
 - job:
     name: otcinfra-promote-image
     parent: promote-docker-image
-    nodeset: ubuntu-focal
+    nodeset: ubuntu-jammy
     secrets:
       name: docker_credentials
       secret: otcinfra_dockerhub
@@ -145,7 +145,7 @@
     parent: upload-docker-image
     vars:
       docker_registry: quay.io
-    nodeset: ubuntu-focal
+    nodeset: ubuntu-jammy
     secrets:
       name: docker_credentials
       secret: otcinfra_quay
@@ -423,7 +423,7 @@
     pre-run: playbooks/docs/pre.yaml
     run: playbooks/docs/run.yaml
     post-run: playbooks/docs/fetch.yaml
-    nodeset: ubuntu-focal
+    nodeset: ubuntu-jammy
     vars:
       sphinx_python: python3
       tox_envlist: docs
@@ -443,7 +443,7 @@
     pre-run: playbooks/docs/pre.yaml
     run: playbooks/docs/run.yaml
     post-run: playbooks/docs/fetch.yaml
-    nodeset: ubuntu-focal
+    nodeset: ubuntu-jammy
     vars:
       sphinx_python: python3
       sphinx_build_dir: umn/build
@@ -466,7 +466,7 @@
     pre-run: playbooks/docs/pre.yaml
     run: playbooks/docs/run.yaml
     post-run: playbooks/docs/fetch.yaml
-    nodeset: ubuntu-focal
+    nodeset: ubuntu-jammy
     vars:
       sphinx_python: python3
       sphinx_build_dir: api-ref/build
