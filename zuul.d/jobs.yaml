@@ -77,7 +77,7 @@
     pre-run:
       - playbooks/otc/functest-pre.yaml
     post-run: playbooks/otc/functest-post.yaml
-    ansible_version: 5
+    ansible-version: 5
     vars:
       vault_functional_cloud_secret_name: "clouds/otcci_functional"
       functest_project_name: "eu-de_zuul_otce"
