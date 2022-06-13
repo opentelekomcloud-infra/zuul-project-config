@@ -116,9 +116,6 @@
     pre-run:
       - playbooks/otc/functest-pre.yaml
     post-run: playbooks/otc/functest-post.yaml
-    # Until we solve networking issue between 2 K8 cluster we need to have it
-    # on a VM
-    nodeset: ubuntu-jammy
     vars:
       vault_functional_cloud_secret_name: "clouds/otcci_functional"
       functest_project_name: eu-de_zuul_acc
