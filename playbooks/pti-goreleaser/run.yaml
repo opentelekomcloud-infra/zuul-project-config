@@ -54,6 +54,9 @@
 
     - name: Import GPG private key
       command: "gpg --allow-secret-key-import --import {{ gpg_key.dest }}"
+     
+    - name: Check secret keys imported
+      command: "gpg --list-secret-keys"
 
     - name: Delete GPG private key
       file:
