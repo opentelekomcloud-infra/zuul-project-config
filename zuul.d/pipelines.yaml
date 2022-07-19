@@ -28,6 +28,12 @@
           action:
             - opened
             - changed
+      gitea:
+        - event: gt_pull_request
+          action:
+            - opened
+            - changed
+            - reopened
     start:
       github:
         check: in_progress
@@ -42,6 +48,9 @@
       gitlab:
         comment: true
         approval: true
+      gitea:
+        comment: true
+        status: "success"
     failure:
       github:
         check: failure
@@ -49,6 +58,9 @@
       gitlab:
         comment: true
         approval: false
+      gitea:
+        comment: true
+        status: "failure"
     dequeue:
       github:
         check: cancelled
