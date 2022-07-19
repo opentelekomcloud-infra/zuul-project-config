@@ -34,6 +34,9 @@
             - opened
             - changed
             - reopened
+        - event: gt_pull_request
+          action: comment
+          comment: (?i)^\s*recheck\s*$
     start:
       github:
         check: in_progress
