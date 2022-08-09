@@ -20,3 +20,13 @@
       refstack_tempest_tag: "tags/31.1.0"
       zuul_work_dir: "{{ ansible_user_dir }}/{{ zuul.projects['opendev.org/osf/refstack-client'].src_dir }}"
       refstack_environment: "dummy"
+
+- job:
+    name: refstack-client-run
+    parent: refstack-client-run-base
+    vars:
+      refstack_environment: "production_eu-de"
+    secrets:
+      - secret: zuul_eco_project_config_restack_prod
+        name: test_users
+        pass-to-parent: true

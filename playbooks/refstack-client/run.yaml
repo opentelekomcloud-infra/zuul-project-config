@@ -1,4 +1,57 @@
 ---
+- hosts: localhost
+  vars:
+    vault_addr: "{{ zuul_vault_addr }}"
+    vault_token: "{{ lookup('file', zuul_base_vault_token_path) }}"
+    vault_secret_dest: "{{ ansible_user_dir }}/.approle-secret"
+    vault_token_dest: "{{ ansible_user_dir }}/.approle-token"
+
+    vault_role_name: "{{ vault_data.vault_role_name }}"
+
+  roles:
+    - role: create-vault-approle-secret
+      when: zuul_success | bool
+
+    - role: create-vault-approle-token
+      vault_role_id: "{{ vault_data.vault_role_id }}"
+      vault_wrapping_token_id: "{{ lookup('file', vault_secret_dest) }}"
+
+  tasks:
+    - name: Get refstack admin user credentials from vault
+      no_log: true
+      vault_read:
+        vault_addr: "{{ vault_addr }}"
+        vault_token: "{{ lookup('file', vault_token_dest) }}"
+        secret_path: "{{ test_users.vault_admin_secret_path }}"
+      register: refstack_admin
+
+    - name: Get refstack power user1 credentials from vault
+      no_log: true
+      vault_read:
+        vault_addr: "{{ vault_addr }}"
+        vault_token: "{{ lookup('file', vault_token_dest) }}"
+        secret_path: "{{ test_users.vault_power1_secret_path }}"
+      register: refstack_power1
+
+    - name: Get refstack power user2 credentials from vault
+      no_log: true
+      vault_read:
+        vault_addr: "{{ vault_addr }}"
+        vault_token: "{{ lookup('file', vault_token_dest) }}"
+        secret_path: "{{ test_users.vault_power1_secret_path }}"
+      register: refstack_power2
+
+    - name: Destroy vault token
+      include_role:
+        name: destroy-vault-token
+      vars:
+        vault_token: "{{ lookup('file', vault_token_dest) }}"
+
+    - name: Remove vault token file
+      file:
+        path: "{{ vault_token_dest }}"
+        state: "absent"
+
 - hosts: all
   roles:
     - refstack-client
