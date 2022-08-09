@@ -47,10 +47,10 @@
       vars:
         vault_token: "{{ lookup('file', vault_token_dest) }}"
 
-     name: Remove vault token file
-       file:
-         path: "{{ vault_token_dest }}"
-         state: "absent"
+    - name: Remove vault token file
+      file:
+        path: "{{ vault_token_dest }}"
+        state: "absent"
 
 - hosts: all
   roles:
