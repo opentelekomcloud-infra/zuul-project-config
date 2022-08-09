@@ -1,4 +1,12 @@
 - project:
+    name: opendev.org/osf/refstack-client
+    default-branch: master
+    periodic:
+      jobs:
+        - refstack-client-run:
+            branches: master
+
+- project:
     name: opentelekomcloud-infra/zuul-project-config
     merge-mode: squash-merge
     default-branch: master
