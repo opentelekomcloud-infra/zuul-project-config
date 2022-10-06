@@ -16,7 +16,7 @@
 
     - name: Revoke token lease
       check_mode: false
-      # no_log: true
+      no_log: true
       ansible.builtin.uri:
         url: "{{ zuul_vault_addr }}/v1/sys/leases/revoke"
         headers:

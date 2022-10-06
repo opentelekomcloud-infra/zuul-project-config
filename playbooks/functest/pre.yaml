@@ -26,7 +26,7 @@
 
     - name: Get temporary credentials
       delegate_to: localhost
-      # no_log: true
+      no_log: true
       ansible.builtin.uri:
         url: "{{ zuul_vault_addr }}/v1/openstack/creds/{{ vault_cloud_path }}"
         headers:
@@ -42,12 +42,6 @@
           cloud_creds:
             lease_id: "{{ vault_data.json.lease_id }}"
         mode: "0440"
-
-    - name: set fact
-      set_fact:
-        cloud_config:
-          clouds:
-            functional_user: "{{ vault_data.json.data | combine({'auth': {'user_domain_id': vault_data.json.data.auth.project_domain_id}}, recursive=True) }}"
 
     - name: Include deploy-clouds-config role
       no_log: true
