@@ -1,4 +1,12 @@
 ---
+- semaphore:
+    name: functest-eu-de
+    max: 4
+
+- semaphore:
+    name: functest-eu-nl
+    max: 4
+
 - job:
     name: tox-functional
     parent: tox
@@ -61,6 +69,7 @@
     secrets:
       - secret: zuul_eco_project_config_vault_new
         name: vault_data
+    semaphores: functest-eu-de
 
 - job:
     name: tox-functional-eu-nl
@@ -84,3 +93,4 @@
     secrets:
       - secret: zuul_eco_project_config_vault_new
         name: vault_data
+    semaphores: functest-eu-nl
