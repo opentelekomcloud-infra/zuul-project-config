@@ -1,11 +1,14 @@
 - hosts: localhost
   vars:
     vault_addr: "{{ zuul_vault_addr }}"
+    vault_token: "{{ lookup('file', zuul_base_vault_token_path) }}"
     vault_secret_dest: "{{ ansible_user_dir }}/.approle-secret"
     vault_token_dest: "{{ ansible_user_dir }}/.approle-token"
     vault_role_name: "{{ vault_data.vault_role_name }}"
 
   roles:
+    - role: create-vault-approle-secret
+
     - role: create-vault-approle-token
       vault_role_id: "{{ vault_data.vault_role_id }}"
       vault_wrapping_token_id: "{{ lookup('file', vault_secret_dest) }}"
