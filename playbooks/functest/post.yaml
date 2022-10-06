@@ -26,4 +26,4 @@
           lease_id: "{{ cloud_creds.lease_id }}"
         body_format: "json"
         status_code: 204
-      when: "cloud_cred is defined and cloud_creds.lease_id is defined"
+      when: "cloud_creds is defined and cloud_creds.lease_id is defined"
