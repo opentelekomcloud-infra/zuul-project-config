@@ -31,7 +31,7 @@
       ansible.builtin.uri:
         url: "{{ zuul_vault_addr }}/v1/openstack/creds/{{ vault_cloud_path }}"
         headers:
-          X-Vault-Token: "{{{ lookup('file', vault_token_dest) }"
+          X-Vault-Token: "{{ lookup('file', vault_token_dest) }}"
         method: "GET"
       register: vault_data
 
