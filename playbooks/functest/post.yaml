@@ -16,7 +16,7 @@
 
     - name: Revoke token lease
       check_mode: false
-      no_log: true
+      # no_log: true
       uri:
         url: "{{ zuul_vault_addr }}/v1/sys/leases/revoke"
         headers:
@@ -26,3 +26,4 @@
           lease_id: "{{ temp_token.lease_id }}"
         body_format: "json"
         status_code: 204
+      when: "temp_token is defined and temp_token.lease_id is defined"
