@@ -34,20 +34,18 @@
         method: "GET"
       register: vault_data
 
-    - name: Save token
+    - name: Save data for later revocation
       delegate_to: localhost
-      copy:
-        dest: "{{ zuul.executor.work_root }}/.{{ zuul.build }}"
+      ansible.builtin.copy:
+        dest: "{{ zuul.executor.work_root }}/.{{ zuul.build }}.functest"
         content:
-          temp_token:
-            token: "{{ vault_data.config.auth.token }}"
-            auth_url: "{{ vault_data.config.auth.auth_url }}"
+          cloud_creds:
             lease_id: "{{ vault_data.json.lease_id }}"
         mode: "0440"
 
     - name: Include deploy-clouds-config role
       no_log: true
-      include_role:
+      ansible.builtin.include_role:
         name: deploy-clouds-config
       vars:
         cloud_config:

@@ -7,23 +7,23 @@
     # - clean the resources, which might have been created
     # - revoke the temp token explicitely
     - name: Include vars
-      include_vars: "{{ zuul.executor.work_root }}/.{{ zuul.build }}"
+      ansible.builtin.include_vars: "{{ zuul.executor.work_root }}/.{{ zuul.build }}.functest"
       failed_when: false
 
     - name: delete data file
-      command: "shred {{ zuul.executor.work_root }}/.{{ zuul.build }}"
-      when: "temp_token is defined"
+      ansible.builtin.command: "shred {{ zuul.executor.work_root }}/.{{ zuul.build }}.functest"
+      when: "cloud_creds is defined"
 
     - name: Revoke token lease
       check_mode: false
       # no_log: true
-      uri:
+      ansible.builtin.uri:
         url: "{{ zuul_vault_addr }}/v1/sys/leases/revoke"
         headers:
           X-Vault-Token: "{{ lookup('file', vault_token_file) }}"
         method: "PUT"
         body:
-          lease_id: "{{ temp_token.lease_id }}"
+          lease_id: "{{ cloud_creds.lease_id }}"
         body_format: "json"
         status_code: 204
       when: "temp_token is defined and temp_token.lease_id is defined"
