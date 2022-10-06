@@ -1,0 +1,28 @@
+- hosts: localhost
+  vars:
+    vault_token_dest: "{{ ansible_user_dir }}/.approle-token"
+
+  tasks:
+    # TODO:
+    # - clean the resources, which might have been created
+    # - revoke the temp token explicitely
+    - name: Include vars
+      include_vars: "{{ zuul.executor.work_root }}/.{{ zuul.build }}"
+      failed_when: false
+
+    - name: delete data file
+      command: "shred {{ zuul.executor.work_root }}/.{{ zuul.build }}"
+      when: "temp_token is defined"
+
+    - name: Revoke token lease
+      check_mode: false
+      no_log: true
+      uri:
+        url: "{{ zuul_vault_addr }}/v1/sys/leases/revoke"
+        headers:
+          "X-Vault-Token": "{{ lookup('file', vault_token_dest) }}"
+        method: "PUT"
+        body:
+          lease_id: "{{ temp_token.lease_id }}"
+        body_format: "json"
+        status_code: 204

@@ -1,0 +1,62 @@
+---
+- job:
+    name: tox-functional
+    parent: tox
+    description: |
+      Base job for executing functional tests with tox against OTC
+    pre-run:
+      - playbooks/otc/functest-pre.yaml
+    post-run: playbooks/otc/functest-post.yaml
+    ansible-version: 5
+    nodeset: ubuntu-jammy
+    vars:
+      vault_functional_cloud_secret_name: "clouds/otcci_functional"
+      functest_project_name: "eu-de_zuul_otce"
+      tox_envlist: functional
+      tox_environment:
+        OS_CLOUD: functest_cloud
+        OS_ADMIN_CLOUD: functest_cloud
+    secrets:
+      - secret: zuul_project_config_vault
+        name: zuul_project_config_vault
+
+- job:
+    name: golang-make-functional
+    parent: golang-make
+    description: |
+      Base job for executing golang functional tests against OTC
+    pre-run:
+      - playbooks/otc/functest-pre.yaml
+    post-run: playbooks/otc/functest-post.yaml
+    nodeset: ubuntu-jammy
+    vars:
+      vault_functional_cloud_secret_name: "clouds/otcci_functional"
+      functest_project_name: "eu-de_zuul_tf"
+      make_command: acceptance
+      make_env:
+        OS_CLOUD: functest_cloud
+    secrets:
+      - secret: zuul_project_config_vault
+        name: zuul_project_config_vault
+
+- job:
+    name: tox-functional-de
+    parent: tox
+    description: |
+      Base job for executing functional tests with tox against OTC
+    pre-run:
+      - playbooks/functest/pre.yaml
+    post-run: playbooks/functest/post.yaml
+    nodeset: ubuntu-jammy
+    vars:
+      functest_candidate_clouds:
+        - "cloud_41245_de_functest1"
+        - "cloud_41245_de_functest2"
+        - "cloud_41245_de_functest3"
+        - "cloud_41245_de_functest4"
+      tox_envlist: functional
+      tox_environment:
+        OS_CLOUD: functional_user
+    secrets:
+      - secret: zuul_eco_project_config_vault_new
+        name: vault_data

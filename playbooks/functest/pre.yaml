@@ -1,0 +1,53 @@
+- hosts: localhost
+  vars:
+    vault_addr: "{{ zuul_vault_addr }}"
+    vault_secret_dest: "{{ ansible_user_dir }}/.approle-secret"
+    vault_token_dest: "{{ ansible_user_dir }}/.approle-token"
+    vault_role_name: "{{ vault_data.vault_role_name }}"
+
+  roles:
+    - role: create-vault-approle-token
+      vault_role_id: "{{ vault_data.vault_role_id }}"
+      vault_wrapping_token_id: "{{ lookup('file', vault_secret_dest) }}"
+
+- hosts: all
+  vars:
+    vault_token_dest: "{{ ansible_user_dir }}/.approle-token"
+
+  tasks:
+    - name: Select random cloud
+      ansible.builtin.set_fact:
+        vault_cloud_path: "{{ cloud_vault_path_prefix }}_{{ otc_base_item }}"
+      with_random_choice: "{{ functest_candidate_clouds }}"
+      loop_control:
+        loop_var: "otc_base_item"
+
+    - name: Get temporary credentials
+      delegate_to: localhost
+      no_log: true
+      ansible.builtin.uri:
+        url: "{{ zuul_vault_addr }}/v1/openstack/creds/{{ vault_cloud_path }}"
+        headers:
+          X-Vault-Token: "{{{ lookup('file', vault_token_dest) }"
+        method: "GET"
+      register: vault_data
+
+    - name: Include deploy-clouds-config role
+      no_log: true
+      include_role:
+        name: deploy-clouds-config
+      vars:
+        cloud_config:
+          clouds:
+            functional_user: "{{ vault_data.json.data.config | combine({'auth': {'user_domain_id': vault_data.json.data.auth.project_domain_id}) }}"
+
+    - name: Save token
+      delegate_to: localhost
+      copy:
+        dest: "{{ zuul.executor.work_root }}/.{{ zuul.build }}"
+        content:
+          temp_token:
+            token: "{{ vault_data.config.auth.token }}"
+            auth_url: "{{ vault_data.config.auth.auth_url }}"
+            lease_id: "{{ vault_data.json.lease_id }}"
+        mode: "0440"
