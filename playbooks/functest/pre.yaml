@@ -20,7 +20,7 @@
   tasks:
     - name: Select random cloud
       ansible.builtin.set_fact:
-        vault_cloud_path: "{{ cloud_vault_path_prefix }}_{{ otc_base_item }}"
+        vault_cloud_path: "{{ otc_base_item }}"
       with_random_choice: "{{ functest_candidate_clouds }}"
       loop_control:
         loop_var: "otc_base_item"
