@@ -47,7 +47,8 @@
       set_fact:
         cloud_config:
           clouds:
-            functional_user: "{{ vault_data.json.data | combine({'auth': {'user_domain_id': vault_data.json.data.auth.project_domain_id}}) }}"
+            functional_user: "{{ vault_data.json.data | combine({'auth': {'user_domain_id': vault_data.json.data.auth.project_domain_id}}, recursive=True) }}"
+
     - name: Include deploy-clouds-config role
       no_log: true
       ansible.builtin.include_role:
@@ -55,4 +56,4 @@
       vars:
         cloud_config:
           clouds:
-            functional_user: "{{ vault_data.json.data | combine({'auth': {'user_domain_id': vault_data.json.data.auth.project_domain_id}}) }}"
+            functional_user: "{{ vault_data.json.data | combine({'auth': {'user_domain_id': vault_data.json.data.auth.project_domain_id}}, recursive=True) }}"
