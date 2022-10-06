@@ -1,6 +1,6 @@
 - hosts: localhost
   vars:
-    vault_token_dest: "{{ ansible_user_dir }}/.approle-token"
+    vault_token_file: "{{ zuul.executor.work_root }}/.approle-token"
 
   tasks:
     # TODO:
@@ -20,7 +20,7 @@
       uri:
         url: "{{ zuul_vault_addr }}/v1/sys/leases/revoke"
         headers:
-          "X-Vault-Token": "{{ lookup('file', vault_token_dest) }}"
+          X-Vault-Token: "{{ lookup('file', vault_token_file) }}"
         method: "PUT"
         body:
           lease_id: "{{ temp_token.lease_id }}"

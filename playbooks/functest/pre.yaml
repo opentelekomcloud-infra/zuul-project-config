@@ -2,8 +2,8 @@
   vars:
     vault_addr: "{{ zuul_vault_addr }}"
     vault_token: "{{ lookup('file', zuul_base_vault_token_path) }}"
-    vault_secret_dest: "{{ ansible_user_dir }}/.approle-secret"
-    vault_token_dest: "{{ ansible_user_dir }}/.approle-token"
+    vault_secret_dest: "{{ zuul.executor.work_root }}/.approle-secret"
+    vault_token_dest: "{{ zuul.executor.work_root }}/.approle-token"
     vault_role_name: "{{ vault_data.vault_role_name }}"
 
   roles:
@@ -15,8 +15,7 @@
 
 - hosts: all
   vars:
-    vault_token_dest: "{{ ansible_user_dir }}/.approle-token"
-
+    vault_token_file: "{{ zuul.executor.work_root }}/.approle-token"
   tasks:
     - name: Select random cloud
       ansible.builtin.set_fact:
@@ -31,7 +30,7 @@
       ansible.builtin.uri:
         url: "{{ zuul_vault_addr }}/v1/openstack/creds/{{ vault_cloud_path }}"
         headers:
-          X-Vault-Token: "{{ lookup('file', vault_token_dest) }}"
+          X-Vault-Token: "{{ lookup('file', vault_token_file) }}"
         method: "GET"
       register: vault_data
 
