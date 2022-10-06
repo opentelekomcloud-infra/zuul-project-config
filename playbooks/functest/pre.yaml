@@ -34,15 +34,6 @@
         method: "GET"
       register: vault_data
 
-    - name: Include deploy-clouds-config role
-      no_log: true
-      include_role:
-        name: deploy-clouds-config
-      vars:
-        cloud_config:
-          clouds:
-            functional_user: "{{ vault_data.json.data.config | combine({'auth': {'user_domain_id': vault_data.json.data.auth.project_domain_id}) }}"
-
     - name: Save token
       delegate_to: localhost
       copy:
@@ -53,3 +44,12 @@
             auth_url: "{{ vault_data.config.auth.auth_url }}"
             lease_id: "{{ vault_data.json.lease_id }}"
         mode: "0440"
+
+    - name: Include deploy-clouds-config role
+      no_log: true
+      include_role:
+        name: deploy-clouds-config
+      vars:
+        cloud_config:
+          clouds:
+            functional_user: "{{ vault_data.json.data.config | combine({'auth': {'user_domain_id': vault_data.json.data.auth.project_domain_id}}) }}"
