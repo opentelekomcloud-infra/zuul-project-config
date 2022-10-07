@@ -299,6 +299,9 @@
     description: Jobs in this queue are triggered on a timer.
     manager: independent
     precedence: low
+    failure:
+      smtp:
+        subject: "Change {change} failed"
     trigger:
       timer:
         - time: '0 0 * * *'
@@ -321,6 +324,9 @@
     description: Jobs in this queue are triggered on a weekly timer.
     manager: independent
     precedence: low
+    failure:
+      smtp:
+        subject: "Change {change} failed"
     trigger:
       timer:
         # Saturday 8am UTC is a better time to start weekend jobs.
