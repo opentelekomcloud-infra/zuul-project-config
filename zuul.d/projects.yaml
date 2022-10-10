@@ -10,16 +10,15 @@
     name: opentelekomcloud-infra/zuul-project-config
     merge-mode: squash-merge
     default-branch: master
+    queue: project-config
     templates:
       - publish-otc-docs-pti
     check:
-      queue: project-config
       jobs:
         - otc-tox-linters: &otc-tox-linters
             required-projects:
               - zuul/zuul-jobs
               - opentelekomcloud-infra/otc-zuul-jobs
     gate:
-      queue: project-config
       jobs:
         - otc-tox-linters: *otc-tox-linters
