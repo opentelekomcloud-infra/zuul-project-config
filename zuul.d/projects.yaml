@@ -9,7 +9,7 @@
 - project:
     name: opentelekomcloud-infra/zuul-project-config
     merge-mode: squash-merge
-    default-branch: master
+    default-branch: main
     queue: project-config
     templates:
       - publish-otc-docs-pti
