@@ -1,6 +1,6 @@
 - project:
     name: opendev.org/osf/refstack-client
-    default-branch: master
+    default-branch: master1
     periodic:
       jobs:
         - refstack-client-run:
