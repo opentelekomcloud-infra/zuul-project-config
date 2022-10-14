@@ -96,3 +96,94 @@
       - secret: zuul_eco_project_config_vault_new
         name: vault_data
     semaphores: functest-eu-nl
+
+- job:
+    name: otc-project-cleanup-base
+    parent: project-cleanup
+    abstract: true
+    description:
+      Cleanup functest1 project in eu-de
+    pre-run: playbooks/functest/pre.yaml
+    post-run: playbooks/functest/post.yaml
+    vars:
+      project_cleanup_cloud: "functional_user"
+      project_cleanup_filters:
+        created_at: "{{
+          ('%Y-%m-%d %H:%M:%S') |
+          strftime((ansible_date_time.epoch | int) - 3600)
+        }}"
+    secrets:
+      - secret: zuul_eco_project_config_vault_new
+        name: vault_data
+
+- job:
+    name: otc-project-cleanup-eu-de-functest1
+    parent: otc-project-cleanup-base
+    description:
+      Cleanup functest1 project in eu-de
+    vars:
+      functest_candidate_clouds:
+        - "cloud_41245_de_functest1"
+
+- job:
+    name: otc-project-cleanup-eu-de-functest2
+    parent: otc-project-cleanup-base
+    description:
+      Cleanup functest2 project in eu-de
+    vars:
+      functest_candidate_clouds:
+        - "cloud_41245_de_functest2"
+
+- job:
+    name: otc-project-cleanup-eu-de-functest3
+    parent: otc-project-cleanup-base
+    description:
+      Cleanup functest3 project in eu-de
+    vars:
+      functest_candidate_clouds:
+        - "cloud_41245_de_functest3"
+
+- job:
+    name: otc-project-cleanup-eu-de-functest4
+    parent: otc-project-cleanup-base
+    description:
+      Cleanup functest4 project in eu-de
+    vars:
+      functest_candidate_clouds:
+        - "cloud_41245_de_functest4"
+
+- job:
+    name: otc-project-cleanup-eu-nl-functest1
+    parent: otc-project-cleanup-base
+    description:
+      Cleanup functest1 project in eu-nl
+    vars:
+      functest_candidate_clouds:
+        - "cloud_41245_nl_functest1"
+
+- job:
+    name: otc-project-cleanup-eu-nl-functest2
+    parent: otc-project-cleanup-base
+    description:
+      Cleanup functest2 project in eu-nl
+    vars:
+      functest_candidate_clouds:
+        - "cloud_41245_nl_functest2"
+
+- job:
+    name: otc-project-cleanup-eu-nl-functest3
+    parent: otc-project-cleanup-base
+    description:
+      Cleanup functest3 project in eu-nl
+    vars:
+      functest_candidate_clouds:
+        - "cloud_41245_nl_functest3"
+
+- job:
+    name: otc-project-cleanup-eu-nl-functest4
+    parent: otc-project-cleanup-base
+    description:
+      Cleanup functest4 project in eu-nl
+    vars:
+      functest_candidate_clouds:
+        - "cloud_41245_nl_functest4"
