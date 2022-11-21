@@ -17,5 +17,3 @@
       include_role:
         name: fetch-sphinx-json
       when: zuul_success | bool
-
-

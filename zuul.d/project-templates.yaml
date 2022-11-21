@@ -94,6 +94,9 @@
     promote:
       jobs:
         - noop
+    periodic:
+      jobs:
+        - publish-otc-docs-hc
 
 - project-template:
     name: api-ref-jobs

@@ -182,6 +182,7 @@
     run: playbooks/publish/fetch-zuul-artifact.yaml
     post-run: playbooks/publish/docs.yaml
     vars:
+      container: "{{ zuul.project.short_name }}"
       write_root_marker: true
     nodeset:
       nodes: []
@@ -259,6 +260,26 @@
       opensearch_doc_category: "api-ref"
 
 - job:
+    name: promote-otc-tox-docs-hc
+    parent: otc-promote-docs-hc-base
+    description: |
+      Promote content of the otc-tox-doc job.
+      This job is run in a promote pipeline to publish documents built
+      in the gate pipeline.
+    # We only publish the master branch, so no need to run
+    # for changes on other branches.
+    branches:
+      - main
+    final: true
+    files:
+      - ^doc/.*
+      - ^requirements.txt
+    vars:
+      download_artifact_job: "otc-tox-docs"
+      make_public: true
+      # opensearch_doc_category: "api-ref"
+
+- job:
     name: promote-api-ref-hc
     parent: otc-promote-docs-hc-base
     description: |
@@ -268,13 +289,10 @@
     # We only publish the master branch, so no need to run
     # for changes on other branches.
     branches:
-      - master
       - main
     final: true
     vars:
-      container: "api-ref"
-      prefix: "{{ zuul.project.short_name }}"
-      download_artifact_job: build-otc-api-ref
+      download_artifact_job: "build-otc-api-ref"
       make_public: true
       opensearch_doc_category: "api-ref"
 
@@ -311,10 +329,11 @@
       - master
       - main
     final: true
+    files:
+      - ^umn/.*
+      - requirements.txt
     vars:
-      container: "umn"
-      prefix: "{{ zuul.project.short_name }}"
-      download_artifact_job: build-otc-umn
+      download_artifact_job: "build-otc-umn"
       make_public: true
       opensearch_doc_category: "umn"
 
@@ -328,13 +347,13 @@
     # We only publish the master branch, so no need to run
     # for changes on other branches.
     branches:
-      - master
       - main
     final: true
+    files:
+      - ^dev_guide/.*
+      - requirements.txt
     vars:
-      container: "dev"
-      prefix: "{{ zuul.project.short_name }}"
-      download_artifact_job: build-otc-dev-guide
+      download_artifact_job: "build-otc-dev-guide"
       make_public: true
       opensearch_doc_category: "dev"
 
@@ -397,7 +416,7 @@
     name: publish-otc-docs-hc
     parent: otc-promote-docs-hc-base
     description: |
-      Publish the docs to Swift.
+      Publish docs to Swift.
       This job is building Docs from scratch and it intended to
       be executed in manual/periodic pipeline.
     final: true
