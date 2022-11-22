@@ -87,13 +87,19 @@
       Base jobs for the HelpCenter projects.
     check:
       jobs:
-        - noop
+        - otc-tox-docs:
+            files:
+              - ^doc/.*
     gate:
       jobs:
-        - noop
+        - otc-tox-docs:
+            files:
+              - ^doc/.*
     promote:
       jobs:
-        - noop
+        - promote-otc-tox-docs-hc:
+            files:
+              - ^doc/.*
     periodic:
       jobs:
         - publish-otc-docs-hc
