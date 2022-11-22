@@ -451,8 +451,6 @@
       bindep_profile: compile doc
       tox_pdf_envlist: umn-pdf-docs
       tox_skip_pdf: false
-      container: "umn"
-      prefix: "{{ zuul.project.short_name }}"
       opensearch_doc_category: "umn"
 
 - job:
@@ -474,6 +472,4 @@
       bindep_profile: compile doc
       tox_pdf_envlist: api-ref-pdf-docs
       tox_skip_pdf: false
-      container: "api-ref"
-      prefix: "{{ zuul.project.short_name }}"
       opensearch_doc_category: "api-ref"
