@@ -70,26 +70,6 @@
       vault_github_token_path: "github_zuul/token"
 
 - job:
-    name: otc-ansible-collection-test-integration
-    parent: ansible-collection-test-integration
-    description: |
-      Execute ansible-test integration tests for the collection with provided cloud
-    pre-run:
-      - playbooks/otc/functest-pre.yaml
-    post-run: playbooks/otc/functest-post.yaml
-    # Until we solve networking issue between 2 K8 cluster we need to have it
-    # on a VM
-    nodeset: ubuntu-jammy
-    vars:
-      vault_functional_cloud_secret_name: "clouds/otcci_functional"
-      functest_project_name: eu-de_zuul_acc
-      ansible_test_integration_env:
-        OS_CLOUD: functest_cloud
-    secrets:
-      - secret: zuul_project_config_vault
-        name: zuul_project_config_vault
-
-- job:
     name: otcinfra-upload-image
     parent: upload-docker-image
     secrets:

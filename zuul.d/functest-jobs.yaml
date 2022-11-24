@@ -187,3 +187,57 @@
     vars:
       functest_candidate_clouds:
         - "cloud_41245_nl_functest4"
+
+- job:
+    name: otc-ansible-collection-test-integration-de
+    parent: ansible-collection-test-integration
+    description: |
+      Execute ansible-test integration tests for the collection with provided
+      cloud in EU-DE region
+    pre-run:
+      - playbooks/functest/pre.yaml
+    post-run: playbooks/functest/post.yaml
+    # Until we solve networking issue between 2 K8 cluster we need to have it
+    # on a VM
+    nodeset: ubuntu-jammy
+    vars:
+      functest_candidate_clouds:
+        - "cloud_41245_de_functest1"
+        - "cloud_41245_de_functest2"
+        - "cloud_41245_de_functest3"
+        - "cloud_41245_de_functest4"
+      tox_envlist: functional
+      tox_environment:
+        OS_CLOUD: functional_user
+        OS_ADMIN_CLOUD: functional_user
+    secrets:
+      - secret: zuul_eco_project_config_vault_new
+        name: vault_data
+    semaphores: functest-eu-de
+
+- job:
+    name: otc-ansible-collection-test-integration-nl
+    parent: ansible-collection-test-integration
+    description: |
+      Execute ansible-test integration tests for the collection with provided
+      cloud in EU-NL region
+    pre-run:
+      - playbooks/functest/pre.yaml
+    post-run: playbooks/functest/post.yaml
+    # Until we solve networking issue between 2 K8 cluster we need to have it
+    # on a VM
+    nodeset: ubuntu-jammy
+    vars:
+      functest_candidate_clouds:
+        - "cloud_41245_nl_functest1"
+        - "cloud_41245_nl_functest2"
+        - "cloud_41245_nl_functest3"
+        - "cloud_41245_nl_functest4"
+      tox_envlist: functional
+      tox_environment:
+        OS_CLOUD: functional_user
+        OS_ADMIN_CLOUD: functional_user
+    secrets:
+      - secret: zuul_eco_project_config_vault_new
+        name: vault_data
+    semaphores: functest-eu-nl

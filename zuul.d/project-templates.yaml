@@ -28,7 +28,7 @@
         - ansible-collection-test-sanity
         - ansible-collection-test-units
         - ansible-collection-docs
-        - otc-ansible-collection-test-integration
+        - otc-ansible-collection-test-integration-de
     gate:
       jobs:
         - otc-tox-pep8
@@ -38,7 +38,7 @@
         - ansible-collection-test-sanity
         - ansible-collection-test-units
         - ansible-collection-docs
-        - otc-ansible-collection-test-integration
+        - otc-ansible-collection-test-integration-de
     release:
       jobs:
         - release-ansible-collection
