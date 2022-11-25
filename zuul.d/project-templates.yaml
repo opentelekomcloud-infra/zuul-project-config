@@ -21,24 +21,49 @@
     check:
       jobs:
         - otc-tox-pep8
-        # - tox-functional
-        # - tox-linters-ansible-devel
         - otc-tox-linters
         - ansible-collection-build
-        - ansible-collection-test-sanity
-        - ansible-collection-test-units
-        - ansible-collection-docs
-        - otc-ansible-collection-test-integration-de
+        - ansible-collection-test-sanity:
+            files:
+              - ^plugins/
+              - ^tests/sanity
+              - ^galaxy.yaml
+              - ^meta/
+              - ^test-requirements*
+        - ansible-collection-test-units:
+            files:
+              - ^plugins/
+              - ^tests/unit
+              - ^galaxy.yaml
+              - ^meta/
+              - ^test-requirements*
+        - ansible-collection-docs:
+            files:
+              - ^plugins/
+              - ^doc/
     gate:
       jobs:
         - otc-tox-pep8
-        # - tox-linters-ansible-devel
         - otc-tox-linters
         - ansible-collection-build
-        - ansible-collection-test-sanity
-        - ansible-collection-test-units
-        - ansible-collection-docs
-        - otc-ansible-collection-test-integration-de
+        - ansible-collection-test-sanity:
+            files:
+              - ^plugins/
+              - ^tests/sanity
+              - ^galaxy.yml
+              - ^meta/
+              - ^test-requirements*
+        - ansible-collection-test-units:
+            files:
+              - ^plugins/
+              - ^tests/unit
+              - ^galaxy.yml
+              - ^meta/
+              - ^test-requirements*
+        - ansible-collection-docs:
+            files:
+              - ^plugins/
+              - ^doc/
     release:
       jobs:
         - release-ansible-collection
