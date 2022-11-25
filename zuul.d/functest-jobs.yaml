@@ -189,7 +189,7 @@
         - "cloud_41245_nl_functest4"
 
 - job:
-    name: otc-ansible-collection-test-integration-de
+    name: otc-ansible-collection-test-integration-eu-de
     parent: ansible-collection-test-integration
     description: |
       Execute ansible-test integration tests for the collection with provided
@@ -218,7 +218,7 @@
     semaphores: functest-eu-de
 
 - job:
-    name: otc-ansible-collection-test-integration-nl
+    name: otc-ansible-collection-test-integration-eu-nl
     parent: ansible-collection-test-integration
     description: |
       Execute ansible-test integration tests for the collection with provided
