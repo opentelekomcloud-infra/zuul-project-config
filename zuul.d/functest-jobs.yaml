@@ -210,6 +210,8 @@
       tox_environment:
         OS_CLOUD: functional_user
         OS_ADMIN_CLOUD: functional_user
+      ansible_test_integration_env:
+        OS_CLOUD: functional_user
     secrets:
       - secret: zuul_eco_project_config_vault_new
         name: vault_data
@@ -237,6 +239,8 @@
       tox_environment:
         OS_CLOUD: functional_user
         OS_ADMIN_CLOUD: functional_user
+      ansible_test_integration_env:
+        OS_CLOUD: functional_user
     secrets:
       - secret: zuul_eco_project_config_vault_new
         name: vault_data
