@@ -7,6 +7,10 @@
     name: functest-eu-nl
     max: 4
 
+- semaphore:
+    name: functest-eu-ch
+    max: 4
+
 - job:
     name: tox-functional
     parent: tox
@@ -96,6 +100,31 @@
       - secret: zuul_eco_project_config_vault_new
         name: vault_data
     semaphores: functest-eu-nl
+
+- job:
+    name: tox-functional-eu-ch
+    parent: tox
+    description:
+      Base job for executing functional tests with tox against OTC in EU-CH
+      region.
+    pre-run:
+      - playbooks/functest/pre.yaml
+    post-run: playbooks/functest/post.yaml
+    nodeset: ubuntu-jammy
+    vars:
+      functest_candidate_clouds:
+        - "cloud_69979_swiss_functest1"
+        - "cloud_69979_swiss_functest2"
+        - "cloud_69979_swiss_functest3"
+        - "cloud_69979_swiss_functest4"
+      tox_envlist: functional
+      tox_environment:
+        OS_CLOUD: functional_user
+        OS_ADMIN_CLOUD: functional_user
+    secrets:
+      - secret: zuul_eco_project_config_vault_new
+        name: vault_data
+    semaphores: functest-eu-ch
 
 - job:
     name: otc-project-cleanup-base
@@ -189,6 +218,42 @@
         - "cloud_41245_nl_functest4"
 
 - job:
+    name: otc-project-cleanup-eu-ch-functest1
+    parent: otc-project-cleanup-base
+    description:
+      Cleanup functest1 project in eu-ch
+    vars:
+      functest_candidate_clouds:
+        - "cloud_69979_swiss_functest1"
+
+- job:
+    name: otc-project-cleanup-eu-ch-functest2
+    parent: otc-project-cleanup-base
+    description:
+      Cleanup functest2 project in eu-ch
+    vars:
+      functest_candidate_clouds:
+        - "cloud_69979_swiss_functest2"
+
+- job:
+    name: otc-project-cleanup-eu-ch-functest3
+    parent: otc-project-cleanup-base
+    description:
+      Cleanup functest3 project in eu-ch
+    vars:
+      functest_candidate_clouds:
+        - "cloud_69979_swiss_functest3"
+
+- job:
+    name: otc-project-cleanup-eu-ch-functest4
+    parent: otc-project-cleanup-base
+    description:
+      Cleanup functest4 project in eu-ch
+    vars:
+      functest_candidate_clouds:
+        - "cloud_69979_swiss_functest4"
+
+- job:
     name: otc-ansible-collection-test-integration-eu-de
     parent: ansible-collection-test-integration
     description: |
@@ -245,3 +310,32 @@
       - secret: zuul_eco_project_config_vault_new
         name: vault_data
     semaphores: functest-eu-nl
+
+- job:
+    name: otc-ansible-collection-test-integration-eu-ch
+    parent: ansible-collection-test-integration
+    description: |
+      Execute ansible-test integration tests for the collection with provided
+      cloud in EU-CH region
+    pre-run:
+      - playbooks/functest/pre.yaml
+    post-run: playbooks/functest/post.yaml
+    # Until we solve networking issue between 2 K8 cluster we need to have it
+    # on a VM
+    nodeset: ubuntu-jammy
+    vars:
+      functest_candidate_clouds:
+        - "cloud_69979_swiss_functest1"
+        - "cloud_69979_swiss_functest2"
+        - "cloud_69979_swiss_functest3"
+        - "cloud_69979_swiss_functest4"
+      tox_envlist: functional
+      tox_environment:
+        OS_CLOUD: functional_user
+        OS_ADMIN_CLOUD: functional_user
+      ansible_test_integration_env:
+        OS_CLOUD: functional_user
+    secrets:
+      - secret: zuul_eco_project_config_vault_new
+        name: vault_data
+    semaphores: functest-eu-ch
