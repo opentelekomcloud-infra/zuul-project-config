@@ -115,6 +115,7 @@
         - otc-tox-docs:
             files:
               - ^doc/.*
+            post-timeout: 3600
     gate:
       jobs:
         - otc-tox-docs:
