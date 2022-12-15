@@ -115,19 +115,23 @@
         - otc-tox-docs:
             files:
               - ^doc/.*
+            post-timeout: 3600
     gate:
       jobs:
         - otc-tox-docs:
             files:
               - ^doc/.*
+            post-timeout: 3600
     promote:
       jobs:
         - promote-otc-tox-docs-hc:
             files:
               - ^doc/.*
+            post-timeout: 3600
     periodic:
       jobs:
-        - publish-otc-docs-hc
+        - publish-otc-docs-hc:
+            post-timeout: 3600
 
 - project-template:
     name: api-ref-jobs
