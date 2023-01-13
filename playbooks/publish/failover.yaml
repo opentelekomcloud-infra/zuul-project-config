@@ -1,0 +1,51 @@
+- name: Add failover hosts to inventory
+  hosts: localhost
+  tasks:
+    - name: Add HC1 to inventory
+      ansible.builtin.add_host:
+        name: hc1.eco.tsi-dev.otc-service.com
+        ansible_python_interpreter: python3
+        ansible_user: zuul
+        # Without setting ansible_host directly, mirror-workspace-git-repos
+        # gets sad because if delegate_to localhost and with add_host that
+        # ends up with ansible_host being localhost.
+        ansible_host: hc1.eco.tsi-dev.otc-service.com
+        ansible_port: 22
+        # Port 19885 is firewalled
+        zuul_console_disabled: true
+        groups:
+          - failover
+
+- name: Register ssh keys for failover hosts
+  hosts: localhost
+  tasks:
+    - name: Add HC1 hostkey to known hosts
+      ansible.builtin.known_hosts:
+        name: hc1.eco.tsi-dev.otc-service.com
+        key: "{{ zj_item }}"
+      loop:
+        - "hc1.eco.tsi-dev.otc-service.com,80.158.17.179 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFffEK/esn/o4mSEGn2UjwcNYgoV4D/f6jfkXd2RrKiy+DIQtev8g8Yz64680q1okZyU1a1Qf1H4rA/vvo/bffU="
+      loop_control:
+        loop_var: zj_item
+
+- name: Upload artifacts to the failover hosts
+  hosts: failover
+  ignore_unreachable: true
+  tasks:
+    - name: Ignore errors block for uploading artifacts
+      block:
+        - name: Construct destination folder name
+          ansible.builtin.set_fact:
+            docs_dest: "/data/{{ container | default(zuul.project.short_name) }}/{{ prefix | default('') }}"
+
+        - name: Create upload directory
+          ansible.builtin.file:
+            path: "{{ docs_dest }}"
+            state: "directory"
+            mode: "0775"
+
+        - name: Upload data to the failover server
+          ansible.builtin.unarchive:
+            src: "{{ zuul.executor.work_root }}/docs-html.tar.gz"
+            dest: "{{ docs_dest }}"
+      ignore_errors: true
