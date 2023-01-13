@@ -160,7 +160,9 @@
     abstract: True
     post-review: true
     run: playbooks/publish/fetch-zuul-artifact.yaml
-    post-run: playbooks/publish/docs.yaml
+    post-run:
+      - playbooks/publish/docs.yaml
+      - playbooks/publish/failover.yaml
     vars:
       container: "{{ zuul.project.short_name }}"
       write_root_marker: true
@@ -402,7 +404,8 @@
     final: true
     pre-run: playbooks/docs/pre.yaml
     run: playbooks/docs/run.yaml
-    post-run: playbooks/docs/fetch.yaml
+    post-run:
+      - playbooks/docs/fetch.yaml
     nodeset: ubuntu-jammy
     vars:
       sphinx_python: python3
