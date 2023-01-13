@@ -31,6 +31,7 @@
 - name: Upload artifacts to the failover hosts
   hosts: failover
   ignore_unreachable: true
+  become: true
   tasks:
     - name: Ignore errors block for uploading artifacts
       block:
@@ -49,3 +50,4 @@
             src: "{{ zuul.executor.work_root }}/docs-html.tar.gz"
             dest: "{{ docs_dest }}"
       ignore_errors: true
+      ignore_unreachable: true
