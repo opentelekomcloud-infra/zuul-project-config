@@ -162,7 +162,6 @@
     run: playbooks/publish/fetch-zuul-artifact.yaml
     post-run:
       - playbooks/publish/docs.yaml
-      - playbooks/publish/failover.yaml
     vars:
       container: "{{ zuul.project.short_name }}"
       write_root_marker: true
