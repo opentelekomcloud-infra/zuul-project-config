@@ -89,10 +89,18 @@
               when: docs_json.stat.exists
 
             - name: Extract docs-json archive
-              unarchive:
+              ansible.builtin.unarchive:
                 src: "{{ docs_json.stat.path }}"
                 dest: "{{ zuul.executor.work_root }}/docs-json"
               when: docs_json.stat.exists
+
+            - name: Find all indexes
+              ansible.builtin.find:
+                paths: "{{ zuul.executor.work_root }}/docs-json"
+                patterns: "searchindex.json"
+              when:
+                - "docs_json.stat.exists"
+              register: indexes
 
             - name: Get Search engine upload credentials from vault
               no_log: true
@@ -101,21 +109,30 @@
                 vault_token: "{{ lookup('file', vault_token_dest) }}"
                 secret_path: "{{ promote_data.vault_search_secret_path }}"
               register: search_credentials
-              when: docs_json.stat.exists
+              when:
+                - "docs_json.stat.exists"
+                - "indexes is defined"
+                - "indexes.matched > 0"
 
             - name: Include upload-doc-index-opensearch
               include_role:
                 name: upload-doc-index-opensearch
               vars:
-                sphinx_json_dir: "{{ zuul.executor.work_root }}/docs-json"
+                sphinx_json_dir: "{{ zj_index.path | dirname }}"
                 search_engine_url: "{{ search_credentials.secret.url }}"
                 search_engine_username: "{{ search_credentials.secret.username }}"
                 search_engine_password: "{{ search_credentials.secret.password }}"
                 search_engine_base_url: "https://docs.otc.t-systems.com"
-                search_engine_doc_url: "{{ container | default(zuul.project.short_name) }}/{{ prefix | default('') }}"
-                search_engine_index_name: "helpcenter-{{ container | default('general') }}-{{ zuul.project.short_name }}"
+                search_engine_doc_url: "{{ container | default(zuul.project.short_name) }}/{{ prefix | default('') }}{{ zj_index.path | dirname | split('/') | last }}"
+                search_engine_index_name: "helpcenter-{{ container | default('general') }}-{{ opensearch_doc_category | default('') }}-{{ zj_index.path | dirname | split('/') | last | default('general') }}"
                 search_engine_doc_category: "{{ opensearch_doc_category | default(omit) }}"
-              when: docs_json.stat.exists
+              loop: "{{ indexes }}"
+              loop_control:
+                loop_var: zj_index
+              when:
+                - "docs_json.stat.exists"
+                - "indexes is defined"
+                - "indexes.matched > 0"
           ignore_errors: true
 
         - name: Destroy vault token
