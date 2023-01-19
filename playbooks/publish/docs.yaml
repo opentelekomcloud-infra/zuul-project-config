@@ -126,7 +126,7 @@
                 search_engine_doc_url: "{{ container | default(zuul.project.short_name) }}/{{ prefix | default('') }}{{ zj_index.path | dirname | split('/') | last }}"
                 search_engine_index_name: "helpcenter-{{ container | default('general') }}-{{ opensearch_doc_category | default('') }}-{{ zj_index.path | dirname | split('/') | last | default('general') }}"
                 search_engine_doc_category: "{{ opensearch_doc_category | default(omit) }}"
-              loop: "{{ indexes }}"
+              loop: "{{ indexes.files }}"
               loop_control:
                 loop_var: zj_index
               when:
