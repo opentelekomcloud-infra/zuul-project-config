@@ -98,6 +98,7 @@
               ansible.builtin.find:
                 paths: "{{ zuul.executor.work_root }}/docs-json"
                 patterns: "searchindex.json"
+                recurse: true
               when:
                 - "docs_json.stat.exists"
               register: indexes
