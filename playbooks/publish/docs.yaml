@@ -91,7 +91,7 @@
 
             - name: Extract docs-json archive
               ansible.builtin.unarchive:
-                src: "{{ docs_json.stat.path }}"
+                src: "{{ docs_json_archive.stat.path }}"
                 dest: "{{ zuul.executor.work_root }}/docs-json"
               when: docs_json_archive.stat.exists
 
