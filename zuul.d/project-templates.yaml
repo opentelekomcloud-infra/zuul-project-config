@@ -174,9 +174,6 @@
       jobs:
         - promote-api-ref-hc:
             files: *api-ref-triggers
-    periodic:
-      jobs:
-        - publish-api-ref-docs-hc
 
 - project-template:
     name: umn-jobs
@@ -223,9 +220,6 @@
       jobs:
         - promote-umn-hc:
             files: *docs-umn-triggers
-    periodic:
-      jobs:
-        - publish-umn-docs-hc
 
 - project-template:
     name: dev-guide-hc-jobs
