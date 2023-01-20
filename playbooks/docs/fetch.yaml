@@ -17,3 +17,11 @@
       include_role:
         name: fetch-sphinx-json
       when: zuul_success | bool
+
+    - name: Fetch json archive
+      fetch:
+        dest: "{{ zuul.executor.work_root }}/"
+        src: "{{ ansible_user_dir }}/zuul-output/logs/docs-json.tar.gz"
+        flat: "true"
+      when: zuul_success | bool
+      failed_when: false
