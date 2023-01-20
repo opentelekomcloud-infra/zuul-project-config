@@ -80,28 +80,26 @@
             - name: Find JSON files
               stat:
                 path: "{{ zuul.executor.work_root }}/docs-json.tar.gz"
-              register: docs_json
+              register: docs_json_archive
 
             - name: Create working directory
               file:
                 path: "{{ zuul.executor.work_root }}/docs-json"
                 state: directory
                 mode: 0755
-              when: docs_json.stat.exists
+              when: docs_json_archive.stat.exists
 
             - name: Extract docs-json archive
               ansible.builtin.unarchive:
                 src: "{{ docs_json.stat.path }}"
                 dest: "{{ zuul.executor.work_root }}/docs-json"
-              when: docs_json.stat.exists
+              when: docs_json_archive.stat.exists
 
             - name: Find all indexes
               ansible.builtin.find:
                 paths: "{{ zuul.executor.work_root }}/docs-json"
                 patterns: "searchindex.json"
                 recurse: true
-              when:
-                - "docs_json.stat.exists"
               register: indexes
 
             - name: Get Search engine upload credentials from vault
@@ -112,7 +110,6 @@
                 secret_path: "{{ promote_data.vault_search_secret_path }}"
               register: search_credentials
               when:
-                - "docs_json.stat.exists"
                 - "indexes is defined"
                 - "indexes.matched > 0"
 
@@ -132,7 +129,6 @@
               loop_control:
                 loop_var: zj_index
               when:
-                - "docs_json.stat.exists"
                 - "indexes is defined"
                 - "indexes.matched > 0"
           ignore_errors: true
