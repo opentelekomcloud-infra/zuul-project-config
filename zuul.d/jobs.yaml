@@ -1,4 +1,9 @@
 ---
+- semaphore:
+    # We do not want to make a big stress on the system and only allow max of 10 jobs at a time
+    name: docs-build
+    max: 10
+
 - job:
     name: release-python
     description: |
@@ -391,6 +396,8 @@
     post-run:
       - playbooks/docs/fetch.yaml
     nodeset: ubuntu-jammy
+    semaphores:
+      - docs-build
     vars:
       sphinx_python: python3
       tox_envlist: docs
