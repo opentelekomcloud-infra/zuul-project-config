@@ -264,7 +264,7 @@
     post-run: playbooks/functest/post.yaml
     # Until we solve networking issue between 2 K8 cluster we need to have it
     # on a VM
-    nodeset: ubuntu-jammy
+    nodeset: debian-bullseye
     vars:
       functest_candidate_clouds:
         - "cloud_41245_de_functest1"
@@ -293,7 +293,7 @@
     post-run: playbooks/functest/post.yaml
     # Until we solve networking issue between 2 K8 cluster we need to have it
     # on a VM
-    nodeset: ubuntu-jammy
+    nodeset: debian-bullseye
     vars:
       functest_candidate_clouds:
         - "cloud_41245_nl_functest1"
@@ -322,7 +322,7 @@
     post-run: playbooks/functest/post.yaml
     # Until we solve networking issue between 2 K8 cluster we need to have it
     # on a VM
-    nodeset: ubuntu-jammy
+    nodeset: debian-bullseye
     vars:
       functest_candidate_clouds:
         - "cloud_69979_swiss_functest1"
