@@ -112,11 +112,13 @@
       Base jobs for the HelpCenter projects.
     check:
       jobs:
+        - noop
         - otc-tox-docs:
             files:
               - ^doc/.*
     gate:
       jobs:
+        - noop
         - otc-tox-docs:
             files:
               - ^doc/.*
