@@ -132,6 +132,9 @@
                 - "indexes is defined"
                 - "indexes.matched > 0"
           ignore_errors: true
+          when:
+            - "publish_doc_to_search is defined"
+            - "publish_doc_to_search"
 
         - name: Destroy vault token
           include_role:

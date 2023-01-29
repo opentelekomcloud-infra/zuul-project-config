@@ -131,6 +131,7 @@
     post-run: playbooks/publish/docs.yaml
     vars:
       write_root_marker: true
+      publish_doc_to_search: false
     nodeset:
       nodes: []
     secrets:
@@ -170,6 +171,7 @@
     vars:
       container: "{{ zuul.project.short_name }}"
       write_root_marker: true
+      publish_doc_to_search: true
     nodeset:
       nodes: []
     secrets:
