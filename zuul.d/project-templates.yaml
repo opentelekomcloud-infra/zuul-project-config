@@ -115,18 +115,27 @@
         - noop
         - otc-tox-docs:
             files:
+              - ^api-ref/.*
+              - ^dev/.*
               - ^doc/.*
+              - ^umn/.*
     gate:
       jobs:
         - noop
         - otc-tox-docs:
             files:
+              - ^api-ref/.*
+              - ^dev/.*
               - ^doc/.*
+              - ^umn/.*
     promote:
       jobs:
         - promote-otc-tox-docs-hc:
             files:
+              - ^api-ref/.*
+              - ^dev/.*
               - ^doc/.*
+              - ^umn/.*
     periodic:
       jobs:
         - publish-otc-docs-hc
