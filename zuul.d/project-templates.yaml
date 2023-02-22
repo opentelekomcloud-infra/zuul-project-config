@@ -285,3 +285,14 @@
     promote:
       jobs:
         - promote-otc-releasenotes
+
+- project-template:
+    name: security-analysis-jobs
+    description: |
+      Perform security relevant static checks.
+    check:
+      jobs:
+        - noop
+    gate:
+      jobs:
+        - noop
