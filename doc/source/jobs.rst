@@ -11,6 +11,7 @@ Jobs
 .. zuul:autojob:: otcinfra-upload-image
 .. zuul:autojob:: otcinfra-promote-image
 .. zuul:autojob:: otcinfra-upload-image-quay
+.. zuul:autojob:: otcinfra-upload-container-images
 .. zuul:autojob:: otc-promote-docs-base
 .. zuul:autojob:: otc-promote-docs-hc-base
 .. zuul:autojob:: promote-otc-tox-docs
