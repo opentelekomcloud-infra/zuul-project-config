@@ -1,0 +1,40 @@
+- job:
+    name: otcinfra-upload-image
+    parent: upload-docker-image
+    secrets:
+      name: docker_credentials
+      secret: otcinfra_dockerhub
+      pass-to-parent: true
+
+- job:
+    name: otcinfra-promote-image
+    parent: promote-docker-image
+    nodeset: ubuntu-jammy
+    secrets:
+      name: docker_credentials
+      secret: otcinfra_dockerhub
+      pass-to-parent: true
+
+- job:
+    name: otcinfra-upload-image-quay
+    parent: upload-docker-image
+    nodeset: ubuntu-jammy
+    vars:
+      docker_registry: quay.io
+    secrets:
+      name: docker_credentials
+      secret: otcinfra_quay
+      pass-to-parent: true
+
+- job:
+    name: otcinfra-upload-container-images
+    parent: otc-build-container-image
+    description: |
+      Upload image(s) to the registry. 
+
+      Please refer to the upload-container-image role.
+    nodeset: ubuntu-jammy
+    post-run: playbooks/image/post.yaml
+    secrets:
+      - secret: zuul_eco_project_config_vault_new
+        name: vault_data

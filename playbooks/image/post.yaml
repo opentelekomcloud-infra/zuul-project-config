@@ -1,0 +1,57 @@
+---
+# This playbook is executed before the post of otc-zuul-jobs
+# upload-container-image
+#
+- hosts: localhost
+  vars:
+    vault_addr: "{{ zuul_vault_addr }}"
+    vault_token: "{{ lookup('file', zuul_base_vault_token_path) }}"
+    vault_secret_dest: "{{ zuul.executor.work_root }}/.approle-secret"
+    vault_token_dest: "{{ zuul.executor.work_root }}/.approle-token"
+    vault_role_name: "{{ vault_data.vault_role_name }}"
+
+  roles:
+    - role: create-vault-approle-secret
+
+    - role: create-vault-approle-token
+      vault_role_id: "{{ vault_data.vault_role_id }}"
+      vault_wrapping_token_id: "{{ lookup('file', vault_secret_dest) }}"
+
+- hosts: all
+  vars:
+    vault_token_file: "{{ zuul.executor.work_root }}/.approle-token"
+  tasks:
+    - name: Get Registry credentials
+      no_log: true
+      vault_read:
+        vault_addr: "{{ vault_addr }}"
+        vault_token: "{{ lookup('file', vault_token_dest) }}"
+        secret_path: "image_registries"
+      register: registry_credentials
+
+    - name: Upload images
+      ansible.builtin.import_role:
+        name: upload-container-image1
+      vars:
+        container_registry_credentials: "{{ registry_credentials.secret }}"
+
+    - name: Get Dependencytrack credentials
+      no_log: true
+      vault_read:
+        vault_addr: "{{ vault_addr }}"
+        vault_token: "{{ lookup('file', vault_token_dest) }}"
+        secret_path: "dependencytrack/uploader"
+      register: dt_credentials
+
+    - name: Upload BOMs to dependency track
+      ansible.builtin.import_role:
+        name: upload-bom-to-dependencytrack
+      vars:
+        dependencytrack_credentials: "{{ dt_credentials.secret }}"
+        bom_artifacts: "{{ zuul_bom_results }}"
+      when: "zuul_bom_results is defined"
+
+    - name: Remove vault token file
+      file:
+        path: "{{ vault_token_dest }}"
+        state: "absent"
