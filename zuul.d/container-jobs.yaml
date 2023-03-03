@@ -28,7 +28,7 @@
 
 - job:
     name: otcinfra-upload-container-images
-    parent: otc-upload-container-image
+    parent: otc-build-container-image
     description: |
       Upload image(s) to the registry. 
 

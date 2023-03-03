@@ -17,9 +17,15 @@
       vault_role_id: "{{ vault_data.vault_role_id }}"
       vault_wrapping_token_id: "{{ lookup('file', vault_secret_dest) }}"
 
+- hosts: all
+  vars:
+    vault_addr: "{{ zuul_vault_addr }}"
+    vault_secret_dest: "{{ zuul.executor.work_root }}/.approle-secret"
+
   tasks:
     - name: Get Registry credentials
       no_log: true
+      delegate_to: localhost
       ansible.builtin.uri:
         url: "{{ vault_addr }}/v1/secret/data/image_registries"
         method: "GET"
@@ -29,13 +35,15 @@
         return_content: true
       register: registry_credentials
 
-    - name: Return image registry creds
-      zuul_return:
-        secret_data:
-          container_registry_credentials: "{{ registry_credentials.json.data.data }}"
+    - name: Upload image
+      ansible.builtin.import_role:
+        name: upload-container-image1
+      vars:
+        container_registry_credentials: "{{ registry_credentials.json.data.data }}"
 
     - name: Get Dependencytrack credentials
       no_log: true
+      delegate_to: localhost
       ansible.builtin.uri:
         url: "{{ vault_addr }}/v1/secret/data/dependencytrack/uploader"
         method: "GET"
@@ -46,11 +54,14 @@
       register: dt_credentials
       failed_when: false
 
-    - name: Return image registry creds
-      zuul_return:
-        secret_data:
-          dependencytrack_credentials: "{{ dt_credentials.json.data.data }}"
-      when:
+    - name: Upload BOMs to dependency track
+      ansible.builtin.import_role:
+        name: upload-bom-to-dependencytrack
+      vars:
+        dependencytrack_credentials: "{{ dt_credentials.json.data.data }}"
+        bom_artifacts: "{{ zuul_bom_results }}"
+      when: "zuul_bom_results is defined"
+      when: 
         - "zuul_bom_results is defined"
         - "dt_credentials is defined"
         - "dt_credentials.json is defined"
