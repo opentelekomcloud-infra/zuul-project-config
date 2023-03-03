@@ -42,6 +42,7 @@
         vault_token: "{{ lookup('file', vault_token_dest) }}"
         secret_path: "dependencytrack/uploader"
       register: dt_credentials
+      failed_when: false
 
     - name: Upload BOMs to dependency track
       ansible.builtin.import_role:
@@ -49,7 +50,10 @@
       vars:
         dependencytrack_credentials: "{{ dt_credentials.secret }}"
         bom_artifacts: "{{ zuul_bom_results }}"
-      when: "zuul_bom_results is defined"
+      when: 
+        - "zuul_bom_results is defined"
+        - "dt_credentials is defined"
+        - "dt_credentials.secret is defined"
 
     - name: Remove vault token file
       file:
