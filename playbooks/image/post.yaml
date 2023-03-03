@@ -20,7 +20,7 @@
 - hosts: all
   vars:
     vault_addr: "{{ zuul_vault_addr }}"
-    vault_secret_dest: "{{ zuul.executor.work_root }}/.approle-secret"
+    vault_token_dest: "{{ zuul.executor.work_root }}/.approle-token"
 
   tasks:
     - name: Get Registry credentials
@@ -53,6 +53,8 @@
         return_content: true
       register: dt_credentials
       failed_when: false
+      when: 
+        - "zuul_bom_results is defined"
 
     - name: Upload BOMs to dependency track
       ansible.builtin.import_role:
