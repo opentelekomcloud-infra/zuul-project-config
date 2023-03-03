@@ -23,7 +23,7 @@
     vault_token_file: "{{ zuul.executor.work_root }}/.approle-token"
   tasks:
     - name: Get Registry credentials
-      no_log: true
+      # no_log: true
       vault_read:
         vault_addr: "{{ vault_addr }}"
         vault_token: "{{ lookup('file', vault_token_file) }}"
