@@ -24,34 +24,43 @@
   tasks:
     - name: Get Registry credentials
       # no_log: true
-      vault_read:
-        vault_addr: "{{ vault_addr }}"
-        vault_token: "{{ lookup('file', vault_token_file) }}"
-        secret_path: "image_registries"
+      ansible.builtin.uri:
+        url: "{{ vault_addr }}/v1/secret/data/image_registries"
+        method: "GET"
+        headers:
+          "X-Vault-Token": "{{ lookup('file', vault_token_file) }}"
+        body_format: json
+        return_content: true
       register: registry_credentials
 
-    - name: Return image registry creds
-      zuul_return:
-        secret_data:
-          container_registry_credentials: "{{ registry_credentials.secret }}"
-
-    - name: Get Dependencytrack credentials
-      no_log: true
-      vault_read:
-        vault_addr: "{{ vault_addr }}"
-        vault_token: "{{ lookup('file', vault_token_file) }}"
-        secret_path: "dependencytrack/uploader"
-      register: dt_credentials
-      failed_when: false
+        #      vault_read:
+        #        vault_addr: "{{ vault_addr }}"
+        #        vault_token: "{{ lookup('file', vault_token_file) }}"
+        #        secret_path: "image_registries"
+        #      register: registry_credentials
 
     - name: Return image registry creds
       zuul_return:
         secret_data:
-          dependencytrack_credentials: "{{ dt_credentials.secret }}"
-      when:
-        - "zuul_bom_results is defined"
-        - "dt_credentials is defined"
-        - "dt_credentials.secret is defined"
+          container_registry_credentials: "{{ registry_credentials.json.data.data }}"
+
+    # - name: Get Dependencytrack credentials
+    #   no_log: true
+    #   vault_read:
+    #     vault_addr: "{{ vault_addr }}"
+    #     vault_token: "{{ lookup('file', vault_token_file) }}"
+    #     secret_path: "dependencytrack/uploader"
+    #   register: dt_credentials
+    #   failed_when: false
+
+    # - name: Return image registry creds
+    #   zuul_return:
+    #     secret_data:
+    #       dependencytrack_credentials: "{{ dt_credentials.secret }}"
+    #   when:
+    #     - "zuul_bom_results is defined"
+    #     - "dt_credentials is defined"
+    #     - "dt_credentials.secret is defined"
 
     - name: Remove vault token file
       file:
