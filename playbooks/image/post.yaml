@@ -27,7 +27,7 @@
       no_log: true
       delegate_to: localhost
       ansible.builtin.uri:
-        url: "{{ vault_addr }}/v1/secret/data/image_registries"
+        url: "{{ vault_addr }}/v1/secret/data/{{ vault_path | default('image_registries') }}"
         method: "GET"
         headers:
           "X-Vault-Token": "{{ lookup('file', vault_token_dest) }}"
@@ -53,7 +53,7 @@
         return_content: true
       register: dt_credentials
       failed_when: false
-      when: 
+      when:
         - "zuul_bom_results is defined"
 
     - name: Upload BOMs to dependency track
@@ -63,7 +63,7 @@
         dependencytrack_credentials: "{{ dt_credentials.json.data.data }}"
         bom_artifacts: "{{ zuul_bom_results }}"
       when: "zuul_bom_results is defined"
-      when: 
+      when:
         - "zuul_bom_results is defined"
         - "dt_credentials is defined"
         - "dt_credentials.json is defined"

@@ -30,11 +30,23 @@
     name: otcinfra-upload-container-images
     parent: otc-build-container-image
     description: |
-      Upload image(s) to the registry. 
+      Upload image(s) to the registry.
 
       Please refer to the upload-container-image role.
     nodeset: ubuntu-jammy
     post-run: playbooks/image/post.yaml
+    vars:
+      vault_path: image_registries
     secrets:
       - secret: zuul_eco_project_config_vault_new
         name: vault_data
+
+- job:
+    name: stackmon-upload-container-images
+    parent: otcinfra-upload-container-images
+    description: |
+      Upload StackMon image(s) to the registry.
+
+      Please refer to the upload-container-image role.
+    vars:
+      vault_path: stackmon_quay
