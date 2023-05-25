@@ -114,28 +114,27 @@
       jobs:
         - noop
         - otc-tox-docs:
-            files:
+            files: &docs-triggers
               - ^api-ref/.*
               - ^dev/.*
               - ^doc/.*
               - ^umn/.*
+              - bindep.txt
+              - ^requirements.txt
+              - doc/requirements.txt
+              - test-requirements.txt
+              - tox.ini
+              - .zuul.yaml
+              - zuul.yaml
     gate:
       jobs:
         - noop
         - otc-tox-docs:
-            files:
-              - ^api-ref/.*
-              - ^dev/.*
-              - ^doc/.*
-              - ^umn/.*
+            files: *docs-triggers
     promote:
       jobs:
         - promote-otc-tox-docs-hc:
-            files:
-              - ^api-ref/.*
-              - ^dev/.*
-              - ^doc/.*
-              - ^umn/.*
+            files: *docs-triggers
     periodic:
       jobs:
         - publish-otc-docs-hc
