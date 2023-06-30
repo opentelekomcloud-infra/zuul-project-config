@@ -11,3 +11,5 @@ Project Templates
 .. zuul:project_template:: umn-hc-jobs
 .. zuul:project_template:: release-notes-jobs
 .. zuul:project_template:: security-analysis-jobs
+.. zuul:project_template:: helpcenter-base-jobs
+.. zuul:project_template:: helpcenter-swiss-base-jobs

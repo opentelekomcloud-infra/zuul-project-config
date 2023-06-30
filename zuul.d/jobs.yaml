@@ -153,6 +153,45 @@
         name: promote_data
 
 - job:
+    name: otc-promote-docs-hc-swiss-base
+    description: |
+      Publish a previously built documentation tarball for HelpCenter Swiss.
+      Use this in the promote pipeline to publish a branch tip tarball
+      built in the gate pipeline.
+      This is an abstract job intended to be inherited from in an
+      Eco tenant and an appropriate secret added.
+
+      .. zuul:jobvar:: download_artifact_job
+
+         The name of the job which built the docs artifact which this
+         job should download and promote.
+
+      .. zuul:jobvar:: prefix
+
+         Prefix path for the resulting files in the container.
+
+      .. zuul:jobvar:: container
+
+         Name of the container to upload data into. If not set
+         {zuul.project.short_name} is used
+    abstract: true
+    post-review: true
+    run: playbooks/publish/fetch-zuul-artifact.yaml
+    post-run:
+      - playbooks/publish/docs.yaml
+    vars:
+      container: "{{ zuul.project.short_name }}"
+      write_root_marker: true
+      publish_doc_to_search: true
+    nodeset:
+      nodes: []
+    secrets:
+      - secret: zuul_eco_project_config_vault_new
+        name: vault_data
+      - secret: zuul_eco_project_config_docs_hc_swiss
+        name: promote_data
+
+- job:
     name: promote-otc-tox-docs
     parent: otc-promote-docs-base
     description: |
@@ -225,8 +264,46 @@
       # opensearch_doc_category: "api-ref"
 
 - job:
+    name: promote-otc-tox-docs-hc-swiss
+    parent: otc-promote-docs-hc-swiss-base
+    description: |
+      Promote content of the otc-tox-doc job.
+      This job is run in a promote pipeline to publish documents built
+      in the gate pipeline.
+    # We only publish the master branch, so no need to run
+    # for changes on other branches.
+    branches:
+      - main
+    final: true
+    files:
+      - ^doc/.*
+      - ^requirements.txt
+    vars:
+      download_artifact_job: "otc-tox-docs"
+      make_public: true
+      prefix: ""
+      # opensearch_doc_category: "api-ref"
+
+- job:
     name: promote-api-ref-hc
     parent: otc-promote-docs-hc-base
+    description: |
+      Publish api-ref document.
+      This job is run in a promote pipeline to publish documents built
+      in the gate pipeline.
+    # We only publish the master branch, so no need to run
+    # for changes on other branches.
+    branches:
+      - main
+    final: true
+    vars:
+      download_artifact_job: "build-otc-api-ref"
+      make_public: true
+      opensearch_doc_category: "api-ref"
+
+- job:
+    name: promote-api-ref-hc-swiss
+    parent: otc-promote-docs-hc-swiss-base
     description: |
       Publish api-ref document.
       This job is run in a promote pipeline to publish documents built
@@ -283,8 +360,49 @@
       opensearch_doc_category: "umn"
 
 - job:
+    name: promote-umn-hc-swiss
+    parent: otc-promote-docs-hc-swiss-base
+    description: |
+      Publish UMN document.
+      This job is run in a promote pipeline to publish documents built
+      in the gate pipeline.
+    # We only publish the master branch, so no need to run
+    # for changes on other branches.
+    branches:
+      - master
+      - main
+    final: true
+    files:
+      - ^umn/.*
+      - requirements.txt
+    vars:
+      download_artifact_job: "build-otc-umn"
+      make_public: true
+      opensearch_doc_category: "umn"
+
+- job:
     name: promote-dev-guide-hc
     parent: otc-promote-docs-hc-base
+    description: |
+      Publish developer guide document.
+      This job is run in a promote pipeline to publish documents built
+      in the gate pipeline.
+    # We only publish the master branch, so no need to run
+    # for changes on other branches.
+    branches:
+      - main
+    final: true
+    files:
+      - ^dev_guide/.*
+      - requirements.txt
+    vars:
+      download_artifact_job: "build-otc-dev-guide"
+      make_public: true
+      opensearch_doc_category: "dev"
+
+- job:
+    name: promote-dev-guide-hc-swiss
+    parent: otc-promote-docs-hc-swiss-base
     description: |
       Publish developer guide document.
       This job is run in a promote pipeline to publish documents built
@@ -381,6 +499,29 @@
       opensearch_doc_category: "doc"
 
 - job:
+    name: publish-otc-docs-hc-swiss
+    parent: otc-promote-docs-hc-swiss-base
+    description: |
+      Publish docs to Swift.
+      This job is building Docs from scratch and it intended to
+      be executed in manual/periodic pipeline.
+    final: true
+    pre-run: playbooks/docs/pre.yaml
+    run: playbooks/docs/run.yaml
+    post-run:
+      - playbooks/docs/fetch.yaml
+    nodeset: ubuntu-jammy
+    semaphores:
+      - docs-build
+    vars:
+      sphinx_python: python3
+      tox_envlist: docs
+      bindep_profile: compile doc
+      tox_pdf_envlist: pdf-docs
+      tox_skip_pdf: false
+      opensearch_doc_category: "doc"
+
+- job:
     name: publish-umn-docs-hc
     parent: otc-promote-docs-hc-base
     description: |
@@ -402,8 +543,50 @@
       opensearch_doc_category: "umn"
 
 - job:
+    name: publish-umn-docs-hc-swiss
+    parent: otc-promote-docs-hc-swiss-base
+    description: |
+      Publish UMN docs to Swift.
+      This job is building Docs from scratch and it intended to
+      be executed in manual/periodic pipeline.
+    final: true
+    pre-run: playbooks/docs/pre.yaml
+    run: playbooks/docs/run.yaml
+    post-run: playbooks/docs/fetch.yaml
+    nodeset: ubuntu-jammy
+    vars:
+      sphinx_python: python3
+      sphinx_build_dir: umn/build
+      tox_envlist: umn
+      bindep_profile: compile doc
+      tox_pdf_envlist: umn-pdf-docs
+      tox_skip_pdf: false
+      opensearch_doc_category: "umn"
+
+- job:
     name: publish-api-ref-docs-hc
     parent: otc-promote-docs-hc-base
+    description: |
+      Publish API-Ref docs to Swift.
+      This job is building Docs from scratch and it intended to
+      be executed in manual/periodic pipeline.
+    final: true
+    pre-run: playbooks/docs/pre.yaml
+    run: playbooks/docs/run.yaml
+    post-run: playbooks/docs/fetch.yaml
+    nodeset: ubuntu-jammy
+    vars:
+      sphinx_python: python3
+      sphinx_build_dir: api-ref/build
+      tox_envlist: api-ref
+      bindep_profile: compile doc
+      tox_pdf_envlist: api-ref-pdf-docs
+      tox_skip_pdf: false
+      opensearch_doc_category: "api-ref"
+
+- job:
+    name: publish-api-ref-docs-hc-swiss
+    parent: otc-promote-docs-hc-swiss-base
     description: |
       Publish API-Ref docs to Swift.
       This job is building Docs from scratch and it intended to
