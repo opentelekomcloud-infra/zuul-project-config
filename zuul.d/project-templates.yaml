@@ -140,6 +140,28 @@
         - publish-otc-docs-hc
 
 - project-template:
+    name: helpcenter-swiss-base-jobs
+    description: |
+      Base jobs for the HelpCenter Swiss projects.
+    check:
+      jobs:
+        - noop
+        - otc-tox-docs:
+            files: *docs-triggers
+    gate:
+      jobs:
+        - noop
+        - otc-tox-docs:
+            files: *docs-triggers
+    promote:
+      jobs:
+        - promote-otc-tox-docs-hc-swiss:
+            files: *docs-triggers
+    periodic:
+      jobs:
+        - publish-otc-docs-hc-swiss
+
+- project-template:
     name: api-ref-jobs
     description: |
       Build the api-ref document and publish the result
