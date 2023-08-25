@@ -184,6 +184,7 @@
       write_root_marker: true
       publish_doc_to_search: true
       search_engine_index_prefix: "hc_swiss"
+      search_base_url: "https://docs-beta.sc.otc.t-systems.com"
     nodeset:
       nodes: []
     secrets:
