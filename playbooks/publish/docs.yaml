@@ -121,7 +121,7 @@
                 search_engine_url: "{{ search_credentials.secret.url }}"
                 search_engine_username: "{{ search_credentials.secret.username }}"
                 search_engine_password: "{{ search_credentials.secret.password }}"
-                search_engine_base_url: "https://docs.otc.t-systems.com"
+                search_engine_base_url: "{{ search_base_url | default('https://docs.otc.t-systems.com') }}"
                 search_engine_doc_url: "{{ container | default(zuul.project.short_name) }}/{{ prefix | default('') }}{{ zj_index.path | relpath(zuul.executor.work_root + '/docs-json/') | dirname }}"
                 search_engine_index_name: "{{ search_engine_index_prefix | default('hc_de') }}-{{ container | default('general') }}-{{ opensearch_doc_category | default('') }}-{{ zj_index.path | dirname | split('/') | last | default('general') }}"
                 search_engine_doc_category: "{{ opensearch_doc_category | default(omit) }}"
