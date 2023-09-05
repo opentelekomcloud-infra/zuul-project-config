@@ -116,7 +116,7 @@
         - otc-tox-docs:
             files: &docs-triggers
               - ^api-ref/.*
-              - ^dev/.*
+              - ^dev_guide/.*
               - ^doc/.*
               - ^umn/.*
               - bindep.txt
