@@ -338,3 +338,20 @@
       - secret: zuul_eco_project_config_vault_new
         name: vault_data
     semaphores: functest-eu-ch
+
+- job:
+    name: otc-terraform-visualize-main
+    parent: otc-terraform-visualize
+    description: |
+      Job to visualize examples in OTC Terraform Provider
+    pre-run:
+      - playbooks/otc/functest-pre.yaml
+    post-run: playbooks/otc/functest-post.yaml
+    vars:
+      vault_functional_cloud_secret_name: "clouds/otcci_functional"
+      functest_project_name: "eu-de_zuul_tf"
+      viz_env:
+        OS_CLOUD: functest_cloud
+    secrets:
+      - secret: zuul_project_config_vault
+        name: zuul_project_config_vault
