@@ -44,10 +44,14 @@
             path: "{{ docs_dest }}"
             state: "directory"
             mode: "0775"
+            group: "www-data"
+            owner: "www-data"
 
         - name: Upload data to the failover server
           ansible.builtin.unarchive:
             src: "{{ zuul.executor.work_root }}/docs-html.tar.gz"
             dest: "{{ docs_dest }}"
+            group: "www-data"
+            owner: "www-data"
       ignore_errors: true
       ignore_unreachable: true
