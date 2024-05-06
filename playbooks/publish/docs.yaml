@@ -146,4 +146,9 @@
           file:
             path: "{{ vault_token_dest }}"
             state: "absent"
+
+        - name: Remove working directory
+          file:
+            path: "{{ zuul.executor.work_root }}/docs"
+            state: "absent"
       when: zuul_success | bool
