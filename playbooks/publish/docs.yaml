@@ -152,4 +152,10 @@
           file:
             path: "{{ zuul.executor.work_root }}/docs"
             state: "absent"
+        
+        # Drop unpacked docs-json, since they are already uploaded to the opensearch and zuul logs also contain archived copy
+        - name: Ensure unpacked docs-json are removed
+          file:
+            path: "{{ zuul.executor.work_root }}/docs-json"
+            state: "absent"
       when: zuul_success | bool
