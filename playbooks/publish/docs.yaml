@@ -150,11 +150,13 @@
         # Drop unpacked docs, and docs-json since they are already uploaded to the target destination and zuul logs also contain archived copy
         - name: Ensure unpacked docs and docs-json are removed
           file:
-            path: "{{ item }}"
+            path: "{{ zj_item }}"
             state: "absent"
-          with_items:
-            - {{ zuul.executor.work_root }}/docs
-            - {{ zuul.executor.work_root }}/docs-json
-            - {{ zuul.executor.log_root }}/docs
-            - {{ zuul.executor.log_root }}/docs-json
+          loop:
+            - "{{ zuul.executor.work_root }}/docs"
+            - "{{ zuul.executor.work_root }}/docs-json"
+            - "{{ zuul.executor.log_root }}/docs"
+            - "{{ zuul.executor.log_root }}/docs-json"
+          loop_control:
+            loop_var: zj_item
       when: zuul_success | bool
