@@ -147,16 +147,18 @@
             path: "{{ vault_token_dest }}"
             state: "absent"
 
-        # Drop unpacked docs, and docs-json since they are already uploaded to the target destination and zuul logs also contain archived copy
-        - name: Ensure unpacked docs and docs-json are removed
-          file:
-            path: "{{ zj_item }}"
-            state: "absent"
-          loop:
-            - "{{ zuul.executor.work_root }}/docs"
-            - "{{ zuul.executor.work_root }}/docs-json"
-            - "{{ zuul.executor.log_root }}/docs"
-            - "{{ zuul.executor.log_root }}/docs-json"
-          loop_control:
-            loop_var: zj_item
       when: zuul_success | bool
+
+- hosts: all
+  tasks:
+    # Drop unpacked docs, and docs-json since they are already uploaded to the target destination and zuul logs also contain archived copy
+    - name: Ensure unpacked docs and docs-json are removed
+      file:
+        path: "{{ zj_item }}"
+        state: "absent"
+      loop:
+        - "{{ zuul.executor.work_root }}/docs"
+        - "{{ zuul.executor.work_root }}/docs-json"
+      loop_control:
+        loop_var: zj_item
+    when: zuul_success | bool
