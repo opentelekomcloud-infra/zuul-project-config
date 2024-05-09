@@ -161,4 +161,4 @@
         - "{{ zuul.executor.work_root }}/docs-json"
       loop_control:
         loop_var: zj_item
-    when: zuul_success | bool
+      when: zuul_success | bool
