@@ -161,6 +161,7 @@
         - "{{ zuul.executor.work_root }}/docs-json"
         - "{{ zuul.executor.log_root }}/docs"
         - "{{ zuul.executor.log_root }}/docs-json"
+        - "{{ ansible_user_dir }}/zuul-output"
       loop_control:
         loop_var: zj_item
       when: zuul_success | bool
