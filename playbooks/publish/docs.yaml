@@ -166,3 +166,13 @@
       loop_control:
         loop_var: zj_item
       when: zuul_success | bool
+    # Recreate directories for further results collection task
+    - name: Ensure docs and docs-json are re-created after cleanup
+      file:
+        path: "{{ zj_item }}"
+        state: directory
+      loop:
+        - "{{ ansible_user_dir }}/zuul-output/docs"
+        - "{{ ansible_user_dir }}/zuul-output/docs-json"
+      loop_control:
+        loop_var: zj_item
