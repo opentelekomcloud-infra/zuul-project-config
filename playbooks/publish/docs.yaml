@@ -163,6 +163,18 @@
         - "{{ zuul.executor.log_root }}/docs-json"
         - "{{ ansible_user_dir }}/zuul-output/docs"
         - "{{ ansible_user_dir }}/zuul-output/docs-json"
+        - "{{ ansible_user_dir }}/zuul-output/logs/docs"
+        - "{{ ansible_user_dir }}/zuul-output/logs/docs-json"
       loop_control:
         loop_var: zj_item
       when: zuul_success | bool
+    # Recreate directories for further results collection task
+    - name: Ensure docs are re-created after cleanup
+      file:
+        path: "{{ zj_item }}"
+        state: directory
+      loop:
+        - "{{ ansible_user_dir }}/zuul-output/docs"
+        - "{{ ansible_user_dir }}/zuul-output/logs"
+      loop_control:
+        loop_var: zj_item
