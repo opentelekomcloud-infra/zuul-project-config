@@ -28,6 +28,7 @@
               - ^plugins/
               - ^tests/sanity
               - ^galaxy.yaml
+              - ^galaxy.yml
               - ^meta/
               - ^test-requirements*
         - ansible-collection-test-units:
@@ -35,6 +36,7 @@
               - ^plugins/
               - ^tests/unit
               - ^galaxy.yaml
+              - ^galaxy.yml
               - ^meta/
               - ^test-requirements*
         - ansible-collection-docs:
@@ -50,6 +52,7 @@
             files:
               - ^plugins/
               - ^tests/sanity
+              - ^galaxy.yaml
               - ^galaxy.yml
               - ^meta/
               - ^test-requirements*
@@ -57,6 +60,7 @@
             files:
               - ^plugins/
               - ^tests/unit
+              - ^galaxy.yaml
               - ^galaxy.yml
               - ^meta/
               - ^test-requirements*
