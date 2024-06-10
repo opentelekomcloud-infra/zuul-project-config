@@ -27,14 +27,14 @@
             files:
               - ^plugins/
               - ^tests/sanity
-              - ^galaxy.yaml
+              - ^galaxy.yml
               - ^meta/
               - ^test-requirements*
         - ansible-collection-test-units:
             files:
               - ^plugins/
               - ^tests/unit
-              - ^galaxy.yaml
+              - ^galaxy.yml
               - ^meta/
               - ^test-requirements*
         - ansible-collection-docs:
