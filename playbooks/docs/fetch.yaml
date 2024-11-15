@@ -1,8 +1,20 @@
 - hosts: all
   tasks:
+    - name: Find matching PDF files
+      find:
+        paths: "{{ zuul_work_dir }}/{{ sphinx_build_dir }}/pdf"
+        patterns: "{{ zuul.project.short_name }}-*.pdf"
+      register: pdf_files
+
+    - name: Debug the list of PDF files
+      debug:
+        var: pdf_files.files
+
     - name: Fetch sphinx tarball
       include_role:
         name: fetch-sphinx-tarball
+      vars:
+        sphinx_pdf_files: "{{ pdf_files.files | map(attribute='path') | list }}"
       when: zuul_success | bool
 
     - name: Fetch archive
