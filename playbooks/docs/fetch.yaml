@@ -2,7 +2,7 @@
   tasks:
     - name: Find matching PDF files
       find:
-        paths: "{{ zuul_work_dir }}/{{ sphinx_build_dir }}/pdf"
+        paths: "{{ zuul.project.src_dir }}/doc/build/pdf"
         patterns: "{{ zuul.project.short_name }}-*.pdf"
       register: pdf_files
 
