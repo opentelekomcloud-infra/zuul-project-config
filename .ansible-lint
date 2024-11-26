@@ -18,4 +18,5 @@ skip_list:
     - '301'  # [E301] Commands should not change things if nothing needs doing
     - '306'  # [E306] Shells that use pipes should set the pipefail option
     - '503'  # [E503] Use module rather than command when a module exists
+    - command-instead-of-module
 verbosity: 1
