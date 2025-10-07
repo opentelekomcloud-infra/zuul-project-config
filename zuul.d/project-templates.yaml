@@ -151,18 +151,7 @@
       jobs:
         - noop
         - otc-tox-docs:
-            files: &docs-triggers
-              - ^api-ref/.*
-              - ^dev_guide/.*
-              - ^doc/.*
-              - ^umn/.*
-              - bindep.txt
-              - ^requirements.txt
-              - doc/requirements.txt
-              - test-requirements.txt
-              - tox.ini
-              - .zuul.yaml
-              - zuul.yaml
+            files: *docs-triggers
     promote:
       jobs:
         - promote-otc-tox-docs-hc:
