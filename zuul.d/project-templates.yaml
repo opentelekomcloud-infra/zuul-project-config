@@ -146,7 +146,7 @@
 - project-template:
     name: helpcenter-base-jobs-no-check
     description: |
-      Base jobs for the HelpCenter projects wihtout a check job.
+      Base jobs for the HelpCenter projects without a check job.
     gate:
       jobs:
         - noop
