@@ -144,6 +144,34 @@
         - publish-otc-docs-hc
 
 - project-template:
+    name: helpcenter-base-jobs-no-check
+    description: |
+      Base jobs for the HelpCenter projects wihtout a check job.
+    gate:
+      jobs:
+        - noop
+        - otc-tox-docs:
+            files: &docs-triggers
+              - ^api-ref/.*
+              - ^dev_guide/.*
+              - ^doc/.*
+              - ^umn/.*
+              - bindep.txt
+              - ^requirements.txt
+              - doc/requirements.txt
+              - test-requirements.txt
+              - tox.ini
+              - .zuul.yaml
+              - zuul.yaml
+    promote:
+      jobs:
+        - promote-otc-tox-docs-hc:
+            files: *docs-triggers
+    periodic:
+      jobs:
+        - publish-otc-docs-hc
+
+- project-template:
     name: helpcenter-swiss-base-jobs
     description: |
       Base jobs for the HelpCenter Swiss projects.
