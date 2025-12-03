@@ -35,3 +35,30 @@
         - otc-project-cleanup-eu-nl-functest2
         - otc-project-cleanup-eu-nl-functest3
         - otc-project-cleanup-eu-nl-functest4
+
+- project:
+    name: opentelekomcloud-infra/system-config
+    check:
+      jobs:
+        - otc-tox-linters:
+            branches: preprod
+        - system-config-build-image-haproxy-statsd:
+            branches: preprod
+        - system-config-build-image-zuul:
+            branches: preprod
+        - system-config-build-image-vault:
+            branches: preprod
+    third-party-check:
+      jobs:
+        - otc-tox-linters:
+            branches: preprod
+        - system-config-build-image-haproxy-statsd:
+            branches: preprod
+        - system-config-build-image-zuul:
+            branches: preprod
+        - system-config-build-image-vault:
+            branches: preprod
+    post:
+      jobs:
+        - noop:
+            branches: preprod
