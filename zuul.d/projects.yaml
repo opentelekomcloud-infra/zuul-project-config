@@ -41,8 +41,12 @@
     check:
       jobs:
         - noop:
-            branches: preprod
+            branches:
+              - preprod
+              - test-zuul-final
     third-party-check:
       jobs:
         - noop:
-            branches: preprod
+            branches:
+              - preprod
+              - test-zuul-final
