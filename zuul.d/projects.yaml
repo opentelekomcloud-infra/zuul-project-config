@@ -22,6 +22,9 @@
     gate:
       jobs:
         - otc-tox-linters: *otc-tox-linters
+    post:
+      jobs:
+        - noop
     periodic-hourly:
       jobs:
         - otc-project-cleanup-eu-de-functest1
