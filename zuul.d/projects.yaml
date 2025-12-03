@@ -38,6 +38,7 @@
 
 - project:
     name: opentelekomcloud-infra/system-config
+    # Real build jobs for preprod and test branches
     check:
       jobs:
         - system-config-build-image-zuul:
