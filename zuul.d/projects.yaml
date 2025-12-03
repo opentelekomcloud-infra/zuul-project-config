@@ -37,6 +37,9 @@
     name: opentelekomcloud-infra/system-config
     check:
       jobs:
-        - noop
+        - noop:
+            branches: preprod
     third-party-check:
-      jobs: []
+      jobs:
+        - noop:
+            branches: preprod
