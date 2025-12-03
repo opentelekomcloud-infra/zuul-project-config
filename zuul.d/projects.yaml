@@ -38,46 +38,37 @@
 
 - project:
     name: opentelekomcloud-infra/system-config
-    # Real build jobs for preprod and test branches
+    # Build image jobs for test branch only - preprod jobs defined in-repo
     check:
       jobs:
         - system-config-build-image-zuul:
             branches:
-              - preprod
               - test-zuul-final
         - system-config-build-image-vault:
             branches:
-              - preprod
               - test-zuul-final
         - system-config-build-image-haproxy-statsd:
             branches:
-              - preprod
               - test-zuul-final
     third-party-check:
       jobs:
         - system-config-build-image-zuul:
             branches:
-              - preprod
               - test-zuul-final
         - system-config-build-image-vault:
             branches:
-              - preprod
               - test-zuul-final
         - system-config-build-image-haproxy-statsd:
             branches:
-              - preprod
               - test-zuul-final
     post:
       jobs:
         - system-config-build-image-zuul:
             branches:
-              - preprod
               - test-zuul-final
         - system-config-build-image-vault:
             branches:
-              - preprod
               - test-zuul-final
         - system-config-build-image-haproxy-statsd:
             branches:
-              - preprod
               - test-zuul-final
