@@ -50,3 +50,9 @@
             branches:
               - preprod
               - test-zuul-final
+    post:
+      jobs:
+        - noop:
+            branches:
+              - preprod
+              - test-zuul-final
