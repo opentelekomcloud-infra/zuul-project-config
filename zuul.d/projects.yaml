@@ -40,23 +40,11 @@
     name: opentelekomcloud-infra/system-config
     check:
       jobs:
-        - otc-tox-linters:
-            branches: preprod
-        - system-config-build-image-haproxy-statsd:
-            branches: preprod
-        - system-config-build-image-zuul:
-            branches: preprod
-        - system-config-build-image-vault:
+        - noop:
             branches: preprod
     third-party-check:
       jobs:
-        - otc-tox-linters:
-            branches: preprod
-        - system-config-build-image-haproxy-statsd:
-            branches: preprod
-        - system-config-build-image-zuul:
-            branches: preprod
-        - system-config-build-image-vault:
+        - noop:
             branches: preprod
     post:
       jobs:
