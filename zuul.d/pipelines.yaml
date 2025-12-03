@@ -345,6 +345,7 @@
             - opened
             - changed
             - reopened
+            - review_requested
         - event: pull_request
           action: comment
           comment: (?i)^\s*recheck\s*$
