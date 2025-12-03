@@ -32,3 +32,11 @@
         - otc-project-cleanup-eu-nl-functest2
         - otc-project-cleanup-eu-nl-functest3
         - otc-project-cleanup-eu-nl-functest4
+
+- project:
+    name: opentelekomcloud-infra/system-config
+    check:
+      jobs:
+        - noop
+    third-party-check:
+      jobs: []
