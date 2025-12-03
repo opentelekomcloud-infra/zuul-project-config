@@ -43,11 +43,3 @@
       jobs:
         - noop:
             branches: preprod
-    check:
-      jobs:
-        - noop:
-            branches: preprod
-    third-party-check:
-      jobs:
-        - noop:
-            branches: preprod
