@@ -498,6 +498,7 @@
       bindep_profile: compile doc
       tox_pdf_envlist: pdf-docs
       tox_skip_pdf: false
+      ensure_tox_version: "<4.48.0"
       opensearch_doc_category: "doc"
 
 - job:
