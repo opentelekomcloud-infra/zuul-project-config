@@ -225,6 +225,8 @@
         merged: true
       gitlab:
         merged: true
+      gitea:
+        merged: true
     trigger:
       github:
         - event: pull_request
@@ -232,6 +234,17 @@
       gitlab:
          - event: gl_merge_request
            action: merged
+      gitea:
+        - event: gt_pull_request
+          action: closed
+    success:
+      gitea:
+        comment: true
+        status: "success"
+    failure:
+      gitea:
+        comment: true
+        status: "failure"
 
 - pipeline:
     name: pre-release
